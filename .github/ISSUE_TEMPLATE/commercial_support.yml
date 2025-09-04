@@ -1,0 +1,185 @@
+name: 💼 Commercial Support
+description: Consultas comerciales, licenciamiento y partnerships
+title: "[COMMERCIAL] "
+labels: ["commercial", "partnership"]
+assignees: ["vigoferrel"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💼 Consulta Comercial - QBTC-UNIFIED
+        Para consultas comerciales, licenciamiento empresarial o partnerships estratégicos.
+
+  - type: dropdown
+    id: inquiry-type
+    attributes:
+      label: 🎯 Tipo de Consulta
+      description: ¿Qué tipo de consulta comercial es?
+      options:
+        - Licenciamiento Empresarial
+        - Partnership Estratégico
+        - Implementación Custom
+        - Consultoría Técnica
+        - White-label Solution
+        - API Enterprise Access
+        - Training y Capacitación
+        - Soporte Técnico Premium
+        - Otros (especificar abajo)
+    validations:
+      required: true
+
+  - type: textarea
+    id: company-info
+    attributes:
+      label: 🏢 Información de la Empresa
+      description: Cuéntanos sobre tu organización
+      placeholder: |
+        Nombre de la empresa:
+        Industria:
+        Tamaño de la empresa:
+        Website:
+        País/Región:
+    validations:
+      required: true
+
+  - type: textarea
+    id: project-requirements
+    attributes:
+      label: 📋 Requerimientos del Proyecto
+      description: Describe qué necesitas y tus objetivos específicos
+      placeholder: |
+        Necesitamos QBTC-UNIFIED para...
+        Volumen estimado de trading:
+        Timeframe del proyecto:
+        Requerimientos específicos:
+    validations:
+      required: true
+
+  - type: dropdown
+    id: budget-range
+    attributes:
+      label: 💰 Rango de Presupuesto
+      description: Rango aproximado para planificación inicial (USD)
+      options:
+        - < $10K (Startup/SME)
+        - $10K - $50K (Enterprise)
+        - $50K - $100K (Large Enterprise)
+        - $100K+ (Fortune 500)
+        - Presupuesto flexible según propuesta
+        - Prefiero no especificar ahora
+    validations:
+      required: true
+
+  - type: dropdown
+    id: timeline
+    attributes:
+      label: ⏰ Timeline Esperado
+      description: ¿Cuándo necesitarías implementar la solución?
+      options:
+        - Inmediato (< 1 mes)
+        - Corto plazo (1-3 meses)
+        - Mediano plazo (3-6 meses)
+        - Largo plazo (6+ meses)
+        - Flexible, evaluando opciones
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: components-interest
+    attributes:
+      label: 🧩 Componentes de Interés
+      description: ¿Qué partes del ecosistema QBTC te interesan? (selecciona todas las relevantes)
+      options:
+        - label: MetaConsciencia (IA/LLM Trading Intelligence)
+        - label: Sistema Guardian (Risk Protection)
+        - label: Portfolio Manager (Advanced Portfolio Management)
+        - label: Quantum Engine (Core Trading Engine)
+        - label: Risk Manager (Enterprise Risk Management)
+        - label: Metrics & Observability (Monitoring Suite)
+        - label: API Enterprise (Custom Integrations)
+        - label: White-label Solution (Complete Rebrand)
+        - label: Custom Development (Tailored Features)
+
+  - type: textarea
+    id: technical-requirements
+    attributes:
+      label: ⚙️ Requerimientos Técnicos
+      description: Especificaciones técnicas o de integración
+      placeholder: |
+        Plataformas objetivo:
+        Integraciones requeridas:
+        Escalabilidad necesaria:
+        Requerimientos de seguridad:
+        Compliance necesario:
+
+  - type: textarea
+    id: success-metrics
+    attributes:
+      label: 📊 Métricas de Éxito
+      description: ¿Cómo medirías el éxito de este proyecto?
+      placeholder: |
+        ROI esperado:
+        KPIs importantes:
+        Objetivos de performance:
+        Métricas de negocio:
+
+  - type: checkboxes
+    id: services-needed
+    attributes:
+      label: 🛠️ Servicios Adicionales
+      description: ¿Qué servicios adicionales necesitarías?
+      options:
+        - label: Implementación y deployment
+        - label: Training y onboarding
+        - label: Soporte técnico 24/7
+        - label: Mantenimiento y actualizaciones
+        - label: Consultoría estratégica
+        - label: Custom development
+        - label: Performance optimization
+        - label: Security auditing
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 📝 Información Adicional
+      description: Cualquier otra información relevante para tu consulta
+      placeholder: |
+        Contexto adicional:
+        Preguntas específicas:
+        Referencias o casos similares:
+
+  - type: checkboxes
+    id: privacy-consent
+    attributes:
+      label: 🔒 Consentimiento y Privacidad
+      description: Términos requeridos para procesar consultas comerciales
+      options:
+        - label: Autorizo el contacto comercial por email/teléfono
+          required: true
+        - label: Acepto que la información compartida se use para evaluar la propuesta
+          required: true
+        - label: Comprendo que QBTC-UNIFIED es software propietario con derechos reservados
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 📞 Próximos Pasos
+        
+        Una vez enviada tu consulta:
+        1. **Revisión inicial:** 24-48 horas
+        2. **Contacto directo:** Te contactaremos para discutir detalles
+        3. **Propuesta personalizada:** Based on your requirements
+        4. **Demo/POC:** Si aplica según el proyecto
+        
+        ## 📧 Contacto Directo
+        **Email:** vigoferrel@gmail.com  
+        **Subject:** QBTC-UNIFIED Commercial Inquiry
+        
+        ## 🔐 Confidencialidad
+        Toda información compartida se maneja bajo estricta confidencialidad. NDAs disponibles bajo solicitud.
+        
+        ---
+        **¡Gracias por tu interés en QBTC-UNIFIED!** 🚀

@@ -1,0 +1,141 @@
+name: 🐛 Bug Report
+description: Reporta un problema o error en QBTC-UNIFIED
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+assignees: ["vigoferrel"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Gracias por reportar un bug
+        Por favor completa toda la información para ayudarnos a resolver el problema rápidamente.
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 📝 Descripción del Bug
+      description: Una descripción clara y concisa del problema
+      placeholder: Describe qué está pasando...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: 🔄 Pasos para Reproducir
+      description: Pasos detallados para reproducir el problema
+      placeholder: |
+        1. Ve a '...'
+        2. Haz click en '...'
+        3. Ejecuta '...'
+        4. Ve el error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: ✅ Comportamiento Esperado
+      description: Qué esperabas que pasara
+      placeholder: Esperaba que...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: ❌ Comportamiento Actual
+      description: Qué está pasando realmente
+      placeholder: Pero en su lugar...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: 🧩 Componente Afectado
+      description: ¿Qué parte del sistema está afectada?
+      options:
+        - MetaConsciencia (IA/LLM)
+        - Sistema Guardian (Protección)
+        - Portfolio Manager (Trading)
+        - Quantum Engine (Core)
+        - Risk Manager (Gestión Riesgos)
+        - Metrics System (Observabilidad)
+        - API/Backend
+        - Frontend/Dashboard
+        - Scripts/Automatización
+        - Documentación
+        - No estoy seguro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 🚨 Severidad
+      description: ¿Qué tan crítico es este bug?
+      options:
+        - 🔥 Crítico - Sistema no funciona
+        - ⚠️ Alto - Funcionalidad importante rota
+        - 📝 Medio - Bug molesto pero workaround existe
+        - 🐛 Bajo - Bug menor o cosmético
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 🖥️ Información del Entorno
+      description: Información técnica del sistema
+      render: shell
+      placeholder: |
+        OS: Windows 11 / macOS 13 / Ubuntu 22.04
+        Node.js: v18.17.0
+        npm: v9.6.7
+        Browser: Chrome 115 / Firefox 116
+        QBTC Version: v1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 📋 Logs y Error Messages
+      description: Copia aquí cualquier log, mensaje de error o stack trace
+      render: shell
+      placeholder: |
+        Error: 
+        Stack trace:
+        Console logs:
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 📸 Screenshots
+      description: Si es un bug visual, agrega screenshots
+      placeholder: Arrastra imágenes aquí o usa ![](url)
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Checklist
+      description: Confirma que has hecho lo siguiente
+      options:
+        - label: He buscado en issues existentes y no hay duplicados
+          required: true
+        - label: He probado con la última versión
+          required: true
+        - label: He incluido toda la información solicitada
+          required: true
+        - label: He verificado mis configuraciones de entorno
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        💡 **Tip:** Mientras más detallada sea la información, más rápido podremos ayudarte.
+        
+        📧 **Contacto:** vigoferrel@gmail.com para consultas urgentes

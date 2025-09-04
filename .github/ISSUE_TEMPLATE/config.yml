@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📧 Contacto Comercial Directo
+    url: mailto:vigoferrel@gmail.com?subject=QBTC-UNIFIED%20Commercial%20Inquiry
+    about: Para consultas comerciales urgentes, licenciamiento empresarial o partnerships estratégicos
+  - name: 💬 GitHub Discussions
+    url: https://github.com/vigoferrel/qbtc-unified/discussions
+    about: Preguntas generales, ideas, y discusiones con la comunidad
+  - name: 📖 Documentación
+    url: https://github.com/vigoferrel/qbtc-unified#readme
+    about: Consulta la documentación completa antes de reportar issues
+  - name: 🚀 Soporte Técnico Premium
+    url: mailto:vigoferrel@gmail.com?subject=QBTC-UNIFIED%20Premium%20Support
+    about: Soporte técnico prioritario para clientes empresariales

@@ -390,7 +390,7 @@ QBTC-UNIFIED es **software propietario** desarrollado por **vigoleonrocks**.
 ¿Interesado en el sistema? Contacta directamente:
 
 ```
-📧 Email: vigoleonrocks@proton.me
+📧 **Email:** vigoferrel@gmail.com
 💬 Consultas: Licenciamiento y acceso empresarial
 🏢 Modalidad: Partnership y joint ventures
 ⚡ Respuesta: 24-48 horas hábiles

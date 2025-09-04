@@ -1,0 +1,168 @@
+name: ✨ Feature Request
+description: Sugiere una nueva funcionalidad para QBTC-UNIFIED
+title: "[FEATURE] "
+labels: ["enhancement", "needs-review"]
+assignees: ["vigoferrel"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Gracias por sugerir una nueva funcionalidad
+        Tu feedback ayuda a mejorar QBTC-UNIFIED. Por favor describe tu idea detalladamente.
+
+  - type: textarea
+    id: feature-summary
+    attributes:
+      label: 🎯 Resumen de la Funcionalidad
+      description: Una descripción breve y clara de qué quieres que se agregue
+      placeholder: Me gustaría que QBTC-UNIFIED pueda...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: 🤔 ¿Qué problema resuelve?
+      description: ¿Hay algún problema o limitación actual que esta funcionalidad resolvería?
+      placeholder: |
+        Actualmente es difícil/imposible hacer X porque...
+        Esto sería útil cuando...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: 💡 Solución Propuesta
+      description: Describe cómo te imaginas que funcionaría esta funcionalidad
+      placeholder: |
+        Podríamos agregar...
+        La funcionalidad trabajaría así...
+        El usuario podría...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: 🧩 Componente Objetivo
+      description: ¿En qué parte del sistema se implementaría?
+      options:
+        - MetaConsciencia (IA/LLM Enhancement)
+        - Sistema Guardian (Nuevas Protecciones)
+        - Portfolio Manager (Trading Features)
+        - Quantum Engine (Core Improvements)
+        - Risk Manager (Risk Features)
+        - Metrics System (Observabilidad)
+        - API/Backend (New Endpoints)
+        - Frontend/Dashboard (UI/UX)
+        - Scripts/Automatización
+        - Documentación
+        - Arquitectura General
+        - No estoy seguro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 📊 Prioridad
+      description: ¿Qué tan importante es esta funcionalidad?
+      options:
+        - 🔥 Alta - Funcionalidad crítica para el negocio
+        - 📈 Media - Mejoraría significativamente la experiencia
+        - 💡 Baja - Sería una mejora incremental agradable
+        - 🎨 Muy Baja - Mejora cosmética o de conveniencia
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternativas Consideradas
+      description: ¿Has considerado otras formas de resolver este problema?
+      placeholder: |
+        También consideré...
+        Otra opción sería...
+        Como workaround actual uso...
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: 🎭 Casos de Uso
+      description: Proporciona ejemplos específicos de cuándo/cómo se usaría
+      placeholder: |
+        Caso 1: Como trader, quiero...
+        Caso 2: Cuando el sistema está...
+        Caso 3: Para optimizar...
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation-ideas
+    attributes:
+      label: ⚙️ Ideas de Implementación
+      description: Si tienes ideas técnicas sobre cómo implementarlo (opcional)
+      placeholder: |
+        Podría implementarse usando...
+        Requeriría cambios en...
+        Dependencies necesarias...
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 🎨 Mockups o Diseños
+      description: Si tienes wireframes, mockups o referencias visuales
+      placeholder: Arrastra imágenes aquí, agrega links, or describe visualmente...
+
+  - type: checkboxes
+    id: business-impact
+    attributes:
+      label: 💼 Impacto del Negocio
+      description: ¿Cómo ayudaría esta funcionalidad? (selecciona todos los que apliquen)
+      options:
+        - label: Mejoraría performance de trading
+        - label: Reduciría riesgos
+        - label: Simplificaría operaciones
+        - label: Aumentaría observabilidad
+        - label: Mejoraría experiencia del usuario
+        - label: Reduciría costos operacionales
+        - label: Facilitaría escalabilidad
+        - label: Mejoraría seguridad
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Checklist
+      description: Confirma antes de enviar
+      options:
+        - label: He buscado si ya existe una funcionalidad similar
+          required: true
+        - label: He considerado si esto encaja con la visión del proyecto
+          required: true
+        - label: He proporcionado casos de uso específicos
+          required: true
+        - label: Estoy dispuesto/a a colaborar en la implementación si es posible
+          required: false
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: 🤝 ¿Contribuirías con la implementación?
+      description: ¿Te interesaría ayudar a implementar esta funcionalidad?
+      options:
+        - Sí, puedo ayudar con código
+        - Sí, puedo ayudar con testing
+        - Sí, puedo ayudar con documentación
+        - Sí, puedo ayudar con diseño/UX
+        - No tengo tiempo pero apoyo la idea
+        - Solo la idea, no puedo contribuir
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        🚀 **¡Gracias por tu sugerencia!** Las mejores ideas se convertirán en realidad.
+        
+        📧 **Contacto:** vigoferrel@gmail.com para discusiones más detalladas
