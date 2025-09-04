@@ -1,0 +1,354 @@
+#!/usr/bin/env node
+/*
+  QBTC API KEY ANALYZER AND IP FIXER
+  Analiza las claves API configuradas y resuelve problemas de IP whitelist
+*/
+
+const axios = require('axios');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+
+class QBTCAPIAnalyzer {
+    constructor() {
+        this.envPath = path.join(__dirname, '..', '.env');
+        this.loadEnvConfig();
+        this.issues = [];
+        this.solutions = [];
+    }
+
+    loadEnvConfig() {
+        try {
+            const envContent = fs.readFileSync(this.envPath, 'utf8');
+            this.envVars = {};
+            
+            envContent.split('\n').forEach(line => {
+                if (line.includes('=') && !line.startsWith('#')) {
+                    const [key, ...valueParts] = line.split('=');
+                    this.envVars[key.trim()] = valueParts.join('=').trim();
+                }
+            });
+        } catch (error) {
+            console.error('❌ Error leyendo .env:', error.message);
+            this.envVars = {};
+        }
+    }
+
+    async analyzeAPIKeys() {
+        console.log('🔍 ANÁLISIS DE CLAVES API QBTC');
+        console.log('===============================\n');
+
+        const apiKey = this.envVars.BINANCE_API_KEY || '';
+        const secretKey = this.envVars.BINANCE_SECRET_KEY || '';
+        const isTestnet = this.envVars.BINANCE_TESTNET === 'true';
+
+        console.log('📋 CONFIGURACIÓN ACTUAL:');
+        console.log(`   API Key: ${apiKey ? `${apiKey.substring(0, 8)}...${apiKey.substring(apiKey.length - 8)}` : 'NO CONFIGURADA'}`);
+        console.log(`   Secret Key: ${secretKey ? `${secretKey.substring(0, 8)}...${secretKey.substring(secretKey.length - 8)}` : 'NO CONFIGURADA'}`);
+        console.log(`   Modo Testnet: ${isTestnet ? '✅ ACTIVADO' : '❌ DESACTIVADO'}`);
+        console.log(`   IP Configurada: ${this.envVars.CURRENT_PUBLIC_IP || 'NO CONFIGURADA'}\n`);
+
+        // Verificar IP actual
+        await this.checkCurrentIP();
+        
+        // Analizar claves
+        this.analyzeKeyFormats(apiKey, secretKey);
+        
+        // Probar conexión
+        if (apiKey && secretKey) {
+            await this.testBinanceConnection(apiKey, secretKey, isTestnet);
+        }
+
+        // Mostrar diagnóstico final
+        this.showDiagnostic();
+    }
+
+    async checkCurrentIP() {
+        try {
+            console.log('🌐 VERIFICANDO IP PÚBLICA ACTUAL...');
+            
+            // Intentar múltiples servicios para obtener IP
+            const ipServices = [
+                'http://ipinfo.io/ip',
+                'https://api.ipify.org',
+                'http://checkip.amazonaws.com',
+                'https://ifconfig.me/ip'
+            ];
+
+            let currentIP = null;
+            
+            for (const service of ipServices) {
+                try {
+                    const response = await axios.get(service, { timeout: 5000 });
+                    currentIP = response.data.trim();
+                    console.log(`   ✅ IP detectada: ${currentIP} (via ${service})`);
+                    break;
+                } catch (error) {
+                    console.log(`   ⚠️ Fallo ${service}: ${error.message}`);
+                    continue;
+                }
+            }
+
+            if (!currentIP) {
+                this.issues.push('❌ No se pudo detectar la IP pública');
+                this.solutions.push('🔧 Verificar conectividad a internet');
+                return;
+            }
+
+            // Comparar con IP configurada
+            const configuredIP = this.envVars.CURRENT_PUBLIC_IP;
+            if (configuredIP && configuredIP !== currentIP) {
+                this.issues.push(`⚠️ IP CAMBIÓ: Configurada=${configuredIP}, Actual=${currentIP}`);
+                this.solutions.push(`🔧 Actualizar CURRENT_PUBLIC_IP=${currentIP} en .env`);
+                this.solutions.push('🔧 Actualizar whitelist en Binance con nueva IP');
+            } else if (!configuredIP) {
+                this.issues.push('❌ IP no configurada en .env');
+                this.solutions.push(`🔧 Agregar CURRENT_PUBLIC_IP=${currentIP} en .env`);
+            } else {
+                console.log('   ✅ IP coincide con configuración');
+            }
+
+            this.currentIP = currentIP;
+            
+        } catch (error) {
+            console.error('❌ Error verificando IP:', error.message);
+            this.issues.push('❌ Error verificando IP pública');
+        }
+    }
+
+    analyzeKeyFormats(apiKey, secretKey) {
+        console.log('\n🔑 ANÁLISIS DE FORMATO DE CLAVES...');
+        
+        // Verificar si las claves son de ejemplo/demo
+        const demoPatterns = [
+            'TU_API_KEY',
+            'DEMO_KEY',
+            'test_api_key',
+            'your-api-key',
+            'demo_api_key'
+        ];
+
+        let isDemo = false;
+        demoPatterns.forEach(pattern => {
+            if (apiKey.includes(pattern) || secretKey.includes(pattern)) {
+                isDemo = true;
+                this.issues.push(`❌ Claves contienen valores de ejemplo: ${pattern}`);
+            }
+        });
+
+        if (isDemo) {
+            this.solutions.push('🔧 Reemplazar con claves reales de Binance API Management');
+            return;
+        }
+
+        // Verificar formato de claves reales de Binance
+        if (apiKey.length < 60) {
+            this.issues.push('⚠️ API Key muy corta (formato inválido)');
+        } else {
+            console.log('   ✅ API Key tiene longitud correcta');
+        }
+
+        if (secretKey.length < 60) {
+            this.issues.push('⚠️ Secret Key muy corta (formato inválido)');
+        } else {
+            console.log('   ✅ Secret Key tiene longitud correcta');
+        }
+
+        // Verificar caracteres válidos
+        const validChars = /^[A-Za-z0-9]+$/;
+        if (!validChars.test(apiKey)) {
+            this.issues.push('❌ API Key contiene caracteres inválidos');
+        }
+        if (!validChars.test(secretKey)) {
+            this.issues.push('❌ Secret Key contiene caracteres inválidos');
+        }
+    }
+
+    async testBinanceConnection(apiKey, secretKey, isTestnet) {
+        console.log('\n🔗 PROBANDO CONEXIÓN CON BINANCE...');
+        
+        const baseURL = isTestnet 
+            ? 'https://testnet.binancefuture.com'
+            : 'https://fapi.binance.com';
+
+        try {
+            // Test 1: Ping básico
+            console.log('   📡 Test 1: Ping básico...');
+            await axios.get(`${baseURL}/fapi/v1/ping`, { timeout: 5000 });
+            console.log('   ✅ Conectividad básica OK');
+
+            // Test 2: Server Time
+            console.log('   ⏰ Test 2: Sincronización de tiempo...');
+            const timeResponse = await axios.get(`${baseURL}/fapi/v1/time`, { timeout: 5000 });
+            const serverTime = timeResponse.data.serverTime;
+            const localTime = Date.now();
+            const timeDiff = Math.abs(localTime - serverTime);
+            
+            if (timeDiff > 1000) {
+                this.issues.push(`⚠️ Reloj desincronizado: ${timeDiff}ms de diferencia`);
+                this.solutions.push('🔧 Sincronizar reloj del sistema (usar NTP)');
+            } else {
+                console.log('   ✅ Sincronización de tiempo OK');
+            }
+
+            // Test 3: Autenticación con API Key
+            console.log('   🔐 Test 3: Autenticación...');
+            
+            const timestamp = Date.now();
+            const queryString = `timestamp=${timestamp}`;
+            const signature = crypto
+                .createHmac('sha256', secretKey)
+                .update(queryString)
+                .digest('hex');
+
+            const authResponse = await axios.get(`${baseURL}/fapi/v2/account`, {
+                params: {
+                    timestamp,
+                    signature
+                },
+                headers: {
+                    'X-MBX-APIKEY': apiKey
+                },
+                timeout: 10000
+            });
+
+            console.log('   ✅ Autenticación exitosa');
+            console.log(`   💰 Balance disponible: ${authResponse.data.totalWalletBalance} USDT`);
+            console.log(`   ⚖️ Positions: ${authResponse.data.positions?.length || 0} símbolos`);
+
+        } catch (error) {
+            console.log('   ❌ Error de conexión:', error.message);
+            
+            if (error.response) {
+                const status = error.response.status;
+                const data = error.response.data;
+                
+                console.log(`   📊 Status: ${status}`);
+                console.log(`   📋 Response: ${JSON.stringify(data, null, 2)}`);
+
+                // Analizar errores específicos
+                if (status === 401) {
+                    if (data.code === -2014 || data.code === -2015) {
+                        this.issues.push('❌ FORMATO DE API KEY INVÁLIDO');
+                        this.solutions.push('🔧 Regenerar API Key en Binance');
+                        this.solutions.push('🔧 Verificar que no haya espacios o caracteres especiales');
+                    }
+                    
+                    if (data.msg && data.msg.includes('IP')) {
+                        this.issues.push('❌ IP NO ESTÁ EN WHITELIST DE BINANCE');
+                        this.solutions.push(`🔧 Agregar IP ${this.currentIP} en Binance API Management`);
+                        this.solutions.push('🔧 O deshabilitar restricción de IP (solo para SPOT)');
+                    }
+                }
+                
+                if (status === 403) {
+                    this.issues.push('❌ PERMISOS INSUFICIENTES');
+                    this.solutions.push('🔧 Habilitar "Enable Futures" en API Key');
+                    this.solutions.push('🔧 Verificar que API Key no esté suspendida');
+                }
+                
+            } else {
+                this.issues.push(`❌ Error de red: ${error.message}`);
+                this.solutions.push('🔧 Verificar conectividad a internet');
+                this.solutions.push('🔧 Verificar firewall/proxy');
+            }
+        }
+    }
+
+    showDiagnostic() {
+        console.log('\n' + '='.repeat(60));
+        console.log('📊 DIAGNÓSTICO FINAL QBTC');
+        console.log('='.repeat(60));
+
+        if (this.issues.length === 0) {
+            console.log('🎉 ¡TODO ESTÁ CONFIGURADO CORRECTAMENTE!');
+            console.log('✅ Sistema listo para trading cuántico');
+            return;
+        }
+
+        console.log('\n❌ PROBLEMAS DETECTADOS:');
+        this.issues.forEach((issue, index) => {
+            console.log(`   ${index + 1}. ${issue}`);
+        });
+
+        console.log('\n🔧 SOLUCIONES RECOMENDADAS:');
+        this.solutions.forEach((solution, index) => {
+            console.log(`   ${index + 1}. ${solution}`);
+        });
+
+        console.log('\n📋 PASOS ESPECÍFICOS PARA BINANCE:');
+        console.log('   1. Ir a https://www.binance.com/en/my/settings/api-management');
+        console.log(`   2. Seleccionar tu API Key actual`);
+        console.log(`   3. En "Restrict access to trusted IPs only" → Enable`);
+        console.log(`   4. Agregar IP: ${this.currentIP || '[IP_DETECTADA]'}`);
+        console.log('   5. Asegurar permisos: ✅ Reading, ✅ Spot & Margin, ✅ Futures');
+        console.log('   6. Guardar cambios y esperar 5-10 minutos');
+        
+        console.log('\n🚨 IMPORTANTE:');
+        console.log('   • Sin IP específica habilitada NO puedes usar trading de futuros');
+        console.log('   • Para máxima seguridad, siempre usar IP restringida');
+        console.log('   • Regenerar API Keys si hay problemas persistentes');
+    }
+
+    async fixIPConfiguration() {
+        if (!this.currentIP) {
+            console.log('❌ No se pudo detectar IP para configurar');
+            return;
+        }
+
+        console.log(`\n🔧 ACTUALIZANDO CONFIGURACIÓN DE IP...`);
+        
+        try {
+            let envContent = fs.readFileSync(this.envPath, 'utf8');
+            
+            // Actualizar o agregar IP actual
+            if (envContent.includes('CURRENT_PUBLIC_IP=')) {
+                envContent = envContent.replace(
+                    /CURRENT_PUBLIC_IP=.*/,
+                    `CURRENT_PUBLIC_IP=${this.currentIP}`
+                );
+            } else {
+                envContent += `\n# IP de conexión actual para whitelist\nCURRENT_PUBLIC_IP=${this.currentIP}\n`;
+            }
+            
+            // Backup del .env actual
+            const backupPath = `${this.envPath}.backup.${Date.now()}`;
+            fs.writeFileSync(backupPath, fs.readFileSync(this.envPath));
+            console.log(`   📁 Backup creado: ${backupPath}`);
+            
+            // Escribir nueva configuración
+            fs.writeFileSync(this.envPath, envContent);
+            console.log(`   ✅ IP actualizada a ${this.currentIP} en .env`);
+            
+        } catch (error) {
+            console.error('❌ Error actualizando .env:', error.message);
+        }
+    }
+}
+
+// Ejecutar análisis
+async function main() {
+    const analyzer = new QBTCAPIAnalyzer();
+    
+    console.log('🎯 QBTC API KEY ANALYZER v1.0');
+    console.log('🔍 Analizando configuración y detectando problemas...\n');
+    
+    await analyzer.analyzeAPIKeys();
+    
+    // Preguntar si actualizar IP automáticamente
+    if (analyzer.currentIP && analyzer.issues.some(issue => issue.includes('IP'))) {
+        console.log('\n❓ ¿Actualizar automáticamente la IP en .env? (y/N)');
+        // En un entorno real, usarías readline, pero por simplicidad...
+        await analyzer.fixIPConfiguration();
+    }
+    
+    console.log('\n🚀 Análisis completado. Revisar soluciones arriba.');
+    console.log('📖 Para más información: https://binance-docs.github.io/apidocs/futures/en/');
+}
+
+// Ejecutar si se llama directamente
+if (require.main === module) {
+    main().catch(console.error);
+}
+
+module.exports = QBTCAPIAnalyzer;

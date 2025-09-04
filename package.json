@@ -1,0 +1,69 @@
+{
+  "name": "qbtc-unified",
+  "version": "1.0.0",
+  "description": "QBTC-UNIFIED: Ecosistema de Trading Cuántico Autogobernado con Inteligencia Artificial",
+  "author": {
+    "name": "vigoleonrocks",
+    "email": "vigoleonrocks@proton.me",
+    "url": "https://vigoleonrocks.dev"
+  },
+  "license": "PROPRIETARY",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start:leonardo": "node leonardo-consciousness/LeonardoQuantumServer.cjs",
+    "start:frontend": "npx http-server frontend-unified -p 8081 -c-1 --cors --gzip --brotli -e html",
+    "start:all": "npm-run-all --parallel start:leonardo start:frontend",
+    "pm2:leonardo": "pm2 start leonardo-consciousness/LeonardoQuantumServer.cjs --name leonardo-quantum --time",
+    "pm2:frontend": "pm2 start npx --name qbtc-frontend -- http-server frontend-unified -p 8081 -c-1 --cors --gzip --brotli -e html",
+    "pm2:ls": "pm2 ls",
+    "pm2:stop": "pm2 stop all && pm2 delete all"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.55.0",
+    "axios": "^1.11.0",
+    "binance-api-node": "^0.12.9",
+    "combined-stream": "^1.0.8",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "form-data": "^4.0.4",
+    "helmet": "^8.1.0",
+    "http-proxy-middleware": "^3.0.5",
+    "joi": "^18.0.0",
+    "node-cron": "^4.2.1",
+    "node-fetch": "^2.7.0",
+    "path-to-regexp": "^8.3.0",
+    "prom-client": "^15.1.3",
+    "winston": "^3.17.0",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "npm-run-all": "^4.1.5",
+    "pm2": "^5.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vigoleonrocks/qbtc-unified.git"
+  },
+  "homepage": "https://github.com/vigoleonrocks/qbtc-unified#readme",
+  "bugs": {
+    "url": "https://github.com/vigoleonrocks/qbtc-unified/issues",
+    "email": "vigoleonrocks@proton.me"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "funding": {
+    "type": "commercial",
+    "url": "mailto:vigoleonrocks@proton.me"
+  },
+  "copyright": "Copyright (c) 2024 vigoleonrocks. All rights reserved.",
+  "security": {
+    "contact": "vigoleonrocks@proton.me"
+  }
+}

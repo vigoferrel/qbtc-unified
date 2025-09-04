@@ -1,0 +1,299 @@
+#!/usr/bin/env node
+/*
+  QBTC BINANCE KEY CHECKER - Versión Simplificada sin Dependencias
+  Analiza las claves API configuradas y detecta problemas de IP whitelist
+*/
+
+const https = require('https');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+
+class SimpleBinanceChecker {
+    constructor() {
+        this.envPath = path.join(__dirname, '..', '.env');
+        this.loadEnvConfig();
+        this.issues = [];
+        this.solutions = [];
+        this.currentIP = null;
+    }
+
+    loadEnvConfig() {
+        try {
+            const envContent = fs.readFileSync(this.envPath, 'utf8');
+            this.envVars = {};
+            
+            envContent.split('\n').forEach(line => {
+                if (line.includes('=') && !line.startsWith('#')) {
+                    const [key, ...valueParts] = line.split('=');
+                    this.envVars[key.trim()] = valueParts.join('=').trim();
+                }
+            });
+        } catch (error) {
+            console.error('❌ Error leyendo .env:', error.message);
+            this.envVars = {};
+        }
+    }
+
+    async checkAPI() {
+        console.log('🎯 QBTC BINANCE KEY CHECKER v1.0');
+        console.log('🔍 Analizando configuración sin dependencias externas...\n');
+        
+        console.log('🔍 ANÁLISIS DE CLAVES API QBTC');
+        console.log('===============================\n');
+
+        const apiKey = this.envVars.BINANCE_API_KEY || '';
+        const secretKey = this.envVars.BINANCE_SECRET_KEY || '';
+        const isTestnet = this.envVars.BINANCE_TESTNET === 'true';
+
+        console.log('📋 CONFIGURACIÓN ACTUAL:');
+        console.log(`   API Key: ${apiKey ? `${apiKey.substring(0, 8)}...${apiKey.substring(apiKey.length - 8)}` : 'NO CONFIGURADA'}`);
+        console.log(`   Secret Key: ${secretKey ? `${secretKey.substring(0, 8)}...${secretKey.substring(secretKey.length - 8)}` : 'NO CONFIGURADA'}`);
+        console.log(`   Modo Testnet: ${isTestnet ? '✅ ACTIVADO' : '❌ DESACTIVADO'}`);
+        console.log(`   IP Configurada: ${this.envVars.CURRENT_PUBLIC_IP || 'NO CONFIGURADA'}\n`);
+
+        // Detectar IP actual
+        await this.getCurrentIP();
+        
+        // Analizar formato de claves
+        this.analyzeKeys(apiKey, secretKey);
+        
+        // Test de conectividad básica
+        await this.testConnectivity(isTestnet);
+        
+        // Mostrar resultados
+        this.showResults();
+        
+        // Auto-actualizar IP si es necesario
+        if (this.currentIP && this.issues.some(issue => issue.includes('IP'))) {
+            await this.updateIPConfig();
+        }
+    }
+
+    async getCurrentIP() {
+        console.log('🌐 DETECTANDO IP PÚBLICA...');
+        
+        return new Promise((resolve) => {
+            const req = https.request({
+                hostname: 'ipinfo.io',
+                path: '/ip',
+                method: 'GET',
+                timeout: 5000
+            }, (res) => {
+                let data = '';
+                res.on('data', (chunk) => data += chunk);
+                res.on('end', () => {
+                    this.currentIP = data.trim();
+                    console.log(`   ✅ IP detectada: ${this.currentIP}`);
+                    
+                    // Comparar con IP configurada
+                    const configuredIP = this.envVars.CURRENT_PUBLIC_IP;
+                    if (configuredIP && configuredIP !== this.currentIP) {
+                        this.issues.push(`⚠️ IP CAMBIÓ: Configurada=${configuredIP}, Actual=${this.currentIP}`);
+                        this.solutions.push(`🔧 Actualizar CURRENT_PUBLIC_IP=${this.currentIP} en .env`);
+                        this.solutions.push('🔧 Actualizar whitelist en Binance con nueva IP');
+                    } else if (!configuredIP) {
+                        this.issues.push('❌ IP no configurada en .env');
+                        this.solutions.push(`🔧 Agregar CURRENT_PUBLIC_IP=${this.currentIP} en .env`);
+                    } else {
+                        console.log('   ✅ IP coincide con configuración');
+                    }
+                    
+                    resolve();
+                });
+            });
+
+            req.on('error', (error) => {
+                console.log(`   ❌ Error detectando IP: ${error.message}`);
+                this.issues.push('❌ No se pudo detectar IP pública');
+                resolve();
+            });
+
+            req.on('timeout', () => {
+                console.log('   ⏰ Timeout detectando IP');
+                this.issues.push('❌ Timeout detectando IP pública');
+                req.destroy();
+                resolve();
+            });
+
+            req.end();
+        });
+    }
+
+    analyzeKeys(apiKey, secretKey) {
+        console.log('\n🔑 ANÁLISIS DE FORMATO DE CLAVES...');
+        
+        if (!apiKey || !secretKey) {
+            this.issues.push('❌ Claves API no configuradas');
+            this.solutions.push('🔧 Configurar BINANCE_API_KEY y BINANCE_SECRET_KEY en .env');
+            return;
+        }
+
+        // Verificar si son claves de ejemplo
+        const demoPatterns = [
+            'TU_API_KEY',
+            'DEMO_KEY',
+            'test_api_key',
+            'your-api-key',
+            'demo_api_key'
+        ];
+
+        let isDemo = false;
+        demoPatterns.forEach(pattern => {
+            if (apiKey.includes(pattern) || secretKey.includes(pattern)) {
+                isDemo = true;
+                this.issues.push(`❌ Claves contienen valores de ejemplo: ${pattern}`);
+            }
+        });
+
+        if (isDemo) {
+            this.solutions.push('🔧 Reemplazar con claves reales de Binance API Management');
+            return;
+        }
+
+        // Verificar longitud (claves reales de Binance suelen ser ~64 caracteres)
+        if (apiKey.length < 60) {
+            this.issues.push('⚠️ API Key muy corta (posible formato inválido)');
+        } else {
+            console.log('   ✅ API Key tiene longitud adecuada');
+        }
+
+        if (secretKey.length < 60) {
+            this.issues.push('⚠️ Secret Key muy corta (posible formato inválido)');
+        } else {
+            console.log('   ✅ Secret Key tiene longitud adecuada');
+        }
+
+        // Verificar caracteres válidos (solo alphanumeric)
+        const validChars = /^[A-Za-z0-9]+$/;
+        if (!validChars.test(apiKey)) {
+            this.issues.push('❌ API Key contiene caracteres inválidos');
+        }
+        if (!validChars.test(secretKey)) {
+            this.issues.push('❌ Secret Key contiene caracteres inválidos');
+        }
+
+        if (validChars.test(apiKey) && validChars.test(secretKey) && apiKey.length >= 60 && secretKey.length >= 60) {
+            console.log('   ✅ Formato de claves parece correcto');
+        }
+    }
+
+    async testConnectivity(isTestnet) {
+        console.log('\n🔗 PROBANDO CONECTIVIDAD BÁSICA...');
+        
+        const hostname = isTestnet ? 'testnet.binancefuture.com' : 'fapi.binance.com';
+        
+        return new Promise((resolve) => {
+            const req = https.request({
+                hostname,
+                path: '/fapi/v1/ping',
+                method: 'GET',
+                timeout: 5000
+            }, (res) => {
+                if (res.statusCode === 200) {
+                    console.log('   ✅ Conectividad básica con Binance OK');
+                } else {
+                    console.log(`   ⚠️ Respuesta inesperada: ${res.statusCode}`);
+                    this.issues.push(`⚠️ Respuesta HTTP ${res.statusCode} de Binance`);
+                }
+                resolve();
+            });
+
+            req.on('error', (error) => {
+                console.log(`   ❌ Error de conectividad: ${error.message}`);
+                this.issues.push(`❌ No se pudo conectar a Binance: ${error.message}`);
+                this.solutions.push('🔧 Verificar conectividad a internet');
+                this.solutions.push('🔧 Verificar firewall/proxy');
+                resolve();
+            });
+
+            req.on('timeout', () => {
+                console.log('   ⏰ Timeout conectando a Binance');
+                this.issues.push('❌ Timeout conectando a Binance');
+                req.destroy();
+                resolve();
+            });
+
+            req.end();
+        });
+    }
+
+    showResults() {
+        console.log('\n' + '='.repeat(60));
+        console.log('📊 DIAGNÓSTICO FINAL QBTC');
+        console.log('='.repeat(60));
+
+        if (this.issues.length === 0) {
+            console.log('🎉 ¡CONFIGURACIÓN BÁSICA CORRECTA!');
+            console.log('✅ Claves tienen formato válido');
+            console.log('✅ Conectividad básica funcional');
+            console.log('\n🔸 Para prueba completa de autenticación, usar el sistema principal');
+            return;
+        }
+
+        console.log('\n❌ PROBLEMAS DETECTADOS:');
+        this.issues.forEach((issue, index) => {
+            console.log(`   ${index + 1}. ${issue}`);
+        });
+
+        console.log('\n🔧 SOLUCIONES RECOMENDADAS:');
+        this.solutions.forEach((solution, index) => {
+            console.log(`   ${index + 1}. ${solution}`);
+        });
+
+        console.log('\n📋 CONFIGURACIÓN DE BINANCE API:');
+        console.log('   1. Ir a https://www.binance.com/en/my/settings/api-management');
+        console.log('   2. Crear nueva API Key o editar existente');
+        console.log(`   3. Agregar IP en whitelist: ${this.currentIP || '[DETECTAR_IP_PRIMERO]'}`);
+        console.log('   4. Permisos requeridos: ✅ Reading, ✅ Spot & Margin, ✅ Futures');
+        console.log('   5. Guardar y esperar 5-10 minutos para activación');
+        
+        console.log('\n🚨 IMPORTANTE PARA FUTUROS:');
+        console.log('   • OBLIGATORIO: Configurar IP específica en whitelist');
+        console.log('   • Sin IP restringida NO funciona trading de futuros');
+        console.log('   • Para testnet: usar testnet.binance.com para crear keys');
+    }
+
+    async updateIPConfig() {
+        if (!this.currentIP) {
+            console.log('\n❌ No se detectó IP para actualizar configuración');
+            return;
+        }
+
+        console.log(`\n🔧 ACTUALIZANDO IP EN CONFIGURACIÓN...`);
+        
+        try {
+            let envContent = fs.readFileSync(this.envPath, 'utf8');
+            
+            // Crear backup
+            const backupPath = `${this.envPath}.backup.${Date.now()}`;
+            fs.writeFileSync(backupPath, envContent);
+            console.log(`   📁 Backup creado: ${path.basename(backupPath)}`);
+            
+            // Actualizar IP
+            if (envContent.includes('CURRENT_PUBLIC_IP=')) {
+                envContent = envContent.replace(
+                    /CURRENT_PUBLIC_IP=.*/,
+                    `CURRENT_PUBLIC_IP=${this.currentIP}`
+                );
+            } else {
+                envContent += `\n# IP de conexión actual para whitelist\nCURRENT_PUBLIC_IP=${this.currentIP}\n`;
+            }
+            
+            fs.writeFileSync(this.envPath, envContent);
+            console.log(`   ✅ IP actualizada a ${this.currentIP} en .env`);
+            console.log(`   🔔 Recuerda actualizar la whitelist en Binance también`);
+            
+        } catch (error) {
+            console.error(`   ❌ Error actualizando .env: ${error.message}`);
+        }
+    }
+}
+
+// Ejecutar
+if (require.main === module) {
+    const checker = new SimpleBinanceChecker();
+    checker.checkAPI().catch(console.error);
+}
+
+module.exports = SimpleBinanceChecker;
