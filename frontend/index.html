@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QBTC Leonardo Consciousness - Quantum Trading Unified</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzAwRkY4OCIvPgo8dGV4dCB4PSIxNiIgeT0iMjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMDAwIj5RPC90ZXh0Pgo8L3N2Zz4K">
+</head>
+<body>
+    <!-- Sistema de estado global -->
+    <div id="global-status" class="status-bar">
+        <div class="status-left">
+            <span id="system-status" class="system-status">🔄 INICIALIZANDO...</span>
+            <span id="connection-status" class="connection-status">⚡ CONECTANDO...</span>
+        </div>
+        <div class="status-right">
+            <span id="current-time"></span>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="main-container">
+        <!-- Header simplificado -->
+        <header class="main-header">
+            <div class="header-brand">
+                <h1>🧠 LEONARDO CONSCIOUSNESS</h1>
+                <p>Sistema Cuántico de Trading Unificado</p>
+            </div>
+            
+            <!-- Métricas esenciales (solo 3) -->
+            <div class="essential-metrics">
+                <div class="metric-card">
+                    <div class="metric-label">CONCIENCIA Φ</div>
+                    <div id="consciousness-value" class="metric-value">0.0</div>
+                    <div id="consciousness-bar" class="metric-bar"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">COHERENCIA</div>
+                    <div id="coherence-value" class="metric-value">0.0</div>
+                    <div id="coherence-bar" class="metric-bar"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">DECISIONES</div>
+                    <div id="decisions-value" class="metric-value">0</div>
+                    <div id="decisions-bar" class="metric-bar"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Vista "Bosque" - Pool de oportunidades -->
+        <section class="forest-view">
+            <div class="forest-header">
+                <h2>🌳 VISTA BOSQUE - Pool de Oportunidades</h2>
+                <div class="forest-stats">
+                    <span id="opportunities-count">Detectando...</span>
+                    <span id="last-scan">Último escaneo: --:--</span>
+                </div>
+            </div>
+            
+            <!-- Grid de oportunidades (5 mejores) -->
+            <div id="opportunities-grid" class="opportunities-grid">
+                <!-- Las oportunidades se generan dinámicamente -->
+                <div class="opportunity-placeholder">
+                    <div class="opportunity-icon">🔍</div>
+                    <div class="opportunity-text">Escaneando mercado cuántico...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modo Secuencial - Validación de hipótesis -->
+        <section class="sequential-mode">
+            <div class="sequential-header">
+                <h2>⚡ MODO SECUENCIAL - Validación de Hipótesis</h2>
+                <div id="selected-opportunity" class="selected-opportunity">
+                    Ninguna oportunidad seleccionada
+                </div>
+            </div>
+
+            <!-- Progreso de 3 pasos -->
+            <div class="sequence-steps">
+                <div id="step-detect" class="step step-pending">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>DETECTAR</h3>
+                        <p>Identificar oportunidad en el bosque</p>
+                        <div class="step-status">Pendiente</div>
+                    </div>
+                </div>
+
+                <div id="step-validate" class="step step-pending">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>VALIDAR</h3>
+                        <p>Confirmar con conciencia cuántica</p>
+                        <div class="step-status">Pendiente</div>
+                    </div>
+                </div>
+
+                <div id="step-execute" class="step step-pending">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>EJECUTAR</h3>
+                        <p>Confirmar conscientemente</p>
+                        <div class="step-status">Pendiente</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controles de acción -->
+            <div class="action-controls">
+                <button id="reset-sequence" class="btn btn-secondary">🔄 Reset Secuencia</button>
+                <button id="validate-hypothesis" class="btn btn-primary" disabled>✅ Validar Hipótesis</button>
+                <button id="execute-trade" class="btn btn-execute" disabled>🚀 Ejecutar Trade</button>
+                <button id="emergency-stop" class="btn btn-emergency">🛑 STOP Emergencia</button>
+            </div>
+        </section>
+
+        <!-- Log simplificado -->
+        <section class="simple-log">
+            <div class="log-header">
+                <h3>📝 LOG DEL SISTEMA</h3>
+                <button id="clear-log" class="btn-clear">Limpiar</button>
+            </div>
+            <div id="system-log" class="log-container">
+                <div class="log-entry log-info">
+                    <span class="log-time">--:--:--</span>
+                    <span class="log-message">Sistema inicializando...</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Confirmar Acción</h3>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">¿Estás seguro de continuar?</p>
+                <div id="modal-details" class="modal-details"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel" class="btn btn-secondary">Cancelar</button>
+                <button id="modal-confirm" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "name": "qbtc-frontend-unified",
+  "version": "1.0.0",
+  "description": "QBTC Frontend Unificado - Sistema Cuantico de Consciousness Leonardo",
+  "main": "frontend-proxy-server.js",
+  "scripts": {
+    "start": "node frontend-proxy-server.js",
+    "dev": "node frontend-proxy-server.js",
+    "monitor": "node frontend-proxy-server.js --monitor"
+  },
+  "keywords": [
+    "qbtc",
+    "leonardo-consciousness",
+    "quantum-trading",
+    "frontend",
+    "unified"
+  ],
+  "author": "VIGOLEONROCKS QUANTUM TECHNOLOGIES",
+  "license": "MIT",
+  "dependencies": {
+    "express": "4.18.2",
+    "cors": "^2.8.5",
+    "compression": "^1.8.1",
+    "helmet": "^7.1.0"
+  },
+  "config": {
+  "port": 3004,
+  "backend_url": "http://localhost:3003",
+    "static_path": ".",
+    "proxy_paths": [
+      "/api"
+    ]
+  }
+}

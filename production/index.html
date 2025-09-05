@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QBTC Unified Quantum System v3.0</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "leonardo": "./leonardo-consciousness.js"
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --accent-color: #00ff9d;
+            --error-color: #ff4444;
+            --success-color: #00cc88;
+            --warning-color: #ffbb33;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-mono);
+            line-height: 1.6;
+            padding: 2rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric {
+            background: rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .metric h2 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .metric .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .opportunities {
+            background: rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .opportunity {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .opportunity:last-child {
+            border-bottom: none;
+        }
+
+        .opportunity .quality {
+            font-size: 1.5rem;
+        }
+
+        .opportunity .edge {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .log {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            height: 200px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+
+        .log-entry {
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .log-entry .timestamp {
+            color: var(--accent-color);
+        }
+
+        .status {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .status.connected {
+            background: var(--success-color);
+        }
+
+        .status.disconnected {
+            background: var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="metric">
+            <h2>Consciencia</h2>
+            <div class="value" id="consciousness">80.1%</div>
+        </div>
+        <div class="metric">
+            <h2>Coherencia</h2>
+            <div class="value" id="coherence">91.9%</div>
+        </div>
+        <div class="metric">
+            <h2>Decisiones</h2>
+            <div class="value" id="decisions">9</div>
+        </div>
+    </div>
+
+    <div class="opportunities">
+        <h2>Pool de Oportunidades (Vista Bosque)</h2>
+        <div id="opportunities-list">
+            <!-- Las oportunidades se insertarán dinámicamente -->
+        </div>
+    </div>
+
+    <div class="log" id="system-log">
+        <!-- Los logs se insertarán dinámicamente -->
+    </div>
+
+    <div class="status" id="connection-status">Conectando...</div>
+
+    <script type="module">
+        // Importar Leonardo Consciousness
+        import { LeonardoConsciousness } from 'leonardo';
+        
+        // Inicializar sistema
+        const leonardo = new LeonardoConsciousness();
+        
+        // Escuchar cambios de estado
+        window.addEventListener('leonardo-state-change', (event) => {
+            updateDashboard(event.detail);
+        });
+        
+        function updateDashboard(state) {
+            // Actualizar métricas principales
+            document.getElementById('consciousness').textContent = 
+                `${(state.consciousness * 100).toFixed(1)}%`;
+            document.getElementById('coherence').textContent = 
+                `${(state.coherence * 100).toFixed(1)}%`;
+            document.getElementById('decisions').textContent = 
+                state.decisions;
+            
+            // Actualizar estado de conexión
+            const status = document.getElementById('connection-status');
+            if (state.status === 'QUANTUM_RESONANCE') {
+                status.className = 'status connected';
+                status.textContent = 'Conectado ✓';
+            } else {
+                status.className = 'status disconnected';
+                status.textContent = 'Reconectando...';
+            }
+            
+            // Agregar entrada al log
+            const log = document.getElementById('system-log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `
+                <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+                Consciencia: ${(state.consciousness * 100).toFixed(1)}% | 
+                Coherencia: ${(state.coherence * 100).toFixed(1)}% | 
+                Decisiones: ${state.decisions}
+            `;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            
+            // Mantener solo últimas 50 entradas en el log
+            while (log.children.length > 50) {
+                log.removeChild(log.firstChild);
+            }
+        }
+        
+        // Inicializar oportunidades de ejemplo
+        const opportunities = [
+            { symbol: 'BTC/USD', quality: '🟢', edge: '2.5x', probability: '88%' },
+            { symbol: 'ETH/USD', quality: '🟡', edge: '1.8x', probability: '75%' },
+            { symbol: 'XRP/USD', quality: '🟢', edge: '2.2x', probability: '82%' },
+            { symbol: 'SOL/USD', quality: '🔴', edge: '1.2x', probability: '65%' },
+            { symbol: 'DOT/USD', quality: '🟡', edge: '1.6x', probability: '71%' }
+        ];
+        
+        // Renderizar oportunidades
+        const opportunitiesList = document.getElementById('opportunities-list');
+        opportunities.forEach(opp => {
+            const div = document.createElement('div');
+            div.className = 'opportunity';
+            div.innerHTML = `
+                <span class="quality">${opp.quality}</span>
+                <span class="symbol">${opp.symbol}</span>
+                <span class="edge">${opp.edge}</span>
+                <span class="probability">${opp.probability}</span>
+            `;
+            opportunitiesList.appendChild(div);
+        });
+    </script>
+</body>
+</html>

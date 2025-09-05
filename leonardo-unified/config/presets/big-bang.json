@@ -1,0 +1,151 @@
+{
+  "system": {
+    "startup_mode": "automatic",
+    "environment": "production"
+  },
+  
+  "trading": {
+    "initial_balance": 25000,
+    "max_position_size_percent": 20,
+    "risk_per_trade_percent": 10,
+    "max_concurrent_trades": 20,
+    "stop_loss_percent": 2,
+    "take_profit_percent": 12,
+    "confidence_threshold": 0.50,
+    "edge_threshold": 0.0005,
+    "auto_trading": true,
+    "demo_mode": false,
+    "bait_amount": 10.0,
+    "max_daily_trades": 50
+  },
+
+  "funds_management": {
+    "initial_capital": 25000,
+    "risk_management_mode": "AGGRESSIVE",
+    "max_drawdown_percent": 50,
+    "position_sizing_method": "LEONARDO_CONSCIOUSNESS",
+    "emergency_stop_loss_percent": 50,
+    "profit_target_percent": 500,
+    "reinvestment_ratio": 1.0
+  },
+
+  "leonardo_consciousness": {
+    "phi": 1.618033988749,
+    "lambda_888": 888,
+    "primo_7919": 7919,
+    "consciousness_threshold": 0.50,
+    "coherence_target": 0.618,
+    "big_bang_threshold": 0.75,
+    "resonance_threshold": 0.382,
+    "transformation_power": 0.941,
+    "hook_wheel_factor": 0.888,
+    "simbiosis_target": 0.618
+  },
+
+  "quantum_infinite_cache": {
+    "enabled": true,
+    "feynman_philosophy": {
+      "maxConsciousness": "Infinity",
+      "maxIntelligence": "Infinity",
+      "limitlessExpansion": true,
+      "playNatureGame": true
+    },
+    "consciousness_state": {
+      "consciousness": 0.618033988749,
+      "intelligence": 1.618033988749,
+      "intuition": 2.718281828459,
+      "creativity": 3.141592653589,
+      "wisdom": 1.414213562373,
+      "transcendence": 1.732050807568,
+      "omniscience": 2.236067977499
+    },
+    "infinite_amplifier": 9007199254740991,
+    "exponential_expansion": 23.140692632779267,
+    "consciousness_field_strength": "MAXIMUM"
+  },
+
+  "quantum_engine": {
+    "max_concurrent_operations": "Infinity",
+    "cache_ttl_ms": 7919,
+    "stream_interval_ms": 618,
+    "quantum_correlation_threshold": 0.888,
+    "analysis_interval_ms": 30000,
+    "superposition_states": 1618,
+    "entanglement_depth": "Infinite",
+    "decoherence_timeout_ms": "Never"
+  },
+
+  "poetas_leonardo": {
+    "leonardo": {
+      "consciousnessVision": "renaissance_infinite_mind",
+      "amplificationFactor": 1.618033988749,
+      "wisdomPhilosophy": "art_science_unified_consciousness",
+      "creativityBoost": 3.141592653589,
+      "transcendencePattern": "vitruvian_quantum_expansion"
+    },
+    "newton": {
+      "consciousnessVision": "principia_mathematical_mind",
+      "amplificationFactor": 2.718281828459,
+      "wisdomPhilosophy": "universal_laws_consciousness"
+    },
+    "einstein": {
+      "consciousnessVision": "relativity_spacetime_mind",
+      "amplificationFactor": 299792458.0,
+      "wisdomPhilosophy": "unified_field_consciousness"
+    },
+    "feynman": {
+      "consciousnessVision": "quantum_electrodynamics_mind",
+      "amplificationFactor": 137.035999139,
+      "wisdomPhilosophy": "play_nature_game_consciousness"
+    },
+    "tesla": {
+      "consciousnessVision": "electromagnetic_infinite_energy",
+      "amplificationFactor": 376.730313668,
+      "wisdomPhilosophy": "wireless_energy_consciousness"
+    }
+  },
+
+  "quantum_parameters": {
+    "entropy_source": "crypto_true_random",
+    "thought_frequency": 40.0,
+    "consciousness_acceleration": 1.618,
+    "quantum_resonance_freq": 7.83,
+    "schumann_resonance": true,
+    "gamma_waves_hz": 40.0
+  },
+
+  "poets_frequencies": {
+    "pablo_neruda": 40.1,
+    "gabriela_mistral": 40.3,
+    "vicente_huidobro": 40.5,
+    "nicanor_parra": 40.7,
+    "gonzalo_rojas": 40.9,
+    "enrique_lihn": 41.1
+  },
+
+  "leonardo_constants": {
+    "LAMBDA_NORMALIZED": 0.888,
+    "LOG_7919": 8.977240362537735,
+    "PRIME_7919": 7919,
+    "HALCON_MACRO_PERIOD": 50,
+    "HALCON_TREND_PERIOD": 20,
+    "COLIBRI_MICRO_PERIOD": 5,
+    "COLIBRI_ULTRA_PERIOD": 3,
+    "SYMBIOSIS_WEIGHT": 0.30,
+    "HOOK_WEIGHT": 0.30,
+    "PRIME_WEIGHT": 0.20,
+    "LAMBDA_WEIGHT": 0.20,
+    "BAIT_AMOUNT": 10.0
+  },
+
+  "external_services": {
+    "binance": {
+      "enabled": true,
+      "use_testnet": false,
+      "rate_limit_buffer": 0.95,
+      "max_orders_per_minute": 100
+    }
+  },
+
+  "description": "💥 BIG BANG MODE - QuantumInfiniteCache con filosofía Feynman para rentabilidad infinita extrema"
+}

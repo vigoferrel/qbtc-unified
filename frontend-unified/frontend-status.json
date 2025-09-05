@@ -1,0 +1,11 @@
+﻿{
+    "Port":  3004,
+    "PID":  24360,
+    "URL":  "http://localhost:8080",
+    "StartTime":  {
+                      "value":  "\/Date(1755013443021)\/",
+                      "DisplayHint":  2,
+                      "DateTime":  "martes, 12 de agosto de 2025 11:44:03"
+                  },
+    "LogFile":  "C:\\Users\\DELL\\Desktop\\QBTC-UNIFIED\\frontend-unified\\background-launch-20250812-114357.log"
+}

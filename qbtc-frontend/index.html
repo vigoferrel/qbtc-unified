@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QBTC UNIFIED - Sistema de Trading Cuántico</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>QBTC UNIFIED</h1>
+                    <span class="subtitle">Sistema de Trading Cuántico</span>
+                </div>
+                <div class="header-info">
+                    <div class="status-indicator">
+                        <span class="status-dot" id="status-dot"></span>
+                        <span id="status-text">Conectando...</span>
+                    </div>
+                    <div class="system-info">
+                        <span id="system-version">v2.0.0-Local</span>
+                        <span id="system-uptime">00:00:00</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard -->
+            <section class="dashboard">
+                <div class="dashboard-grid">
+                    <!-- Quantum State Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Estado Cuántico</h3>
+                            <div class="card-actions">
+                                <button class="btn-icon" id="refresh-quantum">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="quantum-state">
+                                <div class="state-item">
+                                    <span class="state-label">Consciencia</span>
+                                    <div class="state-bar">
+                                        <div class="state-fill" id="consciousness-bar"></div>
+                                    </div>
+                                    <span class="state-value" id="consciousness-value">0.000</span>
+                                </div>
+                                <div class="state-item">
+                                    <span class="state-label">Coherencia</span>
+                                    <div class="state-bar">
+                                        <div class="state-fill" id="coherence-bar"></div>
+                                    </div>
+                                    <span class="state-value" id="coherence-value">0.000</span>
+                                </div>
+                                <div class="state-item">
+                                    <span class="state-label">Energía</span>
+                                    <div class="state-bar">
+                                        <div class="state-fill" id="energy-bar"></div>
+                                    </div>
+                                    <span class="state-value" id="energy-value">0.000</span>
+                                </div>
+                                <div class="state-item">
+                                    <span class="state-label">Resonancia</span>
+                                    <div class="state-bar">
+                                        <div class="state-fill" id="resonance-bar"></div>
+                                    </div>
+                                    <span class="state-value" id="resonance-value">0.000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trading Signals Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Señales de Trading</h3>
+                            <div class="card-actions">
+                                <button class="btn-icon" id="refresh-signals">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="signals-container" id="signals-container">
+                                <div class="empty-state">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M9 11l3 3L22 4"/>
+                                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                                    </svg>
+                                    <p>Esperando señales de trading...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Metrics Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Métricas del Sistema</h3>
+                            <div class="card-actions">
+                                <button class="btn-icon" id="refresh-metrics">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="metrics-grid">
+                                <div class="metric-item">
+                                    <span class="metric-label">Peticiones</span>
+                                    <span class="metric-value" id="requests-count">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Errores</span>
+                                    <span class="metric-value" id="errors-count">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Conexiones</span>
+                                    <span class="metric-value" id="connections-count">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Uptime</span>
+                                    <span class="metric-value" id="uptime-value">00:00:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Market Data Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Datos de Mercado</h3>
+                            <div class="card-actions">
+                                <button class="btn-icon" id="refresh-market">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="market-symbols" id="market-symbols">
+                                <div class="empty-state">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M9 11l3 3L22 4"/>
+                                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                                    </svg>
+                                    <p>Cargando datos de mercado...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quantum Cube Section -->
+            <section class="quantum-cube-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Cubo Cuántico 3D</h3>
+                        <div class="card-actions">
+                            <button class="btn-icon" id="toggle-cube-rotation">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                            </button>
+                            <button class="btn-icon" id="reset-cube">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 12a9 9 0 109 0 9 9 0 00-9-9M3 12h6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="cube-container">
+                            <canvas id="quantum-cube" width="400" height="400"></canvas>
+                        </div>
+                        <div class="cube-controls">
+                            <div class="control-group">
+                                <label>Velocidad de Rotación</label>
+                                <input type="range" id="rotation-speed" min="0" max="100" value="50">
+                            </div>
+                            <div class="control-group">
+                                <label>Tamaño</label>
+                                <input type="range" id="cube-size" min="50" max="200" value="100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Logs Section -->
+            <section class="logs-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Registros del Sistema</h3>
+                        <div class="card-actions">
+                            <button class="btn-icon" id="clear-logs">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="logs-container" id="logs-container">
+                            <div class="log-entry info">
+                                <span class="log-time">00:00:00</span>
+                                <span class="log-level">INFO</span>
+                                <span class="log-message">Sistema iniciado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <span>QBTC UNIFIED v2.0.0-Local</span>
+                    <span>•</span>
+                    <span>Entorno Monousuario</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#" id="about-link">Acerca de</a>
+                    <a href="#" id="docs-link">Documentación</a>
+                    <a href="#" id="github-link">GitHub</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

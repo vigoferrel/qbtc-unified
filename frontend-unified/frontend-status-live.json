@@ -1,0 +1,39 @@
+﻿{
+    "Port":  3004,
+    "Timestamp":  {
+                      "value":  "\/Date(1755014050676)\/",
+                      "DisplayHint":  2,
+                      "DateTime":  "martes, 12 de agosto de 2025 11:54:10"
+                  },
+    "Connectivity":  {
+                         "Backend":  false,
+                         "Frontend":  true
+                     },
+    "ProcessInfo":  [
+                        {
+                            "CommandLine":  "\"C:\\Program Files\\nodejs\\node.exe\" C:\\Users\\DELL\\Desktop\\opciones\\node_modules\\http-server\\bin\\http-server bot-opciones/frontend -p 4603 -c-1",
+                            "Name":  "node",
+                            "PID":  5024,
+                            "WorkingSetMB":  40.29,
+                            "ThreadCount":  7,
+                            "Runtime":  "00:12:20"
+                        },
+                        {
+                            "CommandLine":  "\"node\" frontend-proxy-server.js",
+                            "Name":  "node",
+                            "PID":  24360,
+                            "WorkingSetMB":  41,
+                            "ThreadCount":  13,
+                            "Runtime":  "00:10:13"
+                        }
+                    ],
+    "URLs":  {
+                 "Frontend":  "http://localhost:8080",
+                 "Backend":  "http://localhost:3003"
+             },
+    "SystemMetrics":  {
+                          "CPU":  20,
+                          "Memory":  81.289999999999992,
+                          "Uptime":  "00:12:20"
+                      }
+}

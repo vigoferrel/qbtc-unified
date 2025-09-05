@@ -1,0 +1,425 @@
+/* QBTC Unified Quantum System v3.0 Styles */
+:root {
+    /* Color Palette */
+    --primary: #00ffff;
+    --secondary: #ff6b35;
+    --success: #00ff00;
+    --warning: #ffaa00;
+    --danger: #ff0033;
+    --background: #0a0a0a;
+    --panel-bg: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --border: #333333;
+
+    /* Quantum Colors */
+    --consciousness: #7b2cbf;
+    --coherence: #00b4d8;
+    --decisions: #00ff88;
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+}
+
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--background);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Layout */
+.app-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md) 0;
+    margin-bottom: var(--spacing-xl);
+}
+
+.logo h1 {
+    font-size: 2rem;
+    color: var(--primary);
+}
+
+.logo .subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+/* Panels */
+.panel {
+    background: var(--panel-bg);
+    border-radius: 12px;
+    padding: var(--spacing-lg);
+    border: 1px solid var(--border);
+}
+
+.panel h2 {
+    color: var(--primary);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.2rem;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.metric {
+    text-align: center;
+    padding: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.metric label {
+    display: block;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.metric span {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Control Panel */
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--spacing-md);
+}
+
+/* Buttons */
+.btn {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn.primary {
+    background: var(--primary);
+    color: var(--background);
+}
+
+.btn.danger {
+    background: var(--danger);
+    color: var(--text-primary);
+}
+
+.btn.emergency {
+    background: var(--danger);
+    color: var(--text-primary);
+    border: 2px solid var(--danger);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Status Indicator */
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: var(--spacing-sm);
+    background: var(--danger);
+}
+
+.status-indicator.online {
+    background: var(--success);
+}
+
+/* Positions Table */
+.positions-table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.position-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding: var(--spacing-sm);
+    border-bottom: 1px solid var(--border);
+}
+
+/* Quantum State */
+.poets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.poet {
+    text-align: center;
+    padding: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+/* Metric Bars */
+.metric-bar {
+    margin-top: var(--spacing-xs);
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.metric-bar::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--success) 0%, var(--warning) 60%, var(--danger) 100%);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Performance Charts */
+.performance-charts {
+    grid-column: span 2;
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.ascii-chart {
+    background: rgba(0, 0, 0, 0.3);
+    padding: var(--spacing-sm);
+    border-radius: 8px;
+}
+
+.ascii-chart h4 {
+    color: var(--primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.9rem;
+}
+
+.chart-area {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    line-height: 1.2;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.5);
+    padding: var(--spacing-xs);
+    border-radius: 4px;
+    min-height: 120px;
+    overflow: hidden;
+    white-space: pre;
+}
+
+/* Alerts Panel */
+.alerts-panel {
+    grid-column: span 2;
+}
+
+.alerts-container {
+    margin-bottom: var(--spacing-lg);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.alert-item {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    border-radius: 6px;
+    border-left: 4px solid;
+    animation: slideInRight 0.3s ease;
+}
+
+.alert-item.critical {
+    background: rgba(255, 0, 51, 0.1);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.alert-item.warning {
+    background: rgba(255, 170, 0, 0.1);
+    border-color: var(--warning);
+    color: var(--warning);
+}
+
+.alert-item.info {
+    background: rgba(0, 255, 255, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.alert-icon {
+    margin-right: var(--spacing-sm);
+    font-weight: bold;
+}
+
+.alert-message {
+    flex: 1;
+}
+
+.alert-timestamp {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* Thresholds Configuration */
+.thresholds-config {
+    background: rgba(255, 255, 255, 0.05);
+    padding: var(--spacing-md);
+    border-radius: 8px;
+}
+
+.thresholds-config h4 {
+    color: var(--primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.threshold-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.threshold-item label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.threshold-item input[type="range"] {
+    width: 100px;
+    margin-left: var(--spacing-sm);
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.alert-item.critical {
+    animation: slideInRight 0.3s ease, pulse 2s infinite;
+}
+
+/* Logs */
+.log-container {
+    height: 200px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: var(--spacing-sm);
+    border-radius: 4px;
+}
+
+.log-entry {
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--panel-bg);
+    padding: var(--spacing-xl);
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .control-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Quantum Effects */
+.quantum-glow {
+    box-shadow: 0 0 15px var(--primary);
+    animation: pulse 2s infinite;
+}

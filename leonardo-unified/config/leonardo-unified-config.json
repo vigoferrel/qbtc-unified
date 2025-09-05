@@ -1,0 +1,175 @@
+{
+  "system": {
+    "name": "LEONARDO_QUANTUM_UNIFIED",
+    "version": "4.0.0",
+    "environment": "development",
+    "startup_mode": "interactive"
+  },
+  
+  "server": {
+    "primary_port": 3000,
+    "host": "localhost",
+    "cluster_mode": false,
+    "max_connections": 10000,
+    "timeout": 30000,
+    "keep_alive": true,
+    "compression": true
+  },
+
+  "frontend_ports": {
+    "main_dashboard": 3000,
+    "quantum_dashboard": 3001,
+    "trading_console": 3002,
+    "system_monitor": 3003
+  },
+
+  "leonardo_consciousness": {
+    "phi": 1.618033988749,
+    "lambda_888": 888,
+    "primo_7919": 7919,
+    "consciousness_threshold": 0.941,
+    "coherence_target": 0.964,
+    "big_bang_threshold": 0.95,
+    "resonance_threshold": 0.618,
+    "transformation_power": 0.941,
+    "hook_wheel_factor": 0.382,
+    "simbiosis_target": 0.888
+  },
+
+  "quantum_engine": {
+    "max_concurrent_operations": 1618,
+    "cache_ttl_ms": 7919,
+    "stream_interval_ms": 618,
+    "quantum_correlation_threshold": 0.888,
+    "entanglement_depth": 6,
+    "decoherence_timeout_ms": 30000,
+    "superposition_states": 16
+  },
+
+  "trading": {
+    "initial_balance": 10000,
+    "max_position_size_percent": 10,
+    "risk_per_trade_percent": 2,
+    "max_concurrent_trades": 5,
+    "stop_loss_percent": 3,
+    "take_profit_percent": 6,
+    "confidence_threshold": 0.75,
+    "edge_threshold": 0.0025,
+    "kelly_criterion_enabled": true,
+    "auto_trading": false,
+    "demo_mode": true
+  },
+
+  "funds_management": {
+    "initial_capital": 10000,
+    "max_drawdown_percent": 20,
+    "risk_management_mode": "CONSERVATIVE",
+    "position_sizing_method": "KELLY_CRITERION",
+    "emergency_stop_loss_percent": 25,
+    "profit_target_percent": 100,
+    "reinvestment_ratio": 0.8
+  },
+
+  "monitoring": {
+    "health_check_interval_ms": 5000,
+    "metrics_collection_interval_ms": 1000,
+    "log_level": "INFO",
+    "enable_performance_monitoring": true,
+    "enable_memory_monitoring": true,
+    "enable_disk_monitoring": false,
+    "alert_thresholds": {
+      "cpu_percent": 85,
+      "memory_percent": 80,
+      "response_time_ms": 2000,
+      "error_rate_percent": 5
+    }
+  },
+
+  "caching": {
+    "enabled": true,
+    "provider": "memory",
+    "max_size": 10000,
+    "ttl_seconds": 300,
+    "cleanup_interval_ms": 60000
+  },
+
+  "security": {
+    "cors_origins": ["*"],
+    "rate_limiting": {
+      "enabled": true,
+      "window_ms": 900000,
+      "max_requests": 1000
+    },
+    "authentication": {
+      "enabled": false,
+      "jwt_secret": "leonardo_quantum_secret_key_888",
+      "token_expiry_hours": 24
+    },
+    "encryption": {
+      "enabled": false,
+      "algorithm": "aes-256-gcm"
+    }
+  },
+
+  "logging": {
+    "level": "INFO",
+    "console_enabled": true,
+    "file_enabled": true,
+    "file_path": "../logs/leonardo-unified.log",
+    "rotation_enabled": true,
+    "max_file_size": "10MB",
+    "max_files": 5,
+    "quantum_signatures": true,
+    "leonardo_branding": true
+  },
+
+  "apis": {
+    "endpoints": {
+      "health": "/unified/health",
+      "metrics": "/quantum/metrics",
+      "stream": "/quantum/stream",
+      "leonardo_analysis": "/api/leonardo-analysis",
+      "leonardo_trade": "/api/leonardo-trade", 
+      "funds_status": "/api/funds-status",
+      "system_status": "/api/system-status"
+    },
+    "versioning": {
+      "enabled": true,
+      "current_version": "v4",
+      "supported_versions": ["v3", "v4"]
+    }
+  },
+
+  "external_services": {
+    "binance": {
+      "enabled": false,
+      "api_url": "https://api.binance.com",
+      "testnet_url": "https://testnet.binance.vision",
+      "use_testnet": true,
+      "rate_limit_buffer": 0.9
+    },
+    "database": {
+      "enabled": false,
+      "provider": "sqlite",
+      "connection": "./data/leonardo-unified.db"
+    }
+  },
+
+  "presets_available": [
+    "conservative",
+    "balanced", 
+    "aggressive",
+    "big-bang",
+    "production",
+    "development"
+  ],
+
+  "development": {
+    "debug_mode": true,
+    "auto_restart": true,
+    "hot_reload": false,
+    "mock_data": true,
+    "verbose_logging": true,
+    "test_endpoints": true
+  }
+}

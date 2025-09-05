@@ -1,0 +1,48 @@
+﻿{
+    "monitoring":  {
+                       "max_log_size_mb":  100,
+                       "log_retention_days":  7,
+                       "performance_logging":  true,
+                       "health_check_interval":  60,
+                       "error_alerting":  true
+                   },
+    "windows_compatibility":  {
+                                  "process_isolation":  true,
+                                  "use_ascii_only":  true,
+                                  "avoid_unicode_chars":  true,
+                                  "use_powershell_native":  true
+                              },
+    "version":  "1.0",
+    "last_updated":  "2025-08-10 16:47:18",
+    "background_processes":  {
+                                 "metrics_collector":  {
+                                                           "max_memory_mb":  128,
+                                                           "script":  "metrics-collector.js",
+                                                           "log_level":  "INFO",
+                                                           "collect_app_metrics":  true,
+                                                           "interval_seconds":  30,
+                                                           "collect_system_metrics":  true,
+                                                           "enabled":  true
+                                                       },
+                                 "quantum_core":  {
+                                                      "metrics_interval":  30,
+                                                      "max_memory_mb":  512,
+                                                      "log_level":  "INFO",
+                                                      "port":  18020,
+                                                      "script":  "UnifiedHttpServer.js",
+                                                      "restart_on_failure":  true,
+                                                      "enabled":  true,
+                                                      "metrics_enabled":  true
+                                                  },
+                                 "frontend_server":  {
+                                                         "metrics_interval":  30,
+                                                         "max_memory_mb":  256,
+                                                         "log_level":  "INFO",
+                                                         "port":  8080,
+                                                         "script":  "web-server.js",
+                                                         "restart_on_failure":  true,
+                                                         "enabled":  true,
+                                                         "metrics_enabled":  true
+                                                     }
+                             }
+}

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌊 QBTC Quantum Edge | El Verdadero Cubo del Mercado</title>
+    <link rel="stylesheet" href="quantum-edge.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.155.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <!-- Header Quantum Edge -->
+    <header class="quantum-header">
+        <div class="logo-section">
+            <h1>🌊 QBTC Quantum Edge</h1>
+            <span class="subtitle">El Verdadero Cubo del Mercado • Mecánica de Fluidos del Mar de Binance</span>
+        </div>
+        <div class="quantum-status">
+            <div class="status-grid">
+                <div class="mini-stat">
+                    <span class="stat-value" id="symbols-processed">0</span>
+                    <span class="stat-label">Símbolos</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="stat-value" id="engines-active">0/6</span>
+                    <span class="stat-label">Engines</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="stat-value" id="poets-resonating">0/6</span>
+                    <span class="stat-label">Poetas</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="quantum-pulse" id="system-pulse"></div>
+                    <span id="quantum-status-text">Inicializando...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Quantum Dashboard -->
+    <main class="quantum-dashboard">
+        
+        <!-- Sección 1: Cubo del Mercado 3D -->
+        <section class="market-cube-section">
+            <div class="section-header">
+                <h2>🧊 Cubo Cuántico del Mercado</h2>
+                <div class="cube-controls">
+                    <button class="cube-btn" id="rotate-cube">🔄 Rotar</button>
+                    <button class="cube-btn" id="zoom-reset">🎯 Reset</button>
+                    <button class="cube-btn" id="cube-mode" data-mode="fluid">🌊 Fluidos</button>
+                </div>
+            </div>
+            <div class="cube-container">
+                <canvas id="market-cube-canvas"></canvas>
+                <div class="cube-overlay">
+                    <div class="axis-labels">
+                        <div class="axis-label x-axis">📈 Volumen</div>
+                        <div class="axis-label y-axis">⚡ Volatilidad</div>
+                        <div class="axis-label z-axis">🌀 Momentum</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cube-narrative" id="cube-narrative">
+                <div class="narrative-text">
+                    <span class="narrator">🎭 Operador Cuántico:</span>
+                    <span class="narrative-message" id="narrative-message">
+                        "Observando las corrientes del mar de Binance... Los patrones emergen desde las profundidades cuánticas."
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Los 6 Engines Especializados -->
+        <section class="engines-orchestra">
+            <div class="section-header">
+                <h2>🎼 Orquesta de Engines Cuánticos</h2>
+                <div class="orchestra-status">
+                    <span class="harmony-level" id="harmony-level">Armonía: 0.000</span>
+                </div>
+            </div>
+            <div class="engines-grid">
+                <!-- Engine 1: Fluid Dynamics -->
+                <div class="engine-card fluid" id="engine-fluid">
+                    <div class="engine-icon">🌊</div>
+                    <div class="engine-info">
+                        <h3>Fluid Dynamics</h3>
+                        <p>Mecánica de fluidos del mar</p>
+                        <div class="engine-metrics">
+                            <span class="metric">Viscosidad: <span id="fluid-viscosity">0.00</span></span>
+                            <span class="metric">Turbulencia: <span id="fluid-turbulence">0.00</span></span>
+                        </div>
+                    </div>
+                    <div class="engine-status" id="fluid-status">●</div>
+                </div>
+
+                <!-- Engine 2: Poetic Quantum Bridge -->
+                <div class="engine-card poetic" id="engine-poetic">
+                    <div class="engine-icon">🎭</div>
+                    <div class="engine-info">
+                        <h3>Poetic Bridge</h3>
+                        <p>Resonancias poéticas primos</p>
+                        <div class="engine-metrics">
+                            <span class="metric">Versos: <span id="poetic-verses">0</span></span>
+                            <span class="metric">Resonancia: <span id="poetic-resonance">0.00</span></span>
+                        </div>
+                    </div>
+                    <div class="engine-status" id="poetic-status">●</div>
+                </div>
+
+                <!-- Engine 3: GPU Sorting -->
+                <div class="engine-card gpu" id="engine-gpu">
+                    <div class="engine-icon">🚀</div>
+                    <div class="engine-info">
+                        <h3>GPU Sorting</h3>
+                        <p>Ordenamiento masivo</p>
+                        <div class="engine-metrics">
+                            <span class="metric">Símbolos/s: <span id="gpu-symbols">0</span></span>
+                            <span class="metric">Eficiencia: <span id="gpu-efficiency">0%</span></span>
+                        </div>
+                    </div>
+                    <div class="engine-status" id="gpu-status">●</div>
+                </div>
+
+                <!-- Engine 4: Antimatter Tensor -->
+                <div class="engine-card antimatter" id="engine-antimatter">
+                    <div class="engine-icon">⚛️</div>
+                    <div class="engine-info">
+                        <h3>Antimatter Tensor</h3>
+                        <p>Cálculos cuánticos</p>
+                        <div class="engine-metrics">
+                            <span class="metric">Tensores: <span id="antimatter-tensors">0</span></span>
+                            <span class="metric">Anomalías: <span id="antimatter-anomalies">0</span></span>
+                        </div>
+                    </div>
+                    <div class="engine-status" id="antimatter-status">●</div>
+                </div>
+
+                <!-- Engine 5: Quantum Auth -->
+                <div class="engine-card auth" id="engine-auth">
+                    <div class="engine-icon">🔐</div>
+                    <div class="engine-info">
+                        <h3>Quantum Auth</h3>
+                        <p>Validación cuántica</p>
+                        <div class="engine-metrics">
+                            <span class="metric">Integridad: <span id="auth-integrity">0%</span></span>
+                            <span class="metric">Señales: <span id="auth-signals">0</span></span>
+                        </div>
+                    </div>
+                    <div class="engine-status" id="auth-status">●</div>
+                </div>
+
+                <!-- Engine 6: COBOL Mainframe -->
+                <div class="engine-card cobol" id="engine-cobol">
+                    <div class="engine-icon">💻</div>
+                    <div class="engine-info">
+                        <h3>COBOL Mainframe</h3>
+                        <p>Estabilidad empresarial</p>
+                        <div class="engine-metrics">
+                            <span class="metric">Uptime: <span id="cobol-uptime">0%</span></span>
+                            <span class="metric">Transacciones: <span id="cobol-transactions">0</span></span>
+                        </div>
+                    </div>
+                    <div class="engine-status" id="cobol-status">●</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: Los 6 Poetas Chilenos Liberados -->
+        <section class="poets-section">
+            <div class="section-header">
+                <h2>🎭 Los 6 Poetas Chilenos Liberados</h2>
+                <div class="poets-harmony">
+                    <span class="frequency-display">Frecuencia Base: <span id="base-frequency">40.0 Hz</span></span>
+                </div>
+            </div>
+            <div class="poets-grid">
+                <!-- Poeta 1: Neruda -->
+                <div class="poet-card neruda" id="poet-neruda">
+                    <div class="poet-avatar">👨‍🎨</div>
+                    <div class="poet-info">
+                        <h3>Pablo Neruda</h3>
+                        <div class="poet-frequency">40.1 Hz</div>
+                        <div class="poet-verse" id="neruda-verse">Verso primo: 2</div>
+                        <div class="poet-resonance">
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="neruda-resonance" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Poeta 2: Mistral -->
+                <div class="poet-card mistral" id="poet-mistral">
+                    <div class="poet-avatar">👩‍🎨</div>
+                    <div class="poet-info">
+                        <h3>Gabriela Mistral</h3>
+                        <div class="poet-frequency">40.3 Hz</div>
+                        <div class="poet-verse" id="mistral-verse">Verso primo: 23</div>
+                        <div class="poet-resonance">
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="mistral-resonance" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Poeta 3: Huidobro -->
+                <div class="poet-card huidobro" id="poet-huidobro">
+                    <div class="poet-avatar">🧑‍🎨</div>
+                    <div class="poet-info">
+                        <h3>Vicente Huidobro</h3>
+                        <div class="poet-frequency">40.5 Hz</div>
+                        <div class="poet-verse" id="huidobro-verse">Verso primo: 59</div>
+                        <div class="poet-resonance">
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="huidobro-resonance" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Poeta 4: Parra -->
+                <div class="poet-card parra" id="poet-parra">
+                    <div class="poet-avatar">🎭</div>
+                    <div class="poet-info">
+                        <h3>Nicanor Parra</h3>
+                        <div class="poet-frequency">40.7 Hz</div>
+                        <div class="poet-verse" id="parra-verse">Verso primo: 97</div>
+                        <div class="poet-resonance">
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="parra-resonance" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Poeta 5: Zurita -->
+                <div class="poet-card zurita" id="poet-zurita">
+                    <div class="poet-avatar">📝</div>
+                    <div class="poet-info">
+                        <h3>Raúl Zurita</h3>
+                        <div class="poet-frequency">40.9 Hz</div>
+                        <div class="poet-verse" id="zurita-verse">Verso primo: 137</div>
+                        <div class="poet-resonance">
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="zurita-resonance" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Poeta 6: Ferrel -->
+                <div class="poet-card ferrel" id="poet-ferrel">
+                    <div class="poet-avatar">🌟</div>
+                    <div class="poet-info">
+                        <h3>Oscar Ferrel</h3>
+                        <div class="poet-frequency">41.1 Hz</div>
+                        <div class="poet-verse" id="ferrel-verse">Verso primo: 179</div>
+                        <div class="poet-resonance">
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="ferrel-resonance" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 4: Oportunidades Cuánticas Detectadas -->
+        <section class="quantum-opportunities">
+            <div class="section-header">
+                <h2>🎯 Oportunidades Cuánticas Emergentes</h2>
+                <div class="opportunities-stats">
+                    <span class="stat">Total: <span id="total-opportunities">0</span></span>
+                    <span class="stat">Alta Confianza: <span id="high-confidence">0</span></span>
+                    <span class="stat">Edge Promedio: <span id="avg-edge">0.0x</span></span>
+                </div>
+            </div>
+            <div class="opportunities-stream" id="opportunities-stream">
+                <!-- Oportunidades generadas dinámicamente -->
+                <div class="opportunity-placeholder">
+                    <div class="quantum-loading">
+                        <div class="loading-cube"></div>
+                        <p>Procesando 500+ símbolos simultáneamente...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 5: Panel de Control Cuántico -->
+        <section class="quantum-control">
+            <div class="section-header">
+                <h2>🎮 Control Cuántico del Sistema</h2>
+                <div class="system-health">
+                    <span class="health-indicator" id="system-health">🟢 Sistema Estable</span>
+                </div>
+            </div>
+            <div class="control-grid">
+                <div class="control-group">
+                    <h3>🌊 Mecánica de Fluidos</h3>
+                    <button class="control-btn fluid" id="increase-viscosity">⬆️ Viscosidad</button>
+                    <button class="control-btn fluid" id="decrease-turbulence">⬇️ Turbulencia</button>
+                </div>
+                <div class="control-group">
+                    <h3>🎭 Control Poético</h3>
+                    <button class="control-btn poetic" id="sync-poets">🔄 Sincronizar</button>
+                    <button class="control-btn poetic" id="next-verses">➡️ Siguientes Versos</button>
+                </div>
+                <div class="control-group">
+                    <h3>⚡ Acciones del Sistema</h3>
+                    <button class="control-btn primary" id="start-orchestrator">🚀 Iniciar Orquestador</button>
+                    <button class="control-btn danger" id="emergency-stop">🛑 Parada de Emergencia</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal de Confirmación -->
+    <div class="quantum-modal" id="confirmation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🌊 Confirmación Cuántica</h3>
+                <button class="modal-close" id="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">¿Estás seguro de esta acción cuántica?</p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn primary" id="confirm-action">Confirmar</button>
+                <button class="modal-btn secondary" id="cancel-action">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="quantum-market-cube.js"></script>
+    <script src="quantum-engines-controller.js"></script>
+    <script src="quantum-poets-manager.js"></script>
+    <script src="quantum-edge-controller.js"></script>
+</body>
+</html>

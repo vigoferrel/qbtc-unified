@@ -1,0 +1,667 @@
+/**
+ * QBTC UNIFIED - Binance Connector (PRODUCTION)
+ * Conector Binance optimizado para FUTUROS ÚNICAMENTE - Sin simulaciones
+ */
+
+const { BINANCE } = require('../constants/QBTCConstants');
+const SystemConfig = require('../../config/SystemConfig');
+
+class BinanceConnector {
+    constructor() {
+        if (BinanceConnector.instance) {
+            return BinanceConnector.instance;
+        }
+
+        this.config = SystemConfig.getBinanceConfig();
+        this.wsConnections = new Map();
+        this.restClient = null;
+        this.isInitialized = false;
+        this.reconnectAttempts = 0;
+        this.maxReconnectAttempts = 5;
+        this.eventHandlers = new Map();
+
+        BinanceConnector.instance = this;
+    }
+
+    static getInstance() {
+        if (!BinanceConnector.instance) {
+            BinanceConnector.instance = new BinanceConnector();
+        }
+        return BinanceConnector.instance;
+    }
+
+    /**
+     * Inicializar el conector para FUTUROS ÚNICAMENTE
+     */
+    async initialize() {
+        if (this.isInitialized) {
+            return;
+        }
+
+        try {
+            const Binance = require('binance-api-node');
+            
+            this.restClient = Binance.default({
+                apiKey: this.config.api.apiKey,
+                apiSecret: this.config.api.apiSecret,
+                httpBase: 'https://fapi.binance.com',
+                wsBase: 'wss://fstream.binance.com',
+                futures: true
+            });
+
+            await this.validateConnection();
+            this.isInitialized = true;
+            console.log('[BINANCE CONNECTOR] FUTUROS-ONLY inicializado en PRODUCCIÓN');
+            
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al inicializar:', error.message);
+            throw error;
+        }
+    }
+
+    async connect() {
+        return this.initialize();
+    }
+
+    async validateConnection() {
+        try {
+            const account = await this.restClient.futuresAccountInfo();
+            if (!account) {
+                throw new Error('No se pudo obtener información de la cuenta de futuros');
+            }
+            console.log('[BINANCE CONNECTOR] Conexión FUTUROS validada exitosamente');
+            return true;
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al validar conexión futuros:', error.message);
+            throw error;
+        }
+    }
+
+    async getAccountInfo() {
+        this.ensureInitialized();
+        try {
+            return await this.restClient.futuresAccountInfo();
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener información de cuenta futuros:', error.message);
+            throw error;
+        }
+    }
+
+    async getBalance() {
+        this.ensureInitialized();
+        try {
+            const account = await this.restClient.futuresAccountInfo();
+            return account.assets || [];
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener balance futuros:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Obtener información de trading de un símbolo
+     */
+    async getSymbolInfo(symbol) {
+        this.ensureInitialized();
+        try {
+            const exchangeInfo = await this.restClient.exchangeInfo();
+            return exchangeInfo.symbols.find(s => s.symbol === symbol);
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener información del símbolo:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Obtener precio actual de un símbolo
+     */
+    async getPrice(symbol) {
+        this.ensureInitialized();
+        
+        // En modo demo, retornar precio simulado
+        const isDemoMode = this.config.api.testnet ||
+                          this.config.api.apiKey === 'demo_key' ||
+                          process.env.SIMULATION_MODE === 'true' ||
+                          process.env.REAL_TRADING_ENABLED !== 'true';
+        
+        if (isDemoMode) {
+            const basePrice = symbol.includes('BTC') ? 30000 : symbol.includes('ETH') ? 2000 : 500;
+            return DeterministicMath.randomDeterministic(basePrice * 0.99, basePrice * 1.01, Date.now());
+        }
+        
+        try {
+            const prices = await this.restClient.prices();
+            return prices[symbol];
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener precio:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Compat: obtener ticker con lastPrice
+     */
+    async getTicker(symbol) {
+        const price = await this.getPrice(symbol);
+        return { symbol, lastPrice: String(price) };
+    }
+
+    /**
+     * Obtener velas (klines) de un símbolo
+     */
+    async getCandles(symbol, interval = '1h', limit = 100) {
+        this.ensureInitialized();
+        
+        // En modo demo, generar velas simuladas
+        const isDemoMode = this.config.api.testnet ||
+                          this.config.api.apiKey === 'demo_key' ||
+                          process.env.SIMULATION_MODE === 'true' ||
+                          process.env.REAL_TRADING_ENABLED !== 'true';
+        
+        if (isDemoMode) {
+            const basePrice = symbol.includes('BTC') ? 30000 : symbol.includes('ETH') ? 2000 : 500;
+            const candles = [];
+            const now = Date.now();
+            
+            for (let i = limit - 1; i >= 0; i--) {
+                const timestamp = now - (i * 3600000); // 1h intervals
+                const price = DeterministicMath.randomDeterministic(basePrice * 0.99, basePrice * 1.01, timestamp + i);
+                
+                candles.push({
+                    openTime: timestamp,
+                    open: price,
+                    high: price * DeterministicMath.randomDeterministic(1.0, 1.02, timestamp + i + 1),
+                    low: price * DeterministicMath.randomDeterministic(0.98, 1.0, timestamp + i + 2),
+                    close: price * DeterministicMath.randomDeterministic(0.99, 1.01, timestamp + i + 3),
+                    volume: DeterministicMath.randomDeterministic(10, 1000, timestamp + i + 4),
+                    closeTime: timestamp + 3599999,
+                    quoteAssetVolume: price * DeterministicMath.randomDeterministic(10, 1000, timestamp + i + 5),
+                    numberOfTrades: Math.floor(DeterministicMath.randomDeterministic(10, 500, timestamp + i + 6)),
+                    takerBuyBaseAssetVolume: DeterministicMath.randomDeterministic(5, 500, timestamp + i + 7),
+                    takerBuyQuoteAssetVolume: price * DeterministicMath.randomDeterministic(5, 500, timestamp + i + 8),
+                    ignore: '0'
+                });
+            }
+            
+            return candles;
+        }
+        
+        try {
+            return await this.restClient.candles({
+                symbol: symbol,
+                interval: interval,
+                limit: limit
+            });
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener velas:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Compat: alias para klines
+     */
+    async getKlines(symbol, interval = '1h', limit = 100) {
+        return this.getCandles(symbol, interval, limit);
+    }
+
+    /**
+     * Crear orden de compra
+     */
+    async buy(symbol, quantity, type = 'MARKET', price = null) {
+        this.ensureInitialized();
+        try {
+            const orderParams = {
+                symbol: symbol,
+                side: 'BUY',
+                type: type,
+                quantity: quantity
+            };
+
+            if (type === 'LIMIT' && price) {
+                orderParams.price = price;
+            }
+
+            return await this.restClient.order(orderParams);
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al crear orden de compra:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Crear orden de venta
+     */
+    async sell(symbol, quantity, type = 'MARKET', price = null) {
+        this.ensureInitialized();
+        try {
+            const orderParams = {
+                symbol: symbol,
+                side: 'SELL',
+                type: type,
+                quantity: quantity
+            };
+
+            if (type === 'LIMIT' && price) {
+                orderParams.price = price;
+            }
+
+            return await this.restClient.order(orderParams);
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al crear orden de venta:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Compat: crear orden unificada
+     */
+    async createOrder(order) {
+        const { symbol, side, type = 'MARKET', quantity, price } = order || {};
+        if (!symbol || !side || !quantity) {
+            throw new Error('[BINANCE CONNECTOR] Parámetros inválidos para createOrder');
+        }
+        if (side.toUpperCase() === 'BUY') {
+            return this.buy(symbol, quantity, type, price);
+        }
+        return this.sell(symbol, quantity, type, price);
+    }
+
+    /**
+     * Cancelar orden
+     */
+    async cancelOrder(symbol, orderId) {
+        this.ensureInitialized();
+        try {
+            return await this.restClient.cancelOrder({
+                symbol: symbol,
+                orderId: orderId
+            });
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al cancelar orden:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Obtener órdenes abiertas
+     */
+    async getOpenOrders(symbol = null) {
+        this.ensureInitialized();
+        try {
+            const params = symbol ? { symbol: symbol } : {};
+            return await this.restClient.openOrders(params);
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener órdenes abiertas:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Obtener historial de órdenes
+     */
+    async getOrderHistory(symbol = null, limit = 500) {
+        this.ensureInitialized();
+        try {
+            const params = { limit: limit };
+            if (symbol) {
+                params.symbol = symbol;
+            }
+            return await this.restClient.allOrders(params);
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener historial de órdenes:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Obtener posiciones abiertas
+     */
+    async getOpenPositions() {
+        this.ensureInitialized();
+        try {
+            const account = await this.restClient.accountInfo();
+            return account.positions.filter(p => parseFloat(p.positionAmt) !== 0);
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener posiciones abiertas:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Compat: alias para posiciones
+     */
+    async getPositions() {
+        return this.getOpenPositions();
+    }
+
+    /**
+     * Suscribirse a stream de precios
+     */
+    async subscribeToPriceStream(symbols, callback) {
+        this.ensureInitialized();
+        try {
+            const streamName = `price_${symbols.join('_')}`;
+            
+            if (this.wsConnections.has(streamName)) {
+                console.log(`[BINANCE CONNECTOR] Stream ${streamName} ya existe`);
+                return;
+            }
+
+            // En modo demo, generar datos simulados en lugar de conectar a WebSocket real
+            const isDemoMode = this.config.api.testnet ||
+                              this.config.api.apiKey === 'demo_key' ||
+                              process.env.SIMULATION_MODE === 'true' ||
+                              process.env.REAL_TRADING_ENABLED !== 'true';
+            
+            if (isDemoMode) {
+                console.log(`[BINANCE CONNECTOR] Modo demo: generando datos simulados para ${symbols.join(', ')}`);
+                
+                // Generar datos simulados periódicamente
+                const interval = setInterval(() => {
+                    const timestamp = Date.now();
+                    const mockTrades = symbols.map(symbol => ({
+                        symbol: symbol,
+                        price: (DeterministicMath.randomDeterministic(30000, 31000, timestamp)).toFixed(2),
+                        quantity: (DeterministicMath.randomDeterministic(0.01, 0.11, timestamp + 1)).toFixed(4),
+                        timestamp: timestamp,
+                        isBuyerMaker: DeterministicMath.randomDeterministic(0, 1, timestamp + 2) > 0.5
+                    }));
+                    callback(mockTrades);
+                }, 1000);
+                
+                this.wsConnections.set(streamName, {
+                    interval: interval,
+                    symbols: symbols,
+                    callback: callback,
+                    type: 'price'
+                });
+                
+                return;
+            }
+
+            // Conexión real solo si no estamos en modo demo
+            const ws = this.restClient.ws.trades(symbols, (trades) => {
+                callback(trades);
+            });
+
+            this.wsConnections.set(streamName, {
+                ws: ws,
+                symbols: symbols,
+                callback: callback,
+                type: 'price'
+            });
+
+            console.log(`[BINANCE CONNECTOR] Suscrito a stream de precios para: ${symbols.join(', ')}`);
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al suscribirse a stream de precios:', error.message);
+            // En modo demo, no lanzar error, solo registrar
+            const isDemoMode = this.config.api.testnet ||
+                              this.config.api.apiKey === 'demo_key' ||
+                              process.env.SIMULATION_MODE === 'true' ||
+                              process.env.REAL_TRADING_ENABLED !== 'true';
+            
+            if (isDemoMode) {
+                console.log('[BINANCE CONNECTOR] Continuando en modo demo sin conexión WebSocket real');
+                return;
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Suscribirse a stream de usuario (datos de cuenta)
+     */
+    async subscribeToUserData(callback) {
+        this.ensureInitialized();
+        try {
+            if (this.wsConnections.has('userData')) {
+                console.log('[BINANCE CONNECTOR] Stream de userData ya existe');
+                return;
+            }
+
+            // En modo demo, generar datos simulados en lugar de conectar a WebSocket real
+            const isDemoMode = this.config.api.testnet ||
+                              this.config.api.apiKey === 'demo_key' ||
+                              process.env.SIMULATION_MODE === 'true' ||
+                              process.env.REAL_TRADING_ENABLED !== 'true';
+            
+            if (isDemoMode) {
+                console.log('[BINANCE CONNECTOR] Modo demo: generando datos de usuario simulados');
+                
+                // Generar datos simulados periódicamente
+                const interval = setInterval(() => {
+                    const timestamp = Date.now();
+                    const mockData = {
+                        type: 'account',
+                        data: {
+                            eventType: 'outboundAccountPosition',
+                            balances: [
+                                { asset: 'USDT', free: (DeterministicMath.randomDeterministic(1000, 11000, timestamp)).toFixed(2), locked: '0.00' },
+                                { asset: 'BTC', free: (DeterministicMath.randomDeterministic(0.001, 0.101, timestamp + 1)).toFixed(6), locked: '0.00' },
+                                { asset: 'ETH', free: (DeterministicMath.randomDeterministic(0.1, 1.1, timestamp + 2)).toFixed(4), locked: '0.00' }
+                            ]
+                        }
+                    };
+                    callback(mockData);
+                }, 5000);
+                
+                this.wsConnections.set('userData', {
+                    interval: interval,
+                    callback: callback,
+                    type: 'userData'
+                });
+                
+                return;
+            }
+
+            // Conexión real solo si no estamos en modo demo
+            const userData = await this.restClient.ws.user();
+            
+            userData.on('outboundAccountPosition', (data) => {
+                callback({ type: 'account', data: data });
+            });
+
+            userData.on('executionReport', (data) => {
+                callback({ type: 'execution', data: data });
+            });
+
+            this.wsConnections.set('userData', {
+                ws: userData,
+                callback: callback,
+                type: 'userData'
+            });
+
+            console.log('[BINANCE CONNECTOR] Suscrito a stream de datos de usuario');
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al suscribirse a stream de usuario:', error.message);
+            // En modo demo, no lanzar error, solo registrar
+            const isDemoMode = this.config.api.testnet ||
+                              this.config.api.apiKey === 'demo_key' ||
+                              process.env.SIMULATION_MODE === 'true' ||
+                              process.env.REAL_TRADING_ENABLED !== 'true';
+            
+            if (isDemoMode) {
+                console.log('[BINANCE CONNECTOR] Continuando en modo demo sin conexión WebSocket real');
+                return;
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * Cancelar suscripción a stream
+     */
+    async unsubscribe(streamName) {
+        try {
+            const connection = this.wsConnections.get(streamName);
+            if (connection) {
+                // Cerrar WebSocket real si existe
+                if (connection.ws && typeof connection.ws.close === 'function') {
+                    connection.ws.close();
+                }
+                // Limpiar intervalo de datos simulados si existe
+                if (connection.interval) {
+                    clearInterval(connection.interval);
+                }
+                this.wsConnections.delete(streamName);
+                console.log(`[BINANCE CONNECTOR] Stream ${streamName} cancelado`);
+            }
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al cancelar stream:', error.message);
+        }
+    }
+
+    /**
+     * Cancelar todas las suscripciones
+     */
+    async unsubscribeAll() {
+        try {
+            for (const [streamName] of this.wsConnections) {
+                await this.unsubscribe(streamName);
+            }
+            console.log('[BINANCE CONNECTOR] Todas las suscripciones canceladas');
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al cancelar todas las suscripciones:', error.message);
+        }
+    }
+
+    /**
+     * Verificar si el conector está inicializado
+     */
+    ensureInitialized() {
+        if (!this.isInitialized) {
+            throw new Error('BinanceConnector no está inicializado. Llame a initialize() primero.');
+        }
+    }
+
+    /**
+     * Reiniciar conexión
+     */
+    async restart() {
+        try {
+            await this.unsubscribeAll();
+            this.isInitialized = false;
+            await this.initialize();
+            console.log('[BINANCE CONNECTOR] Conector reiniciado correctamente');
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al reiniciar conector:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Cerrar conexión
+     */
+    async close() {
+        try {
+            await this.unsubscribeAll();
+            this.isInitialized = false;
+            console.log('[BINANCE CONNECTOR] Conector cerrado correctamente');
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al cerrar conector:', error.message);
+        }
+    }
+
+    /**
+     * Obtener información de exchange de Futuros (con fallback a spot)
+     */
+    async getFuturesExchangeInfo() {
+        this.ensureInitialized();
+        try {
+            if (this.restClient.futuresExchangeInfo) {
+                return await this.restClient.futuresExchangeInfo();
+            }
+        } catch (e) {
+            // continuar con fallback
+        }
+        try {
+            const spotInfo = await this.restClient.exchangeInfo();
+            return {
+                symbols: (spotInfo.symbols || []).map(s => ({
+                    symbol: s.symbol,
+                    contractType: 'PERPETUAL',
+                    status: s.status || 'TRADING'
+                }))
+            };
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener exchange info (fallback):', error.message);
+            return { symbols: [] };
+        }
+    }
+
+    /**
+     * Obtener funding rate de Futuros (nativo si existe, de lo contrario proxy por SMA curva)
+     */
+    async getFundingRate(symbol) {
+        this.ensureInitialized();
+        try {
+            if (this.restClient.futuresFundingRate) {
+                const arr = await this.restClient.futuresFundingRate({ symbol, limit: 1 });
+                if (arr && arr.length > 0 && arr[0].fundingRate !== undefined) {
+                    return parseFloat(arr[0].fundingRate);
+                }
+            }
+        } catch (e) {
+            // continuar con proxy
+        }
+
+        // Proxy: diferencia SMA(8) vs SMA(48) sobre 5m como aproximación de presión de funding
+        try {
+            const klines = await this.getCandles(symbol, '5m', 120);
+            if (!klines || klines.length < 60) return 0;
+
+            const closes = klines.map(k => parseFloat(k.close || k.c || k[4]));
+            const sma = (arr, n) => {
+                const L = Math.min(n, arr.length);
+                const sum = arr.slice(-L).reduce((a, b) => a + (b || 0), 0);
+                return sum / L;
+            };
+            const smaFast = sma(closes, 8);
+            const smaSlow = sma(closes, 48);
+            const proxy = smaSlow ? (smaFast - smaSlow) / smaSlow : 0;
+            return Math.max(-0.02, Math.min(0.02, proxy));
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error funding proxy:', error.message);
+            return 0;
+        }
+    }
+
+    /**
+     * Obtener trades recientes (futuros si está disponible, de lo contrario spot)
+     */
+    async getRecentTrades(symbol, limit = 100) {
+        this.ensureInitialized();
+        try {
+            if (this.restClient.futuresTrades) {
+                return await this.restClient.futuresTrades({ symbol, limit });
+            }
+        } catch (e) {
+            // fallback abajo
+        }
+        try {
+            return await this.restClient.trades({ symbol, limit });
+        } catch (error) {
+            console.error('[BINANCE CONNECTOR] Error al obtener trades recientes (fallback spot):', error.message);
+            return [];
+        }
+    }
+
+    /**
+     * Obtener estado del conector
+     */
+    getStatus() {
+        return {
+            initialized: this.isInitialized,
+            wsConnections: this.wsConnections.size,
+            reconnectAttempts: this.reconnectAttempts,
+            config: {
+                testnet: this.config.api.testnet,
+                maxConnections: this.config.ws.maxConnections
+            }
+        };
+    }
+}
+
+// Exportar instancia única
+module.exports = BinanceConnector;

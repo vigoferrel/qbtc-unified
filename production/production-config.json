@@ -1,0 +1,129 @@
+{
+    "system": {
+        "name": "QBTC Production System",
+        "version": "4.0.0",
+        "mode": "PRODUCTION",
+        "environment": "production"
+    },
+    "servers": {
+        "unified": {
+            "port": 18020,
+            "host": "0.0.0.0",
+            "ssl": true,
+            "description": "Centro de comando unificado producción"
+        },
+        "frontend": {
+            "port": 18021,
+            "host": "0.0.0.0",
+            "ssl": true,
+            "description": "Interfaz de usuario producción"
+        },
+        "quantum_core": {
+            "port": 9090,
+            "host": "0.0.0.0",
+            "ssl": true,
+            "description": "Núcleo cuántico principal producción"
+        },
+        "trading_engine": {
+            "port": 9091,
+            "host": "0.0.0.0",
+            "ssl": true,
+            "description": "Motor de trading producción"
+        },
+        "market_data": {
+            "port": 9092,
+            "host": "0.0.0.0",
+            "ssl": true,
+            "description": "Datos de mercado producción"
+        },
+        "monitoring": {
+            "port": 18022,
+            "host": "0.0.0.0",
+            "ssl": true,
+            "description": "Sistema de monitoreo producción"
+        }
+    },
+    "quantum": {
+        "consciousness": {
+            "target": 0.941,
+            "threshold": 0.85,
+            "update_interval": 500
+        },
+        "coherence": {
+            "target": 0.964,
+            "threshold": 0.75,
+            "update_interval": 250
+        },
+        "constants": {
+            "phi": 1.618033988749895,
+            "lambda_888": 888,
+            "primo_7919": 7919,
+            "resonance": 0.618,
+            "transformation": 0.941,
+            "hook_factor": 0.382,
+            "simbiosis": 0.888
+        }
+    },
+    "trading": {
+        "validation": {
+            "consciousness_required": 0.85,
+            "coherence_required": 0.75,
+            "quantum_signature": true,
+            "multi_level_validation": true
+        },
+        "execution": {
+            "retry_attempts": 5,
+            "timeout_ms": 3000,
+            "confirmation_required": true,
+            "strict_mode": true
+        },
+        "risk": {
+            "max_leverage": 5,
+            "stop_loss": 0.015,
+            "take_profit": 0.035,
+            "max_position": 50,
+            "max_daily_trades": 100,
+            "max_drawdown": 0.05
+        }
+    },
+    "monitoring": {
+        "metrics_interval": 500,
+        "log_level": "INFO",
+        "performance_tracking": true,
+        "quantum_tracking": true,
+        "alert_thresholds": {
+            "cpu": 80,
+            "memory": 85,
+            "latency": 1000,
+            "error_rate": 0.01
+        }
+    },
+    "cache": {
+        "quantum_ttl": 7919,
+        "market_ttl": 500,
+        "metrics_ttl": 2500,
+        "max_size": 1000000000,
+        "cleanup_interval": 300000
+    },
+    "websocket": {
+        "heartbeat": 15000,
+        "reconnect_interval": 2000,
+        "max_reconnect_attempts": 10,
+        "ping_timeout": 5000
+    },
+    "security": {
+        "rate_limit": {
+            "window_ms": 60000,
+            "max_requests": 1000
+        },
+        "cors": {
+            "enabled": true,
+            "whitelist": ["http://localhost:8080", "http://localhost:18021", "http://127.0.0.1:8080", "http://127.0.0.1:18021", "https://qbtc-dashboard.com"]
+        },
+        "ssl": {
+            "enabled": true,
+            "key_path": "/etc/ssl/private/qbtc.key",
+            "cert_path": "/etc/ssl/certs/qbtc.crt"
+        }
+    }
+}

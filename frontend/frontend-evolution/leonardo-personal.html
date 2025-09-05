@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Leonardo Personal | Mi Consciencia Cuántica</title>
+    <link rel="stylesheet" href="leonardo-personal.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+</head>
+<body>
+    <!-- Header Personal con IA -->
+    <header class="personal-header">
+        <div class="header-content">
+            <div class="user-avatar">
+                <div class="avatar-ring" id="consciousness-ring">
+                    <div class="avatar-inner">👤</div>
+                    <div class="neural-pulse"></div>
+                </div>
+                <div class="user-info">
+                    <h1 id="user-name">Mi Leonardo</h1>
+                    <span class="consciousness-level" id="personal-level">Consciencia Personal: 0.000</span>
+                </div>
+            </div>
+            
+            <div class="ai-assistant">
+                <div class="ai-avatar pulsing">
+                    <span class="ai-emoji">🧠</span>
+                </div>
+                <div class="ai-status">
+                    <span class="ai-name">Leonardo IA</span>
+                    <span class="ai-message" id="ai-message">Analizando tu patrón cuántico...</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Configuración Personal -->
+        <div class="personal-config collapsed" id="personal-config">
+            <div class="config-toggle" id="config-toggle">⚙️ Mi Configuración</div>
+            <div class="config-content">
+                <div class="config-section">
+                    <h3>🎯 Perfil de Trading</h3>
+                    <div class="profile-options">
+                        <label class="profile-option">
+                            <input type="radio" name="profile" value="conservative" checked>
+                            <span class="option-label">🛡️ Conservador</span>
+                            <small>Menor riesgo, decisiones validadas</small>
+                        </label>
+                        <label class="profile-option">
+                            <input type="radio" name="profile" value="balanced">
+                            <span class="option-label">⚖️ Balanceado</span>
+                            <small>Equilibrio riesgo-recompensa</small>
+                        </label>
+                        <label class="profile-option">
+                            <input type="radio" name="profile" value="aggressive">
+                            <span class="option-label">🚀 Agresivo</span>
+                            <small>Alto riesgo, máximo retorno</small>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3>🧠 Asistencia IA</h3>
+                    <div class="ai-settings">
+                        <label class="setting">
+                            <input type="range" id="ai-confidence" min="0.1" max="1.0" step="0.1" value="0.7">
+                            <span>Confianza IA: <span id="ai-confidence-value">70%</span></span>
+                        </label>
+                        <label class="setting">
+                            <input type="checkbox" id="auto-suggestions" checked>
+                            <span>Sugerencias automáticas</span>
+                        </label>
+                        <label class="setting">
+                            <input type="checkbox" id="learning-mode" checked>
+                            <span>Modo aprendizaje</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3>🎨 Personalización</h3>
+                    <div class="theme-selector">
+                        <div class="theme-option active" data-theme="leonardo">
+                            <div class="theme-preview leonardo-theme"></div>
+                            <span>Leonardo</span>
+                        </div>
+                        <div class="theme-option" data-theme="quantum">
+                            <div class="theme-preview quantum-theme"></div>
+                            <span>Cuántico</span>
+                        </div>
+                        <div class="theme-option" data-theme="minimal">
+                            <div class="theme-preview minimal-theme"></div>
+                            <span>Minimal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Personal Adaptativo -->
+    <main class="personal-dashboard">
+        
+        <!-- IA Insights Panel -->
+        <section class="ai-insights" id="ai-insights">
+            <div class="insights-header">
+                <h2>🧠 Insights de Leonardo IA</h2>
+                <div class="insights-status">
+                    <span class="status-dot active"></span>
+                    <span>Análisis en tiempo real</span>
+                </div>
+            </div>
+            
+            <div class="insights-grid">
+                <div class="insight-card prediction">
+                    <div class="card-icon">📈</div>
+                    <div class="card-content">
+                        <h3>Predicción</h3>
+                        <p class="prediction-text" id="ai-prediction">
+                            Detectando patrones emergentes...
+                        </p>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="prediction-confidence"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="insight-card suggestion">
+                    <div class="card-icon">💡</div>
+                    <div class="card-content">
+                        <h3>Sugerencia</h3>
+                        <p class="suggestion-text" id="ai-suggestion">
+                            Optimizando estrategia personal...
+                        </p>
+                        <button class="apply-suggestion" id="apply-suggestion">Aplicar</button>
+                    </div>
+                </div>
+                
+                <div class="insight-card learning">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-content">
+                        <h3>Aprendizaje</h3>
+                        <p class="learning-text" id="ai-learning">
+                            Analizando tu patrón de decisiones...
+                        </p>
+                        <div class="learning-progress">
+                            <div class="progress-bar" id="learning-progress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pool Personal de Oportunidades -->
+        <section class="personal-opportunities">
+            <div class="opportunities-header">
+                <h2>🌊 Tu Pool Personal</h2>
+                <div class="personalization-indicator">
+                    <span class="indicator-dot"></span>
+                    <span>Personalizado para ti</span>
+                </div>
+            </div>
+            
+            <div class="opportunities-filters">
+                <button class="filter-btn active" data-filter="all">Todas</button>
+                <button class="filter-btn" data-filter="high">Alta Confianza</button>
+                <button class="filter-btn" data-filter="ai-recommended">IA Recomienda</button>
+                <button class="filter-btn" data-filter="pattern-match">Patrón Personal</button>
+            </div>
+            
+            <div class="opportunities-grid" id="personal-opportunities">
+                <!-- Oportunidades generadas dinámicamente por IA -->
+            </div>
+        </section>
+
+        <!-- Métricas Personales -->
+        <section class="personal-metrics">
+            <h2>📊 Mi Performance Cuántica</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card personal-consciousness">
+                    <div class="metric-icon">🧠</div>
+                    <div class="metric-value" id="my-consciousness">0.000</div>
+                    <div class="metric-label">Mi Consciencia</div>
+                    <div class="metric-trend" id="consciousness-trend">↗️</div>
+                </div>
+                
+                <div class="metric-card personal-accuracy">
+                    <div class="metric-icon">🎯</div>
+                    <div class="metric-value" id="my-accuracy">0%</div>
+                    <div class="metric-label">Mi Precisión</div>
+                    <div class="metric-trend" id="accuracy-trend">📊</div>
+                </div>
+                
+                <div class="metric-card personal-learning">
+                    <div class="metric-icon">📈</div>
+                    <div class="metric-value" id="my-learning">0</div>
+                    <div class="metric-label">Decisiones Aprendidas</div>
+                    <div class="metric-trend" id="learning-trend">🔄</div>
+                </div>
+                
+                <div class="metric-card ai-sync">
+                    <div class="metric-icon">🤖</div>
+                    <div class="metric-value" id="ai-sync">0%</div>
+                    <div class="metric-label">Sincronía con IA</div>
+                    <div class="metric-trend" id="sync-trend">🔗</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejecución Consciente Personalizada -->
+        <section class="conscious-execution">
+            <h2>⚡ Mi Flujo de Ejecución</h2>
+            
+            <div class="execution-flow">
+                <div class="flow-step" id="step-analyze">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Analizar</h3>
+                        <p id="analyze-status">IA analizando oportunidades...</p>
+                    </div>
+                    <div class="step-ai-indicator">🤖</div>
+                </div>
+                
+                <div class="flow-connector"></div>
+                
+                <div class="flow-step" id="step-personalize">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Personalizar</h3>
+                        <p id="personalize-status">Adaptando a tu perfil...</p>
+                    </div>
+                    <div class="step-ai-indicator">🎯</div>
+                </div>
+                
+                <div class="flow-connector"></div>
+                
+                <div class="flow-step" id="step-validate">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Validar</h3>
+                        <p id="validate-status">Verificando conciencia cuántica...</p>
+                    </div>
+                    <div class="step-ai-indicator">✨</div>
+                </div>
+                
+                <div class="flow-connector"></div>
+                
+                <div class="flow-step" id="step-execute">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Ejecutar</h3>
+                        <p id="execute-status">Tu confirmación consciente</p>
+                    </div>
+                    <div class="step-ai-indicator">👤</div>
+                </div>
+            </div>
+            
+            <div class="execution-controls">
+                <button class="execute-btn" id="conscious-execute" disabled>
+                    🧠 Ejecutar Conscientemente
+                </button>
+                <button class="reset-btn" id="reset-flow">
+                    🔄 Reiniciar Flujo
+                </button>
+            </div>
+        </section>
+
+        <!-- Aprendizaje Personal -->
+        <section class="personal-learning">
+            <h2>🎓 Mi Evolución</h2>
+            
+            <div class="learning-dashboard">
+                <div class="learning-chart">
+                    <canvas id="learning-canvas" width="400" height="200"></canvas>
+                </div>
+                
+                <div class="learning-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="total-decisions">0</span>
+                        <span class="stat-label">Decisiones Totales</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="success-rate">0%</span>
+                        <span class="stat-label">Tasa de Éxito</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="improvement-rate">0%</span>
+                        <span class="stat-label">Mejora Semanal</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="ai-agreement">0%</span>
+                        <span class="stat-label">Acuerdo con IA</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Journal Personal -->
+        <section class="personal-journal">
+            <h2>📔 Mi Journal de Trading</h2>
+            
+            <div class="journal-controls">
+                <button class="journal-btn" id="add-note">+ Agregar Nota</button>
+                <button class="journal-btn" id="ai-summary">🤖 Resumen IA</button>
+                <select id="journal-filter">
+                    <option value="all">Todas las entradas</option>
+                    <option value="trades">Solo trades</option>
+                    <option value="insights">Solo insights</option>
+                    <option value="ai-feedback">Feedback IA</option>
+                </select>
+            </div>
+            
+            <div class="journal-entries" id="journal-entries">
+                <!-- Entradas del journal se generan dinámicamente -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal de Nota Personal -->
+    <div class="modal" id="note-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📝 Nueva Nota</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="note-text" placeholder="Escribe tus pensamientos sobre esta decisión..."></textarea>
+                <div class="note-options">
+                    <label>
+                        <input type="checkbox" id="private-note">
+                        <span>Nota privada (solo para ti)</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="ai-analyze">
+                        <span>Permitir análisis IA</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-save" id="save-note">💾 Guardar</button>
+                <button class="btn-cancel" id="cancel-note">❌ Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="leonardo-personal.js"></script>
+    <script src="ai-consciousness.js"></script>
+    <script src="personal-learning.js"></script>
+</body>
+</html>

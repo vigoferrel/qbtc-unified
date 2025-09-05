@@ -1,0 +1,858 @@
+/*
+  Copyright © 2025 VIGOLEONROCKS QUANTUM TECHNOLOGIES.
+  Quantum Infinite Cache - Sistema de Caché Cuántica Infinita
+  Optimizado para todos los símbolos y leverage ilimitado
+  ⚡ OPTIMIZACIÓN QUIRÚRGICA CUÁNTICA AVANZADA ⚡
+*/
+
+// Constantes científicas para transformaciones cuánticas
+const CACHE_CONSTANTS = {
+    GOLDEN_RATIO: (1 + Math.sqrt(5)) / 2,
+    EULER_CONSTANT: Math.E,
+    PLANCK_REDUCED: 1.054571817e-34,
+    FINE_STRUCTURE: 7.2973525693e-3,
+    ZURITA_PRIME: 7919,
+    SQRT_PRIME: Math.sqrt(7919),
+    LOG_PRIME: Math.log(7919),
+    BIG_BANG_FACTOR: 488.25,
+    QUANTUM_COHERENCE_THRESHOLD: 0.618
+};
+
+class QuantumInfiniteCache {
+    constructor() {
+        // Cache de datos de trading
+        this.tradingCache = {
+            symbols: new Map(),         // Caché de símbolos
+            prices: new Map(),          // Precios en tiempo real
+            metrics: new Map(),         // Métricas avanzadas
+            leverage: new Map(),        // Datos de leverage
+            quantum: new Map(),         // Estados cuánticos
+            darkMatter: new Map()       // Materia oscura
+        };
+        
+        // Referencias de intervalos para cleanup
+        this.intervals = {
+            cleanup: null,
+            quantum: null,
+            monitoring: null
+        };
+        
+        // Configuración cuántica optimizada científicamente
+        this.config = {
+            maxLeverage: 125,                    // Leverage máximo exchange
+            maxSymbols: 1979,                    // CAPACIDAD MÁXIMA: 1,979 símbolos simultáneamente
+            maxSymbolsProduction: 1979,          // Producción: capacidad total
+            maxSymbolsDevelopment: 40,           // Desarrollo: 40 símbolos fijos
+            refreshInterval: 500,                // Actualización 500ms (alineada)
+            preloadBatchSize: Math.floor(CACHE_CONSTANTS.SQRT_PRIME), // Batch size óptimo
+            cacheExpiry: CACHE_CONSTANTS.ZURITA_PRIME,  // TTL óptimo 7919ms
+            retryAttempts: 7,                    // Intentos basados en perfección
+            parallelFetches: Math.min(Math.floor(CACHE_CONSTANTS.GOLDEN_RATIO * 89), 50), // Paralelo controlado
+            quantumBoostThreshold: 0.941,        // Alineado con consciousness target
+            primeTransformationLevel: 144.0,     // Nivel transformación optimizado
+            darkMatterCoefficient: 0.618,        // Coeficiente materia oscura phi
+            resonanceAmplification: CACHE_CONSTANTS.BIG_BANG_FACTOR,
+            // NUEVAS CONFIGURACIONES PARA 1,979 SÍMBOLOS
+            memoryOptimization: true,            // Optimización de memoria activada
+            partitionSize: 100,                  // Tamaño de partición para procesamiento
+            compressionEnabled: true,            // Compresión de datos antigua
+            gcInterval: 30000,                   // Garbage collection cada 30s
+            maxMemoryUsage: 0.85                 // 85% memoria máxima
+        };
+        
+        // Estado cuántico avanzado con métricas científicas
+        this.quantumState = {
+            matrixSize: 0,                           // Tamaño matriz NxN dinámico
+            symbolsLoaded: 0,                        // Contador símbolos activos
+            leverageMultiplier: this.config.maxLeverage, // Multiplicador dinámico
+            darkMatterCoefficient: this.config.darkMatterCoefficient, // Coef. materia oscura
+            primeTransformLevel: this.config.primeTransformationLevel, // Transform prima
+            resonanceState: 'QUANTUM_INITIALIZING',   // Estado resonancia
+            coherenceLevel: 0,                       // Nivel coherencia cuántica
+            entanglementStrength: 0,                 // Fuerza entrelazamiento
+            quantumEfficiency: 0,                    // Eficiencia cuántica
+            bigBangActivation: false,                // Activación Big Bang
+            primeResonanceBoost: 1.0,                // Boost resonancia prima
+            infiniteLoopProtection: true             // Protección loops infinitos
+        };
+        
+        // Métricas de rendimiento
+        this.metrics = {
+            hits: 0,                    // Cache hits
+            misses: 0,                  // Cache misses
+            totalSymbols: 0,            // Símbolos totales
+            avgLatency: 0,              // Latencia promedio
+            preloadSuccess: 0,          // Precargas exitosas
+            errorRate: 0,               // Tasa de error
+            profitMultiplier: 1.0       // Multiplicador de profit
+        };
+        
+        // Inicializar sistema
+        this.initialize();
+    }
+
+    // Inicialización del sistema
+    async initialize() {
+        console.log('[QUANTUM CACHE] 🌌 Iniciando caché cuántica infinita...');
+        
+        // Configurar actualizaciones periódicas
+        this.setupPeriodicUpdates();
+        
+        // Monitorear estado del sistema
+        this.startMonitoring();
+        
+        console.log('[QUANTUM CACHE] ✨ Sistema inicializado y listo');
+    }
+
+    // Obtener datos con boost cuántico
+    async get(type, key, fetchFn, options = {}) {
+        const start = Date.now();
+        
+        try {
+            // Verificar caché primero
+            const cached = this.tradingCache[type].get(key);
+            if (cached && !this.isExpired(cached)) {
+                this.metrics.hits++;
+                return this.applyQuantumBoost(cached.data);
+            }
+            
+            this.metrics.misses++;
+            
+            // Fetch con retry inteligente
+            const data = await this.fetchWithRetry(fetchFn, options);
+            
+            // Aplicar transformaciones cuánticas
+            const boostedData = this.applyQuantumBoost(data);
+            
+            // Almacenar en caché
+            this.tradingCache[type].set(key, {
+                data: boostedData,
+                timestamp: Date.now(),
+                ttl: options.ttl || this.config.cacheExpiry
+            });
+            
+            // Actualizar métricas
+            this.updateMetrics(Date.now() - start);
+            
+            return boostedData;
+            
+        } catch (error) {
+            console.error('[QUANTUM CACHE] ❌ Error:', error);
+            throw error;
+        }
+    }
+
+    // Precarga masiva de símbolos con control de concurrencia y timeout
+    async preloadSymbols(symbols, fetchFn, options = {}) {
+        console.log(`[QUANTUM CACHE] 🔄 Precargando ${symbols.length} símbolos...`);
+        
+        const {
+            sequential = false,
+            timeout = 30000,
+            maxConcurrency = 10
+        } = options;
+        
+        const batches = this.chunkArray(symbols, this.config.preloadBatchSize);
+        let totalSucceeded = 0;
+        let totalErrors = 0;
+        
+        const startTime = Date.now();
+        
+        for (const [index, batch] of batches.entries()) {
+            try {
+                // Verificar timeout global
+                if (Date.now() - startTime > timeout) {
+                    console.warn(`[QUANTUM CACHE] ⏰ Timeout alcanzado tras ${timeout}ms, deteniendo precarga...`);
+                    break;
+                }
+                
+                console.log(`[QUANTUM CACHE] 📦 Procesando batch ${index + 1}/${batches.length} (${batch.length} símbolos)`);
+                
+                let succeeded = 0;
+                let failed = 0;
+                
+                if (sequential) {
+                    // Procesamiento estrictamente secuencial
+                    for (const symbol of batch) {
+                        try {
+                            await Promise.race([
+                                this.fetchSymbolData(symbol, fetchFn, options),
+                                new Promise((_, reject) => 
+                                    setTimeout(() => reject(new Error(`Timeout para ${symbol}`)), 5000)
+                                )
+                            ]);
+                            succeeded++;
+                        } catch (e) {
+                            failed++;
+                            // Continúa con el siguiente símbolo
+                        }
+                    }
+                } else {
+                    // Procesar batch en paralelo controlado
+                    const limitedBatch = batch.slice(0, Math.min(batch.length, maxConcurrency));
+                    const promises = limitedBatch.map(symbol => 
+                        Promise.race([
+                            this.fetchSymbolData(symbol, fetchFn, options),
+                            new Promise((_, reject) => 
+                                setTimeout(() => reject(new Error(`Timeout para ${symbol}`)), 5000)
+                            )
+                        ])
+                    );
+                    
+                    const results = await Promise.allSettled(promises);
+                    succeeded = results.filter(r => r.status === 'fulfilled').length;
+                    failed = results.filter(r => r.status === 'rejected').length;
+                }
+                
+                totalSucceeded += succeeded;
+                totalErrors += failed;
+                
+                console.log(`[QUANTUM CACHE] ✅ Batch ${index + 1}: ${succeeded} exitosos, ${failed} fallidos`);
+                
+                this.metrics.preloadSuccess += succeeded;
+                
+                // Actualizar estado cuántico
+                this.updateQuantumState(batch.length, succeeded);
+                
+                // Pausa entre batches para evitar sobrecarga
+                await this.sleep(100);
+                
+            } catch (error) {
+                console.error('[QUANTUM CACHE] ❌ Error en batch:', error);
+                totalErrors++;
+            }
+        }
+        
+        const duration = Date.now() - startTime;
+        console.log(`[QUANTUM CACHE] ✅ Precarga completada: ${totalSucceeded} exitosos, ${totalErrors} errores en ${duration}ms`);
+        
+        return {
+            succeeded: totalSucceeded,
+            failed: totalErrors,
+            duration
+        };
+    }
+
+    // Fetch de datos de símbolo individual
+    async fetchSymbolData(symbol, fetchFn, options) {
+        try {
+            // Obtener datos base
+            const data = await this.fetchWithRetry(() => fetchFn(symbol), options);
+            
+            // Aplicar transformaciones cuánticas
+            const quantumData = this.applyQuantumTransformations(data, symbol);
+            
+            // Calcular leverage óptimo
+            const leverageData = this.calculateOptimalLeverage(quantumData);
+            
+            // Almacenar en caché
+            this.tradingCache.symbols.set(symbol, {
+                data: quantumData,
+                leverage: leverageData,
+                timestamp: Date.now(),
+                ttl: options.ttl || this.config.cacheExpiry
+            });
+            
+            return quantumData;
+            
+        } catch (error) {
+            console.error(`[QUANTUM CACHE] ❌ Error en símbolo ${symbol}:`, error);
+            throw error;
+        }
+    }
+
+    // Transformaciones cuánticas avanzadas
+    applyQuantumTransformations(data, symbol) {
+        // Factores primos
+        const primeLog = Math.log(7919);
+        const goldenRatio = (1 + Math.sqrt(5)) / 2;
+        
+        // Transformaciones base
+        const baseTransform = {
+            price: data.price || 0,
+            volume: data.volume || 0,
+            leverage: data.leverage || 1
+        };
+        
+        // Resonancia cuántica
+        const resonance = Math.sin(baseTransform.price * goldenRatio);
+        const primeBoost = Math.exp(Math.log(baseTransform.volume + 1) / primeLog);
+        
+        // Calcular coeficiente de materia oscura
+        const darkMatter = this.calculateDarkMatter(baseTransform, resonance);
+        
+        // Aplicar transformaciones
+        const transformed = {
+            ...baseTransform,
+            resonance,
+            primeBoost,
+            darkMatter,
+            quantumState: this.quantumState.resonanceState,
+            leverageMultiplier: this.calculateLeverageMultiplier(resonance, primeBoost),
+            profitPotential: this.calculateProfitPotential(darkMatter, primeBoost)
+        };
+        
+        // Almacenar métricas cuánticas
+        this.tradingCache.quantum.set(symbol, {
+            resonance,
+            darkMatter,
+            primeBoost,
+            timestamp: Date.now()
+        });
+        
+        return transformed;
+    }
+
+    // Calcular materia oscura
+    calculateDarkMatter(data, resonance) {
+        const baseEnergy = data.price * Math.pow(data.volume, 1/3);
+        const darkEnergy = baseEnergy * resonance;
+        
+        // Transformación prima oscura
+        const darkPrime = Math.log(7919) / Math.log(darkEnergy + 1);
+        const darkRoot = Math.pow(darkPrime, 1/88.99); // sqrt(7919)
+        
+        return darkRoot * this.quantumState.darkMatterCoefficient;
+    }
+
+    // Booster cuántico (placeholder seguro)
+    applyQuantumBoost(data) {
+        // Aplicar un refuerzo mínimo sin alterar estructura
+        return { ...data };
+    }
+
+    // Calcular leverage óptimo (objeto con metadatos)
+    calculateOptimalLeverage(quantumData) {
+        try {
+            const maxLev = this.config.maxLeverage || 125;
+            const resonance = Math.abs(quantumData.resonance || 0);
+            const boost = Math.max(1, Math.min(quantumData.primeBoost || 1, 2));
+            // Factor entre 0.1 y 1.0 para evitar 0
+            const factor = Math.max(0.1, Math.min(1.0, (resonance * boost) / 2));
+            const lev = Math.max(1, Math.floor(maxLev * factor));
+            return {
+                value: lev,
+                max: maxLev,
+                factor,
+                timestamp: Date.now()
+            };
+        } catch (e) {
+            return { value: 1, max: this.config.maxLeverage || 125, factor: 0.1, timestamp: Date.now() };
+        }
+    }
+
+    // Calcular multiplicador de leverage óptimo
+    calculateLeverageMultiplier(resonance, primeBoost) {
+        // Base: 125x máximo
+        const baseLeverage = this.config.maxLeverage;
+        
+        // Factores de optimización
+        const resonanceFactor = Math.abs(resonance);
+        const boostFactor = Math.min(primeBoost, 2.0);
+        const quantumFactor = this.quantumState.leverageMultiplier / 100;
+        
+        // Calcular leverage óptimo
+        let optimalLeverage = baseLeverage * (
+            resonanceFactor * 
+            boostFactor * 
+            quantumFactor
+        );
+        
+        // Limitar al máximo permitido
+        return Math.min(optimalLeverage, this.config.maxLeverage);
+    }
+
+    // Calcular potencial de profit
+    calculateProfitPotential(darkMatter, primeBoost) {
+        const basePotential = darkMatter * primeBoost;
+        const quantumBoost = this.quantumState.primeTransformLevel;
+        
+        return basePotential * quantumBoost * this.metrics.profitMultiplier;
+    }
+
+    // Configurar actualizaciones periódicas
+    setupPeriodicUpdates() {
+        // Actualizar caché cada intervalo
+        this.intervals.cleanup = setInterval(() => {
+            this.cleanExpiredCache();
+        }, this.config.refreshInterval);
+        
+        // Actualizar estado cuántico
+        this.intervals.quantum = setInterval(() => {
+            this.updateQuantumState();
+        }, 1000);
+    }
+
+    // Monitoreo del sistema
+    startMonitoring() {
+        this.intervals.monitoring = setInterval(() => {
+            const metrics = this.getMetrics();
+            const health = this.validateSystemHealth();
+            console.log('[QUANTUM CACHE] 📊 Estado del sistema:', {
+                ...metrics,
+                health,
+                systemTime: new Date().toISOString(),
+                alignmentStatus: {
+                    consciousnessTarget: this.config.quantumBoostThreshold,
+                    cacheExpiry: this.config.cacheExpiry,
+                    batchSize: this.config.preloadBatchSize,
+                    darkMatterCoefficient: this.config.darkMatterCoefficient
+                }
+            });
+        }, 7919);  // Alineado con TTL primo óptimo
+    }
+
+    // Utilidades con timeout y control de operaciones bloqueantes
+    async fetchWithRetry(fetchFn, options = {}) {
+        let attempts = 0;
+        const maxAttempts = Math.min(options.retryAttempts || this.config.retryAttempts, 5);
+        const baseTimeout = options.timeout || 5000; // 5s por defecto
+        
+        while (attempts < maxAttempts) {
+            try {
+                // Implementar timeout individual por intento
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error('Timeout en fetchWithRetry')), baseTimeout);
+                });
+                
+                const fetchPromise = fetchFn();
+                
+                return await Promise.race([fetchPromise, timeoutPromise]);
+                
+            } catch (error) {
+                attempts++;
+                
+                // Log detallado solo en desarrollo
+                if (process.env.NODE_ENV === 'development') {
+                    console.warn(`[QUANTUM CACHE] ⚠️ Intento ${attempts}/${maxAttempts} falló: ${error.message}`);
+                }
+                
+                if (attempts === maxAttempts) {
+                    throw new Error(`Falló tras ${maxAttempts} intentos: ${error.message}`);
+                }
+                
+                // Backoff exponencial limitado a max 2 segundos
+                const backoffMs = Math.min(Math.pow(2, attempts) * 100, 2000);
+                await this.sleep(backoffMs);
+            }
+        }
+    }
+
+    updateMetrics(latency) {
+        this.metrics.avgLatency = (this.metrics.avgLatency + latency) / 2;
+        this.metrics.totalSymbols = this.tradingCache.symbols.size;
+        this.metrics.errorRate = this.metrics.misses / (this.metrics.hits + this.metrics.misses);
+    }
+
+    updateQuantumState(processed = 0, succeeded = 0) {
+        this.quantumState.symbolsLoaded += succeeded;
+        this.quantumState.matrixSize = Math.ceil(Math.sqrt(this.quantumState.symbolsLoaded));
+        
+        // Actualizar estado de resonancia
+        const successRate = processed > 0 ? succeeded / processed : 1;
+        this.quantumState.resonanceState = successRate > 0.9 
+            ? 'QUANTUM_RESONANCE'
+            : successRate > 0.7 
+                ? 'QUANTUM_STABLE' 
+                : 'QUANTUM_READY';
+    }
+
+    isExpired(entry) {
+        return Date.now() - entry.timestamp > entry.ttl;
+    }
+
+    cleanExpiredCache() {
+        for (const [type, cache] of Object.entries(this.tradingCache)) {
+            for (const [key, value] of cache.entries()) {
+                if (this.isExpired(value)) {
+                    cache.delete(key);
+                }
+            }
+        }
+    }
+
+    chunkArray(array, size) {
+        const chunks = [];
+        for (let i = 0; i < array.length; i += size) {
+            chunks.push(array.slice(i, i + size));
+        }
+        return chunks;
+    }
+
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // API de diagnóstico
+    getMetrics() {
+        const totalRequests = this.metrics.hits + this.metrics.misses;
+        const hitRate = totalRequests > 0 
+            ? (this.metrics.hits / totalRequests * 100).toFixed(2) 
+            : 0;
+        
+        return {
+            cacheSize: {
+                symbols: this.tradingCache.symbols.size,
+                quantum: this.tradingCache.quantum.size,
+                darkMatter: this.tradingCache.darkMatter.size
+            },
+            performance: {
+                hitRate: `${hitRate}%`,
+                avgLatency: `${this.metrics.avgLatency.toFixed(2)}ms`,
+                errorRate: `${(this.metrics.errorRate * 100).toFixed(2)}%`,
+                preloadSuccess: this.metrics.preloadSuccess
+            },
+            quantumState: {
+                ...this.quantumState,
+                resonanceQuality: this.quantumState.resonanceState
+            }
+        };
+    }
+
+    validateSystemHealth() {
+        const metrics = this.getMetrics();
+        const warnings = [];
+        
+        const hitRate = parseFloat(metrics.performance.hitRate);
+        const errorRate = parseFloat(metrics.performance.errorRate);
+        
+        if (hitRate < 50) {
+            warnings.push('Hit rate bajo');
+        }
+        if (errorRate > 10) {
+            warnings.push('Alta tasa de errores');
+        }
+        if (this.quantumState.resonanceState !== 'QUANTUM_RESONANCE') {
+            warnings.push('Resonancia cuántica subóptima');
+        }
+        
+        return {
+            status: warnings.length === 0 ? 'HEALTHY' : 'WARNING',
+            warnings,
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    getSystemStatus() {
+        const metrics = this.getMetrics();
+        const health = this.validateSystemHealth();
+        return { ...metrics, health };
+    }
+    
+    // **NUEVOS MÉTODOS PARA SOPORTE DE 1,979 SÍMBOLOS**
+    
+    // Verificar capacidad actual vs máxima
+    checkCapacityLimits() {
+        const currentSymbols = this.tradingCache.symbols.size;
+        const maxSymbols = this.getMaxSymbolsForEnvironment();
+        
+        return {
+            current: currentSymbols,
+            maximum: maxSymbols,
+            utilization: ((currentSymbols / maxSymbols) * 100).toFixed(2),
+            canAddMore: currentSymbols < maxSymbols,
+            remainingCapacity: maxSymbols - currentSymbols
+        };
+    }
+    
+    // Obtener límite máximo según entorno
+    getMaxSymbolsForEnvironment() {
+        // ENV override: QUANTUM_MAX_SYMBOLS
+        const override = process.env.QUANTUM_MAX_SYMBOLS;
+        if (override !== undefined) {
+            const n = parseInt(String(override), 10);
+            if (Number.isFinite(n) && n >= 0) {
+                // 0 means "no cap" (all available)
+                return n === 0 ? Number.MAX_SAFE_INTEGER : n;
+            }
+        }
+
+        // Force full universe regardless of NODE_ENV
+        if (process.env.FORCE_FULL_UNIVERSE === 'true' || process.env.QMM_FORCE_FULL_UNIVERSE === 'true') {
+            return this.config.maxSymbolsProduction;
+        }
+
+        const environment = process.env.NODE_ENV || 'development';
+        return environment === 'production'
+            ? this.config.maxSymbolsProduction
+            : this.config.maxSymbolsDevelopment;
+    }
+    
+    // Precarga masiva optimizada para 1,979 símbolos
+    async preloadMassiveSymbolList(allSymbols, fetchFn, options = {}) {
+        const maxSymbols = this.getMaxSymbolsForEnvironment();
+        const symbolsToLoad = allSymbols.slice(0, maxSymbols);
+        
+        console.log(`[QUANTUM CACHE] 🚀 Iniciando precarga masiva: ${symbolsToLoad.length}/${allSymbols.length} símbolos`);
+        
+        // Configuración optimizada para carga masiva
+        const massiveOptions = {
+            sequential: false,
+            timeout: 120000, // 2 minutos para carga masiva
+            maxConcurrency: this.config.memoryOptimization ? 25 : 15,
+            batchDelay: 200, // Pausa entre batches
+            ...options
+        };
+        
+        // Particionar en grupos para optimización de memoria
+        const partitions = this.createOptimalPartitions(symbolsToLoad);
+        let totalLoaded = 0;
+        let totalErrors = 0;
+        
+        for (const [partitionIndex, partition] of partitions.entries()) {
+            console.log(`[QUANTUM CACHE] 📊 Procesando partición ${partitionIndex + 1}/${partitions.length} (${partition.length} símbolos)`);
+            
+            const partitionResult = await this.preloadSymbols(partition, fetchFn, massiveOptions);
+            totalLoaded += partitionResult.succeeded;
+            totalErrors += partitionResult.failed;
+            
+            // Ejecutar garbage collection entre particiones si está habilitado
+            if (this.config.memoryOptimization && partitionIndex % 3 === 0) {
+                await this.performMemoryOptimization();
+            }
+            
+            // Pausa entre particiones para evitar sobrecarga
+            if (partitionIndex < partitions.length - 1) {
+                await this.sleep(massiveOptions.batchDelay);
+            }
+        }
+        
+        console.log(`[QUANTUM CACHE] ✅ Precarga masiva completada: ${totalLoaded} símbolos cargados, ${totalErrors} errores`);
+        
+        return {
+            totalSymbolsRequested: allSymbols.length,
+            totalSymbolsProcessed: symbolsToLoad.length,
+            totalLoaded,
+            totalErrors,
+            utilizationPercent: ((totalLoaded / maxSymbols) * 100).toFixed(2)
+        };
+    }
+    
+    // Crear particiones optimizadas para memoria
+    createOptimalPartitions(symbols) {
+        const partitionSize = this.config.partitionSize;
+        const partitions = [];
+        
+        for (let i = 0; i < symbols.length; i += partitionSize) {
+            partitions.push(symbols.slice(i, i + partitionSize));
+        }
+        
+        return partitions;
+    }
+    
+    // Optimización de memoria para cargas masivas
+    async performMemoryOptimization() {
+        if (!this.config.memoryOptimization) return;
+        
+        console.log('[QUANTUM CACHE] 🧹 Ejecutando optimización de memoria...');
+        
+        // Limpiar caché expirada
+        this.cleanExpiredCache();
+        
+        // Comprimir datos antiguos si está habilitado
+        if (this.config.compressionEnabled) {
+            this.compressOldCacheData();
+        }
+        
+        // Forzar garbage collection si está disponible
+        if (global.gc) {
+            global.gc();
+        }
+        
+        // Pausa breve para permitir limpieza
+        await this.sleep(100);
+    }
+    
+    // Compresión de datos de caché antiguos
+    compressOldCacheData() {
+        const compressionThreshold = Date.now() - (this.config.cacheExpiry * 2);
+        
+        for (const [type, cache] of Object.entries(this.tradingCache)) {
+            for (const [key, value] of cache.entries()) {
+                if (value.timestamp < compressionThreshold && !value.compressed) {
+                    // Marcar como comprimido (simplificado para este ejemplo)
+                    value.compressed = true;
+                    value.compressedAt = Date.now();
+                }
+            }
+        }
+    }
+    
+    // Obtener estadísticas de capacidad y rendimiento
+    getCapacityStats() {
+        const capacity = this.checkCapacityLimits();
+        const memoryStats = this.getMemoryStats();
+        
+        return {
+            capacity,
+            memory: memoryStats,
+            performance: {
+                symbolsPerSecond: this.calculateSymbolsPerSecond(),
+                averageLoadTime: this.metrics.avgLatency,
+                successRate: this.calculateSuccessRate()
+            },
+            environment: {
+                nodeEnv: process.env.NODE_ENV || 'development',
+                maxSupported: this.config.maxSymbols,
+                currentlySupporting: this.tradingCache.symbols.size
+            }
+        };
+    }
+    
+    // Estadísticas básicas de memoria
+    getMemoryStats() {
+        const used = process.memoryUsage();
+        return {
+            heapUsed: `${Math.round(used.heapUsed / 1024 / 1024)}MB`,
+            heapTotal: `${Math.round(used.heapTotal / 1024 / 1024)}MB`,
+            rss: `${Math.round(used.rss / 1024 / 1024)}MB`,
+            external: `${Math.round(used.external / 1024 / 1024)}MB`
+        };
+    }
+    
+    // Calcular símbolos procesados por segundo
+    calculateSymbolsPerSecond() {
+        const totalSymbols = this.metrics.preloadSuccess || 0;
+        const uptimeSeconds = process.uptime();
+        return uptimeSeconds > 0 ? (totalSymbols / uptimeSeconds).toFixed(2) : '0.00';
+    }
+    
+    // Calcular tasa de éxito
+    calculateSuccessRate() {
+        const total = this.metrics.hits + this.metrics.misses;
+        return total > 0 ? ((this.metrics.hits / total) * 100).toFixed(2) : '100.00';
+    }
+    
+    // Filtrar símbolos por potencial cuántico (para QuantumMarketMaker)
+    filterSymbolsByQuantumPotential(symbols, minPotential = 50) {
+        return symbols.filter(symbol => {
+            const cached = this.tradingCache.symbols.get(symbol);
+            if (!cached) return false;
+            
+            const quantumData = this.tradingCache.quantum.get(symbol);
+            if (!quantumData) return false;
+            
+            // Calcular potencial basado en métricas cuánticas
+            const potential = (
+                (quantumData.resonance * 30) +
+                (quantumData.primeBoost * 20) +
+                (quantumData.darkMatter * 50)
+            );
+            
+            return potential >= minPotential;
+        });
+    }
+    
+    // Filtrar símbolos por categorías
+    filterSymbolsByCategories(symbols, categories = ['MAJOR', 'MEME']) {
+        return symbols.filter(symbol => {
+            // Esta función requeriría integración con el categorizador del fetcher
+            // Por ahora retornamos todos
+            return true;
+        });
+    }
+    
+    // Método de shutdown para limpieza completa
+    shutdown() {
+        console.log('[QUANTUM CACHE] 🔄 Iniciando shutdown...');
+        
+        try {
+            // Limpiar todos los intervalos
+            Object.values(this.intervals).forEach(interval => {
+                if (interval) {
+                    clearInterval(interval);
+                }
+            });
+            
+            // Reinicializar referencias
+            this.intervals = {
+                cleanup: null,
+                quantum: null,
+                monitoring: null
+            };
+            
+            // Limpiar todas las caches
+            Object.values(this.tradingCache).forEach(cache => {
+                if (cache && typeof cache.clear === 'function') {
+                    cache.clear();
+                }
+            });
+            
+            console.log('[QUANTUM CACHE] ✅ Shutdown completado exitosamente');
+            
+        } catch (error) {
+            console.error('[QUANTUM CACHE] ❌ Error durante shutdown:', error);
+        }
+    }
+
+    // ===== ADVANCED CACHING STRATEGIES =====
+    async preloadTopSymbolsIntelligent(symbols, fetchFn, options = {}) {
+        console.log('🧠 [QUANTUM CACHE] Precarga inteligente iniciada...');
+        
+        // Ordenar símbolos por prioridad (volumen, volatilidad, etc.)
+        const sortedSymbols = await this.sortSymbolsByPriority(symbols);
+        
+        // Cargar en lotes optimizados
+        const batchSize = options.maxConcurrency || 20;
+        const results = { succeeded: 0, failed: 0 };
+        
+        for (let i = 0; i < sortedSymbols.length; i += batchSize) {
+            const batch = sortedSymbols.slice(i, i + batchSize);
+            
+            const batchPromises = batch.map(async (symbol) => {
+                try {
+                    const data = await fetchFn(symbol);
+                    if (data) {
+                        await this.set('prices', symbol, data, options.ttl || 30000);
+                        results.succeeded++;
+                    }
+                } catch (error) {
+                    results.failed++;
+                    console.warn(`⚠️ Error cargando ${symbol}: ${error.message}`);
+                }
+            });
+            
+            await Promise.allSettled(batchPromises);
+            
+            // Pequeña pausa entre lotes
+            if (i + batchSize < sortedSymbols.length) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+        
+        console.log(`✅ Precarga inteligente completada: ${results.succeeded} exitosos, ${results.failed} fallidos`);
+        return results;
+    }
+    
+    async sortSymbolsByPriority(symbols) {
+        // Implementar lógica de priorización
+        // Por ahora, mantener orden original pero optimizado
+        return symbols.filter(symbol => symbol && typeof symbol === 'string');
+    }
+    
+    // Sistema de limpieza automática
+    startAutomaticCleanup() {
+        if (this.cleanupInterval) return;
+        
+        this.cleanupInterval = setInterval(() => {
+            this.performCleanup();
+        }, 300000); // Cada 5 minutos
+    }
+    
+    performCleanup() {
+        const now = Date.now();
+        let cleaned = 0;
+        
+        // Limpiar cache de precios
+        for (const [key, entry] of this.tradingCache.symbols.entries()) {
+            if (entry.timestamp + (entry.ttl || 30000) < now) {
+                this.tradingCache.symbols.delete(key);
+                cleaned++;
+            }
+        }
+        
+        if (cleaned > 0) {
+            console.log(`🧹 [QUANTUM CACHE] Limpieza automática: ${cleaned} entradas eliminadas`);
+        }
+    }
+}

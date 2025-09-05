@@ -1,0 +1,563 @@
+#!/usr/bin/env node
+
+// ========================================================================
+// 🔑 CONFIGURACIÓN DE ACCESO REAL A BINANCE 
+// Establece credenciales, sincroniza balance real y configura FundsManager
+// Para coherencia total del sistema Leonardo Consciousness
+// ========================================================================
+
+const fs = require('fs').promises;
+const path = require('path');
+const { FundsManager } = require('./FundsManager');
+const BinanceConnectorAdapter = require('./BinanceConnectorAdapter');
+
+// Configuración del acceso real
+const REAL_ACCESS_CONFIG = {
+    mode: 'production',              // production | 
+    autoSyncBalance: true,          // Sincronizar balance automáticamente
+    createBackup: true,             // Crear backup de configuración actual
+    validateCredentials: true,      // Validar credenciales antes de configurar
+    setEnvironmentVars: true,      // Configurar variables de entorno
+    updateFundsManager: true,      // Actualizar FundsManager con balance real
+    enableRealTrading: false,      // Habilitar trading real (usar con precaución)
+    enableLogging: true            // Logging detallado del proceso
+};
+
+class BinanceRealAccessConfigurator {
+    constructor(config = {}) {
+        this.config = { ...REAL_ACCESS_CONFIG, ...config };
+        this.binanceConnector = null;
+        this.fundsManager = null;
+        this.originalEnv = { ...process.env };
+        this.configBackupPath = path.join(__dirname, 'config-backup.json');
+        this.envFilePath = path.join(__dirname, '..', '.env');
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🚀 CONFIGURACIÓN PRINCIPAL
+    // ═══════════════════════════════════════════════════════════════════════
+
+    async configure() {
+        this.log('INFO', '🚀 Iniciando configuración de acceso real a Binance');
+        
+        try {
+            // 1. Crear backup de configuración actual
+            if (this.config.createBackup) {
+                await this.createBackup();
+            }
+            
+            // 2. Verificar y configurar credenciales
+            await this.setupCredentials();
+            
+            // 3. Validar acceso a Binance
+            if (this.config.validateCredentials) {
+                await this.validateBinanceAccess();
+            }
+            
+            // 4. Sincronizar balance real
+            if (this.config.autoSyncBalance) {
+                await this.syncRealBalance();
+            }
+            
+            // 5. Configurar FundsManager
+            if (this.config.updateFundsManager) {
+                await this.configureFundsManager();
+            }
+            
+            // 6. Generar configuración final
+            await this.generateFinalConfiguration();
+            
+            this.log('SUCCESS', '✅ Configuración de acceso real completada exitosamente');
+            return true;
+            
+        } catch (error) {
+            this.log('ERROR', '❌ Error en configuración de acceso real', error);
+            await this.restoreBackup();
+            throw error;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🔐 CONFIGURACIÓN DE CREDENCIALES
+    // ═══════════════════════════════════════════════════════════════════════
+
+    async setupCredentials() {
+        this.log('INFO', '🔐 Configurando credenciales de Binance...');
+        
+        // Verificar si las credenciales ya están configuradas
+        const apiKey = process.env.BINANCE_API_KEY;
+        const secretKey = process.env.BINANCE_SECRET_KEY || process.env.BINANCE_API_SECRET;
+        
+        if (apiKey && secretKey) {
+            this.log('SUCCESS', '✅ Credenciales encontradas en variables de entorno');
+            return;
+        }
+        
+        // Si no hay credenciales, mostrar instrucciones
+        this.log('WARNING', '⚠️ Credenciales no configuradas. Configurando para modo simulación...');
+        
+        // Crear configuración para modo simulación con balance alto
+        const simulationConfig = {
+            BINANCE_TESTNET: 'true',
+            BINANCE_API_KEY: 'simulation_key_leonardo_consciousness',
+            BINANCE_API_SECRET: 'simulation_secret_leonardo_consciousness',
+            TRADING_INITIAL_BALANCE: '50000',        // $50k para simulación
+            TRADING_MODE: 'SIMULATION',
+            TRADING_MAX_LEVERAGE: '50',
+            LEONARDO_FUNDS_MODE: 'SIMULATION_HIGH_CAPITAL',
+            SKIP_API_VALIDATION: 'true'
+        };
+        
+        // Actualizar variables de entorno para esta sesión
+        Object.entries(simulationConfig).forEach(([key, value]) => {
+            process.env[key] = value;
+        });
+        
+        // Crear archivo .env si no existe
+        await this.createEnvFile(simulationConfig);
+        
+        this.log('INFO', '💰 Configurado para modo SIMULACIÓN con $50,000 inicial');
+    }
+
+    async createEnvFile(config) {
+        try {
+            const existingEnv = await this.readEnvFile();
+            const mergedConfig = { ...existingEnv, ...config };
+            
+            const envContent = Object.entries(mergedConfig)
+                .map(([key, value]) => `${key}=${value}`)
+                .join('\n');
+            
+            await fs.writeFile(this.envFilePath, envContent + '\n');
+            this.log('SUCCESS', '✅ Archivo .env actualizado');
+        } catch (error) {
+            this.log('WARNING', '⚠️ No se pudo crear archivo .env:', error.message);
+        }
+    }
+
+    async readEnvFile() {
+        try {
+            const content = await fs.readFile(this.envFilePath, 'utf8');
+            const env = {};
+            
+            content.split('\n').forEach(line => {
+                const trimmed = line.trim();
+                if (trimmed && !trimmed.startsWith('#')) {
+                    const [key, ...valueParts] = trimmed.split('=');
+                    if (key && valueParts.length > 0) {
+                        env[key.trim()] = valueParts.join('=').trim();
+                    }
+                }
+            });
+            
+            return env;
+        } catch (error) {
+            return {};
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🌐 VALIDACIÓN DE ACCESO BINANCE
+    // ═══════════════════════════════════════════════════════════════════════
+
+    async validateBinanceAccess() {
+        this.log('INFO', '🌐 Validando acceso a Binance...');
+        
+        try {
+            this.binanceConnector = new BinanceConnectorAdapter();
+            
+            // Test de conectividad básica
+            const pingResult = await this.binanceConnector.ping();
+            if (!pingResult.success) {
+                throw new Error(`Ping fallido: ${pingResult.error}`);
+            }
+            
+            this.log('SUCCESS', `✅ Conectividad OK (${pingResult.latencyMs}ms)`);
+            
+            // Test de información del exchange
+            const exchangeInfo = await this.binanceConnector.getExchangeInfo();
+            if (exchangeInfo && exchangeInfo.symbols) {
+                this.log('SUCCESS', `📊 Exchange info obtenida (${exchangeInfo.symbols.length} símbolos)`);
+            }
+            
+            // Test de acceso a cuenta (puede fallar sin credenciales reales)
+            try {
+                const accountInfo = await this.binanceConnector.getAccountInfo();
+                if (accountInfo) {
+                    this.log('SUCCESS', '🔑 Acceso a cuenta verificado');
+                    return accountInfo;
+                }
+            } catch (accountError) {
+                this.log('WARNING', '⚠️ Acceso a cuenta limitado (esperado en simulación)');
+                return null;
+            }
+            
+        } catch (error) {
+            this.log('ERROR', '❌ Error validando acceso Binance', error);
+            throw error;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 💰 SINCRONIZACIÓN DE BALANCE REAL
+    // ═══════════════════════════════════════════════════════════════════════
+
+    async syncRealBalance() {
+        this.log('INFO', '💰 Sincronizando balance...');
+        
+        try {
+            let realBalance = null;
+            
+            // Intentar obtener balance real de Binance
+            if (this.binanceConnector) {
+                try {
+                    const accountInfo = await this.binanceConnector.getAccountInfo();
+                    if (accountInfo && accountInfo.totalWalletBalance) {
+                        realBalance = parseFloat(accountInfo.totalWalletBalance);
+                        this.log('SUCCESS', `📊 Balance real obtenido: $${realBalance.toFixed(2)}`);
+                    }
+                } catch (balanceError) {
+                    this.log('WARNING', '⚠️ No se pudo obtener balance real de Binance');
+                }
+            }
+            
+            // Si no hay balance real, usar configuración simulada
+            if (!realBalance) {
+                const configuredBalance = parseFloat(process.env.TRADING_INITIAL_BALANCE) || 50000;
+                realBalance = configuredBalance;
+                this.log('INFO', `🎯 Usando balance de simulación: $${realBalance.toFixed(2)}`);
+            }
+            
+            // Validar balance mínimo
+            const minBalance = 100; // $100 mínimo
+            if (realBalance < minBalance) {
+                this.log('WARNING', `⚠️ Balance bajo: $${realBalance}, estableciendo mínimo de $${minBalance}`);
+                realBalance = minBalance;
+            }
+            
+            // Guardar balance sincronizado
+            this.syncedBalance = realBalance;
+            
+            // Actualizar variable de entorno
+            process.env.LEONARDO_SYNCED_BALANCE = realBalance.toString();
+            
+            this.log('SUCCESS', `✅ Balance sincronizado: $${realBalance.toFixed(2)}`);
+            return realBalance;
+            
+        } catch (error) {
+            this.log('ERROR', '❌ Error sincronizando balance', error);
+            throw error;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🧠 CONFIGURACIÓN DEL FUNDSMANAGER
+    // ═══════════════════════════════════════════════════════════════════════
+
+    async configureFundsManager() {
+        this.log('INFO', '🧠 Configurando FundsManager con balance real...');
+        
+        try {
+            const initialBalance = this.syncedBalance || 50000;
+            
+            // Crear FundsManager con balance real
+            this.fundsManager = new FundsManager({
+                initialBalance: initialBalance,
+                maxLeverage: parseFloat(process.env.TRADING_MAX_LEVERAGE) || 25,
+                maxRiskPerTrade: 0.08, // 8% máximo por trade para coherencia
+                maxDrawdown: 0.40,     // 40% drawdown máximo
+                stopLoss: 0.025,       // 2.5% stop loss
+                takeProfit: 0.05,      // 5% take profit
+                kellyFactor: 0.35,     // Factor Kelly agresivo
+                : process.env.BINANCE_TESTNET === 'true',
+                compoundingEnabled: true,
+                emergencyThreshold: 0.15 // Emergency stop al 15%
+            });
+            
+            // Inicializar FundsManager
+            await this.fundsManager.initialize();
+            
+            // Verificar estado post-inicialización
+            const fundsStatus = this.fundsManager.getFundsStatus();
+            
+            this.log('SUCCESS', '✅ FundsManager configurado', {
+                balance: fundsStatus.totalBalance,
+                available: fundsStatus.availableBalance,
+                canTrade: fundsStatus.canTrade,
+                consciousness: fundsStatus.leonardoFundsState.consciousness_level
+            });
+            
+            // Test de funcionalidad
+            await this.testFundsManagerOperations();
+            
+        } catch (error) {
+            this.log('ERROR', '❌ Error configurando FundsManager', error);
+            throw error;
+        }
+    }
+
+    async testFundsManagerOperations() {
+        this.log('INFO', '🔧 Probando operaciones FundsManager...');
+        
+        try {
+            // Test de cálculo de posición
+            const mockOpportunity = {
+                symbol: 'BTCUSDT',
+                confidence: 0.8,
+                edge: 0.03,
+                leverage: 10
+            };
+            
+            const mockConsciousness = {
+                consciousness_level: 0.75,
+                confidence: 0.8,
+                edge: 0.03,
+                leverage: 10,
+                bigBangReady: false,
+                pillarDetails: {
+                    lambda888: { strength: 0.8 },
+                    prime7919: { strength: 0.7 },
+                    hookWheel: { strength: 0.85 },
+                    symbiosis: { strength: 0.75 }
+                }
+            };
+            
+            const positionResult = this.fundsManager.calculatePositionSize(mockOpportunity, mockConsciousness);
+            
+            if (positionResult.success) {
+                this.log('SUCCESS', '✅ Cálculo de posición funcional', {
+                    size: positionResult.size,
+                    risk: positionResult.risk,
+                    leverage: positionResult.leverage
+                });
+            } else {
+                this.log('WARNING', '⚠️ Cálculo de posición con limitaciones', {
+                    reason: positionResult.reason
+                });
+            }
+            
+            // Test de métricas
+            const metrics = this.fundsManager.getMetrics();
+            this.log('INFO', '📊 Métricas FundsManager', metrics);
+            
+        } catch (error) {
+            this.log('WARNING', '⚠️ Error en test de operaciones', error);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 📋 GENERACIÓN DE CONFIGURACIÓN FINAL
+    // ═══════════════════════════════════════════════════════════════════════
+
+    async generateFinalConfiguration() {
+        this.log('INFO', '📋 Generando configuración final...');
+        
+        const finalConfig = {
+            timestamp: new Date().toISOString(),
+            mode: this.config.mode,
+            balance: {
+                initial: this.syncedBalance,
+                source: this.syncedBalance > 50000 ? 'BINANCE_REAL' : 'SIMULATION',
+                currency: 'USDT'
+            },
+            binance: {
+                connected: !!this.binanceConnector,
+                : process.env.BINANCE_TESTNET === 'true',
+                credentialsConfigured: !!(process.env.BINANCE_API_KEY && process.env.BINANCE_API_SECRET)
+            },
+            fundsManager: {
+                initialized: !!this.fundsManager,
+                balance: this.fundsManager ? this.fundsManager.totalBalance : 0,
+                canTrade: this.fundsManager ? this.fundsManager.canTrade() : false
+            },
+            environment: {
+                TRADING_INITIAL_BALANCE: this.syncedBalance?.toString(),
+                LEONARDO_SYNCED_BALANCE: this.syncedBalance?.toString(),
+                BINANCE_TESTNET: process.env.BINANCE_TESTNET,
+                TRADING_MODE: process.env.TRADING_MODE || 'SIMULATION',
+                LEONARDO_FUNDS_MODE: process.env.LEONARDO_FUNDS_MODE || 'SIMULATION_HIGH_CAPITAL'
+            },
+            recommendations: this.generateRecommendations()
+        };
+        
+        // Guardar configuración
+        const configPath = path.join(__dirname, 'leonardo-real-access-config.json');
+        await fs.writeFile(configPath, JSON.stringify(finalConfig, null, 2));
+        
+        this.log('SUCCESS', '✅ Configuración final guardada', {
+            balance: finalConfig.balance.initial,
+            mode: finalConfig.balance.source,
+            canTrade: finalConfig.fundsManager.canTrade
+        });
+        
+        return finalConfig;
+    }
+
+    generateRecommendations() {
+        const recommendations = [];
+        
+        if (!process.env.BINANCE_API_KEY || !process.env.BINANCE_API_SECRET) {
+            recommendations.push({
+                type: 'CREDENTIALS',
+                priority: 'HIGH',
+                message: 'Configurar credenciales reales de Binance para trading en vivo',
+                action: 'Set BINANCE_API_KEY y BINANCE_API_SECRET en variables de entorno'
+            });
+        }
+        
+        if (this.syncedBalance < 1000) {
+            recommendations.push({
+                type: 'BALANCE',
+                priority: 'MEDIUM',
+                message: 'Balance bajo para trading agresivo',
+                action: 'Considerar incrementar balance inicial para mejor performance'
+            });
+        }
+        
+        if (process.env.BINANCE_TESTNET === 'true') {
+            recommendations.push({
+                type: 'ENVIRONMENT',
+                priority: 'INFO',
+                message: 'Sistema configurado para TESTNET',
+                action: 'Cambiar BINANCE_TESTNET=false para trading real'
+            });
+        }
+        
+        return recommendations;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🔄 BACKUP Y RESTAURACIÓN
+    // ═══════════════════════════════════════════════════════════════════════
+
+    async createBackup() {
+        this.log('INFO', '💾 Creando backup de configuración...');
+        
+        const backup = {
+            timestamp: new Date().toISOString(),
+            environment: { ...this.originalEnv },
+            files: {}
+        };
+        
+        // Backup de archivo .env si existe
+        try {
+            const envContent = await fs.readFile(this.envFilePath, 'utf8');
+            backup.files['.env'] = envContent;
+        } catch (error) {
+            // .env no existe, no problem
+        }
+        
+        await fs.writeFile(this.configBackupPath, JSON.stringify(backup, null, 2));
+        this.log('SUCCESS', '✅ Backup creado');
+    }
+
+    async restoreBackup() {
+        this.log('WARNING', '🔄 Restaurando configuración desde backup...');
+        
+        try {
+            const backupData = await fs.readFile(this.configBackupPath, 'utf8');
+            const backup = JSON.parse(backupData);
+            
+            // Restaurar variables de entorno
+            Object.keys(process.env).forEach(key => {
+                if (!backup.environment[key]) {
+                    delete process.env[key];
+                }
+            });
+            
+            Object.entries(backup.environment).forEach(([key, value]) => {
+                process.env[key] = value;
+            });
+            
+            this.log('SUCCESS', '✅ Configuración restaurada desde backup');
+        } catch (error) {
+            this.log('ERROR', '❌ Error restaurando backup', error);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🔧 UTILIDADES
+    // ═══════════════════════════════════════════════════════════════════════
+
+    log(level, message, data = null) {
+        if (!this.config.enableLogging && level === 'INFO') return;
+        
+        const timestamp = new Date().toISOString();
+        const colors = {
+            INFO: '\x1b[36m',
+            SUCCESS: '\x1b[32m',
+            WARNING: '\x1b[33m',
+            ERROR: '\x1b[31m',
+            RESET: '\x1b[0m'
+        };
+        
+        console.log(`${colors[level]}[${timestamp}] ${level}: ${message}${colors.RESET}`);
+        if (data) {
+            console.log('Data:', JSON.stringify(data, null, 2));
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 📊 API PÚBLICA
+    // ═══════════════════════════════════════════════════════════════════════
+
+    getConfigStatus() {
+        return {
+            configured: !!this.fundsManager,
+            balance: this.syncedBalance,
+            binanceConnected: !!this.binanceConnector,
+            environment: {
+                : process.env.BINANCE_TESTNET === 'true',
+                hasCredentials: !!(process.env.BINANCE_API_KEY && process.env.BINANCE_API_SECRET)
+            }
+        };
+    }
+
+    async getFundsStatus() {
+        if (!this.fundsManager) return null;
+        return this.fundsManager.getFundsStatus();
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// 🚀 EJECUCIÓN PRINCIPAL
+// ═══════════════════════════════════════════════════════════════════════
+
+async function main() {
+    const configurator = new BinanceRealAccessConfigurator();
+    
+    try {
+        console.log('╔══════════════════════════════════════════════════════════════╗');
+        console.log('║        🔑 CONFIGURADOR DE ACCESO REAL A BINANCE             ║');
+        console.log('║     Sincronización de Balance y Configuración Coherente     ║');
+        console.log('╚══════════════════════════════════════════════════════════════╝');
+        console.log('');
+        
+        const result = await configurator.configure();
+        
+        console.log('\n╔══════════════════════════════════════════════════════════════╗');
+        console.log('║                    ✅ CONFIGURACIÓN COMPLETADA              ║');
+        console.log('╚══════════════════════════════════════════════════════════════╝');
+        
+        const status = configurator.getConfigStatus();
+        console.log('\n📊 Estado final:');
+        console.log(`   💰 Balance sincronizado: $${status.balance?.toFixed(2) || 'N/A'}`);
+        console.log(`   🌐 Binance conectado: ${status.binanceConnected ? 'SÍ' : 'NO'}`);
+        console.log(`   🧠 FundsManager configurado: ${status.configured ? 'SÍ' : 'NO'}`);
+        console.log(`   🔗 Modo: ${status.environment. ? 'TESTNET' : 'PRODUCTION'}`);
+        console.log('');
+        
+        process.exit(0);
+        
+    } catch (error) {
+        console.error('\n💥 Error en configuración:', error.message);
+        process.exit(1);
+    }
+}
+
+// Ejecutar si se llama directamente
+if (require.main === module) {
+    main();
+}
+
+module.exports = BinanceRealAccessConfigurator;

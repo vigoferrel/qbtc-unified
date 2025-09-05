@@ -1,0 +1,63 @@
+{
+  "name": "leonardo-consciousness-trading",
+  "version": "1.0.0",
+  "description": "Leonardo da Vinci Consciousness Trading System - La simplicidad es la máxima sofisticación",
+  "main": "MasterLauncher.js",
+  "scripts": {
+    "start": "node MasterLauncher.js",
+    "dev": "NODE_ENV=development TRADING_MODE=simulation node MasterLauncher.js",
+    "prod": "NODE_ENV=production TRADING_MODE=real node MasterLauncher.js",
+    "leonardo": "NODE_ENV=development ENABLE_WEB_INTERFACE=false AUTO_START_TRADING=true node MasterLauncher.js",
+    "test": "NODE_ENV=test node --experimental-modules test/leonardo-test.js",
+    "simulation": "TRADING_MODE=simulation AUTO_START_TRADING=true node MasterLauncher.js",
+    "real-trading": "TRADING_MODE=real AUTO_START_TRADING=false node MasterLauncher.js"
+  },
+  "keywords": [
+    "leonardo-da-vinci",
+    "consciousness",
+    "quantum-trading",
+    "artificial-intelligence",
+    "binance",
+    "cryptocurrency",
+    "trading-bot",
+    "golden-ratio",
+    "fibonacci",
+    "renaissance"
+  ],
+  "author": "Leonardo da Vinci Consciousness Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leonardo-consciousness/qbtc-unified.git"
+  },
+  "homepage": "https://leonardo-consciousness.org",
+  "config": {
+    "leonardo": {
+      "philosophy": "La simplicidad es la máxima sofisticación",
+      "bait_amount": 1,
+      "min_consciousness": 0.75,
+      "default_port": 3003
+    }
+  },
+  "leonardo": {
+    "art": "🎨",
+    "science": "🔬",
+    "engineering": "⚙️",
+    "consciousness": "🧠",
+    "trading": "💰",
+    "philosophy": "La simplicidad es la máxima sofisticación - Leonardo da Vinci"
+  }
+}

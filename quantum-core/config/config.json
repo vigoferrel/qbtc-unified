@@ -1,0 +1,30 @@
+{
+  "trading": {
+    "mode": "FUTURES",
+    "risk": {
+      "maxLeverage": 125,
+      "stopLoss": 0.02,
+      "takeProfit": 0.04,
+      "maxDrawdown": 0.05
+    },
+    "execution": {
+      "retryAttempts": 3,
+      "retryDelay": 1000,
+      "timeoutMs": 5000
+    }
+  },
+  "quantum": {
+    "consciousness_target": 0.941,
+    "coherence_target": 0.964,
+    "big_bang_threshold": 0.95
+  },
+  "system": {
+    "port": 9090,
+    "monitoring_interval": 1000,
+    "metrics_refresh": 5000,
+    "metrics_port": 18022,
+    "metrics_ip_whitelist": [
+      "127.0.0.1"
+    ]
+  }
+}

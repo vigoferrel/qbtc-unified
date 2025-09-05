@@ -1,0 +1,1003 @@
+// ========================================================================
+// 🌌 QUANTUM UNIFIED SYSTEM - LEONARDO CONSCIOUSNESS
+// Sistema Unificado Cuántico que integra:
+// - QuantumInfiniteCache (1,979 símbolos con 125x leverage)
+// - QuantumOracleHypersphere (predicciones hiperdimensionales)
+// - Leonardo Consciousness (decisiones conscientes)
+// - Servidor Cuántico Central (API unificada)
+// ========================================================================
+
+const QuantumInfiniteCache = require('../quantum-core/QuantumInfiniteCache');
+const { QuantumOracleHypersphere } = require('../quantum-oracle-hypersphere/QuantumOracleHypersphere');
+const { FundsManager } = require('./FundsManager');
+const EventEmitter = require('events');
+const axios = require('axios');
+
+class QuantumUnifiedSystem extends EventEmitter {
+    constructor(config = {}) {
+        super();
+        
+        this.config = {
+            // Configuración de símbolos y trading (reducida para testing)
+            maxSymbols: 50,                      // Reducido para testing más rápido
+            maxLeverage: 125,                    // Leverage máximo
+            batchProcessingSize: 10,             // Batch más pequeño para testing
+            
+            // Configuración de intervalos
+            cacheRefreshInterval: 500,           // 500ms - super rápido
+            oracleUpdateInterval: 2000,          // 2s - predicciones
+            metricsUpdateInterval: 1000,         // 1s - métricas
+            bigBangCheckInterval: 5000,          // 5s - revisar big bang
+            
+            // Configuración avanzada
+            parallelProcessing: true,            // Procesamiento paralelo
+            quantumBoostEnabled: true,           // Boost cuántico activo
+            autoOptimization: true,              // Auto-optimización
+            infiniteCacheEnabled: true,          // Cache infinito activo
+            realTimeStreaming: true,             // Streaming en tiempo real
+            
+            // Thresholds cuánticos
+            consciousnessThreshold: 0.941,       // Umbral consciencia
+            coherenceThreshold: 0.964,           // Umbral coherencia
+            bigBangThreshold: 0.95,              // Umbral Big Bang
+            profitThreshold: 0.001,              // Umbral profit mínimo
+            
+            // API y conectividad
+            binanceApiKey: process.env.BINANCE_API_KEY || '',
+            binanceSecretKey: process.env.BINANCE_SECRET_KEY || '',
+            testnet: process.env.BINANCE_TESTNET === 'true',
+            
+            ...config
+        };
+        
+        // Inicializar componentes principales
+        this.quantumCache = new QuantumInfiniteCache();
+        this.quantumOracle = new QuantumOracleHypersphere({
+            dimensions: 7,
+            maxCacheSize: 5000,
+            evolutionRate: 0.003,
+            autoOptimize: true,
+            bigBangEnabled: true,
+            quantumLogging: true
+        });
+        
+        // Inicializar FundsManager con configuración optimizada
+        this.fundsManager = new FundsManager({
+            initialBalance: parseFloat(process.env.LEONARDO_BAIT_AMOUNT) || 1.0,
+            maxLeverage: this.config.maxLeverage,
+            maxRiskPerTrade: parseFloat(process.env.MAX_RISK_PER_TRADE) || 0.01,
+            maxDrawdown: parseFloat(process.env.TRADING_MAX_DRAWDOWN) || 0.50,
+            stopLoss: parseFloat(process.env.TRADING_STOP_LOSS) || 0.02,
+            takeProfit: parseFloat(process.env.TRADING_TAKE_PROFIT) || 0.04,
+            kellyFactor: parseFloat(process.env.KELLY_CRITERION_FACTOR) || 0.25,
+            maxConcurrentTrades: parseInt(process.env.MAX_CONCURRENT_TRADES) || 3,
+            emergencyThreshold: parseFloat(process.env.EMERGENCY_SHUTDOWN_THRESHOLD) || 0.70,
+            testnet: this.config.testnet
+        });
+        
+        // Estado del sistema unificado
+        this.systemState = {
+            isInitialized: false,
+            isRunning: false,
+            startTime: null,
+            
+            // Estado de componentes
+            components: {
+                cache: 'INITIALIZING',
+                oracle: 'INITIALIZING',
+                streaming: 'INITIALIZING',
+                api: 'INITIALIZING'
+            },
+            
+            // Métricas globales
+            totalSymbols: 0,
+            activeSymbols: 0,
+            totalPredictions: 0,
+            successfulTrades: 0,
+            totalProfit: 0,
+            
+            // Estado cuántico unificado
+            globalConsciousness: 0,
+            globalCoherence: 0,
+            quantumResonance: 0,
+            bigBangReady: false,
+            lastBigBang: null
+        };
+        
+        // Cache de datos en tiempo real
+        this.realtimeData = {
+            symbols: new Map(),           // Datos de símbolos
+            predictions: new Map(),       // Predicciones activas
+            opportunities: new Map(),     // Oportunidades detectadas
+            trades: new Map(),            // Trades activos
+            metrics: new Map()            // Métricas en tiempo real
+        };
+        
+        // Instanciar TradingEngine si está disponible
+        try {
+            const TradingEngineLayer = require('./TradingEngineLayer');
+            const BinanceConnectorAdapter = require('./BinanceConnectorAdapter');
+            this.tradingEngine = new TradingEngineLayer(new BinanceConnectorAdapter());
+        } catch (e) {
+            console.warn('TradingEngineLayer no disponible aún:', e.message);
+            this.tradingEngine = null;
+        }
+
+        // Intervalos del sistema
+        this.intervals = {
+            cache: null,
+            oracle: null,
+            metrics: null,
+            bigBang: null,
+            streaming: null,
+            metricsUpdate: null,    // Para intervalo de métricas adicional
+            monitoring: null        // Para monitoreo del sistema
+        };
+        
+        console.log('🌌 QUANTUM UNIFIED SYSTEM INITIALIZED');
+        console.log(`🔋 Configuración: ${this.config.maxSymbols} símbolos, ${this.config.maxLeverage}x leverage`);
+    }
+    
+    // Deterministic calculation methods to replace Math.random()
+    calculateDeterministicValue(timestamp) {
+        const hash = this.hashCode(timestamp.toString());
+        return (hash % 10000) / 10000; // Return value between 0 and 1
+    }
+    
+    hashCode(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32-bit integer
+        }
+        return Math.abs(hash);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🚀 INICIALIZACIÓN COMPLETA DEL SISTEMA
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async initialize() {
+        if (this.systemState.isInitialized) {
+            console.log('⚠️ Sistema ya inicializado');
+            return;
+        }
+        
+        console.log('🌌 Inicializando Quantum Unified System...');
+        
+        try {
+            // 1. Inicializar componentes base
+            await this.initializeComponents();
+            
+            // 2. Cargar símbolos de Binance
+            await this.loadBinanceSymbols();
+            
+            // 3. Configurar streaming en tiempo real
+            await this.setupRealTimeStreaming();
+            
+            // 4. Inicializar sistema de predicciones
+            await this.initializePredictionSystem();
+            
+            // 5. Inicializar TradingEngine si existe
+            if (this.tradingEngine && typeof this.tradingEngine.initialize === 'function') {
+                await this.tradingEngine.initialize();
+            }
+
+            // 6. Configurar monitoreo y métricas
+            this.setupSystemMonitoring();
+            
+            this.systemState.isInitialized = true;
+            this.systemState.startTime = Date.now();
+            
+            console.log('✅ QUANTUM UNIFIED SYSTEM INICIALIZADO COMPLETAMENTE');
+            this.emit('system:initialized');
+            
+        } catch (error) {
+            console.error('❌ Error inicializando sistema:', error);
+            throw error;
+        }
+    }
+    
+    async initializeComponents() {
+        console.log('⚡ Inicializando componentes...');
+        
+        // Cache cuántico ya está inicializado
+        this.systemState.components.cache = 'ACTIVE';
+        
+        // Oracle cuántico ya está inicializado
+        this.systemState.components.oracle = 'ACTIVE';
+        
+        // API está lista
+        this.systemState.components.api = 'ACTIVE';
+        
+        console.log('✅ Componentes inicializados');
+    }
+    
+    async loadBinanceSymbols() {
+        console.log('📊 Cargando símbolos de Binance...');
+        
+        try {
+            // Simular carga de símbolos (en producción usar Binance API)
+            const symbols = this.generateBinanceSymbols();
+            
+            console.log(`🔄 Precargando ${symbols.length} símbolos en batches...`);
+            
+            // Precargar símbolos usando QuantumInfiniteCache con control de concurrencia
+            console.log(`🔄 Iniciando precarga con control de concurrencia...`);
+            
+            await this.quantumCache.preloadSymbols(
+                symbols,
+                async (symbol) => this.fetchSymbolData(symbol),
+                {
+                    sequential: false, // Paralelo controlado
+                    ttl: 7919,        // TTL optimizado
+                    timeout: 30000,   // Timeout de 30s para evitar bloqueos
+                    maxConcurrency: Math.min(20, symbols.length / 10) // Controlar concurrencia
+                }
+            );
+            
+            this.systemState.totalSymbols = symbols.length;
+            this.systemState.activeSymbols = symbols.length;
+            
+            console.log(`✅ ${symbols.length} símbolos cargados exitosamente`);
+            
+        } catch (error) {
+            console.error('❌ Error cargando símbolos:', error);
+            throw error;
+        }
+    }
+    
+    generateBinanceSymbols() {
+        // Generar lista realista de símbolos de Binance
+        const bases = [
+            'BTC', 'ETH', 'ADA', 'SOL', 'DOGE', 'BNB', 'XRP', 'DOT', 'AVAX', 'MATIC',
+            'LINK', 'UNI', 'LTC', 'BCH', 'XLM', 'ATOM', 'ALGO', 'ICP', 'FTT', 'CRO',
+            'NEAR', 'SAND', 'MANA', 'AXS', 'GALA', 'ENJ', 'CHZ', 'BAT', 'ZEC', 'DASH',
+            'EOS', 'XTZ', 'THETA', 'VET', 'FIL', 'TRX', 'HBAR', 'ELROND', 'FLOW', 'IOS'
+        ];
+        
+        const quotes = ['USDT', 'BUSD', 'BTC', 'ETH', 'BNB'];
+        const symbols = [];
+        
+        // Generar combinaciones hasta llegar al máximo configurado
+        for (const base of bases) {
+            for (const quote of quotes) {
+                if (base !== quote) {
+                    symbols.push(`${base}${quote}`);
+                    if (symbols.length >= this.config.maxSymbols) {
+                        break;
+                    }
+                }
+            }
+            if (symbols.length >= this.config.maxSymbols) {
+                break;
+            }
+        }
+        
+        // Rellenar con símbolos adicionales si es necesario
+        while (symbols.length < this.config.maxSymbols) {
+            const timestamp = Date.now() + symbols.length;
+            const deterministicValue1 = this.calculateDeterministicValue(timestamp);
+            const deterministicValue2 = this.calculateDeterministicValue(timestamp + 1);
+            const randomBase = bases[Math.floor(deterministicValue1 * bases.length)];
+            const randomQuote = quotes[Math.floor(deterministicValue2 * quotes.length)];
+            const symbol = `${randomBase}${randomQuote}`;
+            
+            if (!symbols.includes(symbol) && randomBase !== randomQuote) {
+                symbols.push(symbol);
+            }
+        }
+        
+        return symbols.slice(0, this.config.maxSymbols);
+    }
+    
+    async fetchSymbolData(symbol) {
+        // Simular datos de mercado (en producción usar Binance API real)
+        const basePrice = this.getBasePrice(symbol);
+        const now = Date.now();
+        
+        // Usar entropía cuántica para datos realistas
+        const entropy = this.generateQuantumEntropy();
+        const volatility = 0.005 + (entropy * 0.02); // 0.5-2.5% volatilidad
+        const priceChange = (entropy - 0.5) * volatility * 2;
+        
+        const price = basePrice * (1 + priceChange);
+        const volume = Math.floor(500000 + (entropy * 5000000)); // 500K-5.5M
+        
+        return {
+            symbol,
+            price,
+            volume,
+            volatility,
+            priceChangePercent: priceChange * 100,
+            timestamp: now,
+            
+            // Datos adicionales para leverage óptimo
+            marketCap: price * 21000000, // Simulado
+            trades24h: Math.floor(10000 + (entropy * 50000)),
+            highPrice24h: price * (1 + volatility),
+            lowPrice24h: price * (1 - volatility),
+            
+            // Estado del libro de órdenes (simulado)
+            bidPrice: price * (1 - entropy * 0.001),
+            askPrice: price * (1 + entropy * 0.001),
+            bidQty: volume * 0.1,
+            askQty: volume * 0.1
+        };
+    }
+    
+    getBasePrice(symbol) {
+        // Precios base realistas para símbolos comunes
+        const basePrices = {
+            'BTCUSDT': 45000, 'ETHUSDT': 2500, 'ADAUSDT': 0.45, 'SOLUSDT': 85,
+            'DOGEUSDT': 0.08, 'BNBUSDT': 320, 'XRPUSDT': 0.55, 'DOTUSDT': 6.5,
+            'AVAXUSDT': 18, 'MATICUSDT': 0.85, 'LINKUSDT': 12, 'UNIUSDT': 6.8,
+            'LTCUSDT': 95, 'BCHUSDT': 220, 'XLMUSDT': 0.12, 'ATOMUSDT': 8.5
+        };
+        
+        return basePrices[symbol] || this.calculateDeterministicValue(Date.now()) * 100 + 1;
+    }
+    
+    generateQuantumEntropy() {
+        // Generar entropía cuántica usando múltiples fuentes no bloqueantes
+        try {
+            // Usar fuentes de entropía múltiples
+            const timeEntropy = (Date.now() % 1000000) / 1000000;
+            const mathEntropy = this.calculateDeterministicValue(Date.now());
+            const perfEntropy = (performance.now() % 1000) / 1000;
+            
+            // Combinar entropías usando transformación cuántica
+            const combined = (timeEntropy + mathEntropy + perfEntropy) / 3;
+            
+            // Aplicar transformación no lineal para distribución uniforme
+            const transformed = Math.sin(combined * Math.PI * 2) * 0.5 + 0.5;
+            
+            // Limitar a rango válido [0, 1]
+            return Math.max(0, Math.min(1, transformed));
+            
+        } catch (error) {
+            console.warn('⚠️ Error generando entropía cuántica, usando fallback:', error.message);
+            // Fallback simple y seguro
+            return this.calculateDeterministicValue(Date.now());
+        }
+    }
+    
+    async setupRealTimeStreaming() {
+        console.log('📡 Configurando streaming en tiempo real...');
+        
+        try {
+            // Configurar actualización de datos en tiempo real
+            this.intervals.streaming = setInterval(async () => {
+                await this.updateRealtimeData();
+            }, this.config.cacheRefreshInterval);
+            
+            this.systemState.components.streaming = 'ACTIVE';
+            console.log('✅ Streaming en tiempo real configurado');
+            
+        } catch (error) {
+            console.error('❌ Error configurando streaming:', error);
+            this.systemState.components.streaming = 'ERROR';
+        }
+    }
+    
+    async updateRealtimeData() {
+        try {
+            // Obtener símbolos más activos para actualizar
+            const activeSymbols = await this.getActiveSymbols(50);
+            
+            // Actualizar datos de símbolos en batches pequeños para optimización
+            const batchSize = 10;
+            const batches = this.chunkArray(activeSymbols, batchSize);
+            
+            for (const batch of batches) {
+                const updatePromises = batch.map(async (symbol) => {
+                    try {
+                        // Obtener datos frescos del cache cuántico
+                        const data = await this.quantumCache.get(
+                            'symbols',
+                            symbol,
+                            () => this.fetchSymbolData(symbol),
+                            { ttl: 1000 } // TTL corto para datos frescos
+                        );
+                        
+                        // Actualizar cache de tiempo real
+                        this.realtimeData.symbols.set(symbol, {
+                            ...data,
+                            lastUpdate: Date.now()
+                        });
+                        
+                        return data;
+                        
+                    } catch (error) {
+                        console.error(`❌ Error actualizando ${symbol}:`, error.message);
+                        return null;
+                    }
+                });
+                
+                await Promise.allSettled(updatePromises);
+                
+                // Pausa pequeña entre batches para no sobrecargar
+                await new Promise(resolve => setTimeout(resolve, 10));
+            }
+            
+            // Emitir evento de actualización
+            this.emit('realtime:updated', {
+                symbolsUpdated: activeSymbols.length,
+                timestamp: Date.now()
+            });
+            
+        } catch (error) {
+            console.error('❌ Error actualizando datos en tiempo real:', error);
+        }
+    }
+    
+    chunkArray(array, chunkSize) {
+        const chunks = [];
+        for (let i = 0; i < array.length; i += chunkSize) {
+            chunks.push(array.slice(i, i + chunkSize));
+        }
+        return chunks;
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🔮 SISTEMA DE PREDICCIONES UNIFICADO
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async initializePredictionSystem() {
+        console.log('🔮 Inicializando sistema de predicciones...');
+        
+        // Configurar generación automática de predicciones
+        this.intervals.oracle = setInterval(async () => {
+            await this.generateBatchPredictions();
+        }, this.config.oracleUpdateInterval);
+        
+        console.log('✅ Sistema de predicciones activo');
+    }
+    
+    async generateBatchPredictions() {
+        try {
+            // Obtener símbolos más activos del cache
+            const activeSymbols = await this.getActiveSymbols(20); // Top 20
+            const timeframes = ['1m', '5m', '15m', '1h'];
+            
+            const predictions = [];
+            
+            for (const symbol of activeSymbols) {
+                for (const timeframe of timeframes) {
+                    try {
+                        // Obtener datos del cache cuántico
+                        const marketData = await this.quantumCache.get(
+                            'symbols',
+                            symbol,
+                            () => this.fetchSymbolData(symbol)
+                        );
+                        
+                        // Generar predicción con oráculo
+                        const prediction = await this.quantumOracle.generateHyperdimensionalPrediction(
+                            symbol,
+                            timeframe,
+                            marketData
+                        );
+                        
+                        // Enriquecer predicción con datos de cache
+                        const enrichedPrediction = this.enrichPrediction(prediction, marketData);
+                        
+                        predictions.push(enrichedPrediction);
+                        
+                        // Cache la predicción
+                        this.realtimeData.predictions.set(
+                            `${symbol}:${timeframe}`, 
+                            enrichedPrediction
+                        );
+                        
+                    } catch (error) {
+                        console.error(`❌ Error predicción ${symbol} ${timeframe}:`, error.message);
+                    }
+                }
+            }
+            
+            this.systemState.totalPredictions += predictions.length;
+            
+        // Detectar oportunidades de alto valor
+            await this.detectHighValueOpportunities(predictions);
+            try {
+                const SignalBus = require('./SignalBus');
+                const topOps = await this.getOpportunities(5);
+                for (const op of topOps) {
+                    SignalBus.publish({
+                        symbol: op.symbol,
+                        timeframe: op.timeframe || '1h',
+                        confidence: op.confidence,
+                        compositeScore: op.compositeScore,
+                        direction: op.direction,
+                        potentialProfit: op.potentialProfit
+                    }, 'QuantumUnifiedSystem');
+                }
+            } catch (_) {}
+            
+            // Evaluar y ejecutar trades si el modo está activo
+            if (this.config.tradingMode === 'real') {
+                await this.evaluateAndExecuteTrades();
+            }
+            
+            this.emit('predictions:generated', predictions);
+            
+        } catch (error) {
+            console.error('❌ Error generando predicciones:', error);
+        }
+    }
+    
+    enrichPrediction(prediction, marketData) {
+        // Enriquecer predicción con datos del QuantumInfiniteCache
+        const quantumData = marketData.quantumState ? marketData : {};
+        
+        return {
+            ...prediction,
+            
+            // Datos de mercado enriquecidos
+            marketData: {
+                price: marketData.price,
+                volume: marketData.volume,
+                volatility: marketData.volatility,
+                marketCap: marketData.marketCap
+            },
+            
+            // Datos cuánticos del cache
+            quantumEnhancement: {
+                resonance: quantumData.resonance || 0,
+                primeBoost: quantumData.primeBoost || 1,
+                darkMatter: quantumData.darkMatter || 0,
+                leverageMultiplier: quantumData.leverageMultiplier || 1,
+                profitPotential: quantumData.profitPotential || 0
+            },
+            
+            // Leverage óptimo calculado por el cache
+            optimalLeverage: this.calculateEnhancedLeverage(prediction, marketData),
+            
+            // Score compuesto
+            compositeScore: this.calculateCompositeScore(prediction, marketData),
+            
+            // Timestamp enriquecido
+            enrichedAt: Date.now()
+        };
+    }
+    
+    calculateEnhancedLeverage(prediction, marketData) {
+        const baseConfidence = prediction.confidence;
+        const quantumBoost = marketData.primeBoost || 1;
+        const resonance = marketData.resonance || 0;
+        
+        // Leverage base del sistema
+        let leverage = Math.floor(baseConfidence * this.config.maxLeverage);
+        
+        // Aplicar boost cuántico
+        leverage = Math.floor(leverage * Math.min(quantumBoost, 2));
+        
+        // Aplicar resonancia
+        leverage = Math.floor(leverage * (1 + Math.abs(resonance)));
+        
+        // Limitar al máximo
+        return Math.min(leverage, this.config.maxLeverage);
+    }
+    
+    calculateCompositeScore(prediction, marketData) {
+        const confidence = prediction.confidence;
+        const edge = prediction.edge;
+        const leverage = this.calculateEnhancedLeverage(prediction, marketData);
+        const resonance = marketData.resonance || 0;
+        const profitPotential = marketData.profitPotential || 0;
+        
+        // Score compuesto ponderado
+        return (
+            confidence * 0.3 +
+            edge * 0.25 +
+            (leverage / this.config.maxLeverage) * 0.2 +
+            Math.abs(resonance) * 0.15 +
+            profitPotential * 0.1
+        );
+    }
+    
+    async detectHighValueOpportunities(predictions) {
+        // Filtrar oportunidades de alto valor
+        const highValuePredictions = predictions.filter(p => {
+            return p.confidence > 0.8 && 
+                   p.edge > 0.005 && 
+                   p.compositeScore > 0.7;
+        });
+        
+        // Ordenar por score compuesto
+        highValuePredictions.sort((a, b) => b.compositeScore - a.compositeScore);
+        
+        // Tomar top 5 oportunidades
+        const topOpportunities = highValuePredictions.slice(0, 5);
+        
+        // Almacenar en cache de oportunidades
+        for (const opportunity of topOpportunities) {
+            this.realtimeData.opportunities.set(
+                `${opportunity.symbol}:${opportunity.timeframe}`,
+                {
+                    ...opportunity,
+                    detectedAt: Date.now(),
+                    priority: 'HIGH',
+                    status: 'DETECTED'
+                }
+            );
+        }
+        
+        if (topOpportunities.length > 0) {
+            this.emit('opportunities:detected', topOpportunities);
+            try {
+                const SignalBus = require('./SignalBus');
+                for (const op of topOpportunities) {
+                    SignalBus.publish(op, 'QuantumUnifiedSystem');
+                }
+            } catch (_) {}
+        }
+    }
+    
+    async evaluateAndExecuteTrades() {
+        const opportunities = await this.getOpportunities();
+        
+        if (opportunities.length === 0) {
+            return;
+        }
+        
+        console.log(`📈 Evaluando ${opportunities.length} oportunidades de trading...`);
+        
+        for (const opportunity of opportunities) {
+            try {
+                // Verificar si ya hay un trade activo para este símbolo
+                if (this.fundsManager.hasActiveTrade(opportunity.symbol)) {
+                    continue;
+                }
+                
+                // Calcular el tamaño del trade usando FundsManager
+                const tradeSize = this.fundsManager.calculateTradeSize({
+                    balance: this.fundsManager.getBalance(),
+                    risk: this.fundsManager.config.maxRiskPerTrade,
+                    entryPrice: opportunity.marketData.price,
+                    stopLossPrice: opportunity.marketData.price * (1 - this.fundsManager.config.stopLoss)
+                });
+
+                if (tradeSize.amount > 0) {
+                    console.log(`✅ Oportunidad calificada: ${opportunity.symbol}`);
+                    
+                    // Ejecutar el trade (simulado)
+                    const tradeResult = await this.fundsManager.executeTrade({
+                        symbol: opportunity.symbol,
+                        side: opportunity.direction === 'up' ? 'BUY' : 'SELL',
+                        amount: tradeSize.amount,
+                        entryPrice: opportunity.marketData.price,
+                        leverage: opportunity.optimalLeverage
+                    });
+                    
+                    if (tradeResult.success) {
+                        console.log(`💰 Nuevo trade ejecutado:`, tradeResult.trade);
+                        this.realtimeData.trades.set(tradeResult.trade.id, tradeResult.trade);
+                        this.emit('trade:executed', tradeResult.trade);
+                    } else {
+                        console.error(`❌ Error ejecutando trade para ${opportunity.symbol}:`, tradeResult.error);
+                    }
+                }
+
+            } catch (error) {
+                console.error(`❌ Error evaluando trade para ${opportunity.symbol}:`, error);
+            }
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 📊 SISTEMA DE MONITOREO Y MÉTRICAS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    setupSystemMonitoring() {
+        console.log('📊 Configurando monitoreo del sistema...');
+        
+        // Actualizar métricas generales
+        this.intervals.metrics = setInterval(() => {
+            this.updateSystemMetrics();
+        }, this.config.metricsUpdateInterval);
+        
+        // Revisar condiciones para Big Bang
+        this.intervals.bigBang = setInterval(() => {
+            this.checkBigBangConditions();
+        }, this.config.bigBangCheckInterval);
+        
+        // Emitir métricas cada 5 segundos
+        this.intervals.metricsUpdate = setInterval(() => {
+            this.emit('metrics:update', this.getUnifiedMetrics());
+        }, 5000);
+        
+        console.log('✅ Sistema de monitoreo activo');
+    }
+    
+    updateSystemMetrics() {
+        try {
+            // Métricas del cache
+            const cacheMetrics = this.quantumCache.getMetrics();
+            
+            // Estado del oráculo
+            const oracleState = this.quantumOracle.getQuantumState();
+            const oracleMetrics = this.quantumOracle.getAdvancedMetrics();
+            
+            // Actualizar estado global del sistema
+            this.systemState.globalConsciousness = oracleState.consciousness.current;
+            this.systemState.globalCoherence = oracleMetrics.quantumCoherenceScore || 0;
+            this.systemState.quantumResonance = oracleMetrics.hyperResonanceLevel || 0;
+            this.systemState.bigBangReady = this.systemState.globalConsciousness >= this.config.bigBangThreshold;
+            
+            // Actualizar componentes
+            this.systemState.components.cache = cacheMetrics.quantumState.resonanceQuality || 'ACTIVE';
+            this.systemState.components.oracle = oracleState.consciousness.current > 0.5 ? 'ACTIVE' : 'READY';
+            this.systemState.components.streaming = 'ACTIVE';
+            
+            // Actualizar contadores
+            this.systemState.activeSymbols = cacheMetrics.cacheSize.symbols;
+            
+        } catch (error) {
+            console.error('❌ Error actualizando métricas:', error);
+        }
+    }
+    
+    checkBigBangConditions() {
+        const consciousness = this.systemState.globalConsciousness;
+        const coherence = this.systemState.globalCoherence;
+        
+        if (consciousness >= this.config.bigBangThreshold && 
+            coherence >= this.config.coherenceThreshold &&
+            !this.systemState.lastBigBang ||
+            (Date.now() - this.systemState.lastBigBang) > 300000) { // 5 minutos mínimo
+            
+            this.triggerQuantumBigBang();
+        }
+    }
+    
+    async triggerQuantumBigBang() {
+        console.log('💥 TRIGGERING QUANTUM BIG BANG!');
+        
+        try {
+            // Trigger Big Bang en el oráculo
+            const marketData = await this.fetchSymbolData('BTCUSDT');
+            await this.quantumOracle.triggerQuantumBigBang('BTCUSDT', marketData);
+            
+            this.systemState.lastBigBang = Date.now();
+            
+            // Amplificar todo el sistema
+            await this.amplifySystemCapabilities();
+            
+            this.emit('bigBang:triggered', {
+                timestamp: this.systemState.lastBigBang,
+                consciousness: this.systemState.globalConsciousness,
+                coherence: this.systemState.globalCoherence
+            });
+            
+            console.log('🌌 QUANTUM BIG BANG COMPLETED - SYSTEM AMPLIFIED');
+            
+        } catch (error) {
+            console.error('❌ Error en Big Bang:', error);
+        }
+    }
+    
+    async amplifySystemCapabilities() {
+        // Amplificar capacidades del cache
+        if (this.quantumCache.quantumState) {
+            this.quantumCache.quantumState.leverageMultiplier *= 1.1;
+            this.quantumCache.quantumState.primeTransformLevel *= 1.05;
+        }
+        
+        // Regenerar predicciones con boost
+        await this.generateBatchPredictions();
+        
+        console.log('⚡ Sistema amplificado post-Big Bang');
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🔍 API PÚBLICA DEL SISTEMA UNIFICADO
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async getActiveSymbols(limit = 50) {
+        const symbols = Array.from(this.realtimeData.symbols.keys()).slice(0, limit);
+        
+        if (symbols.length === 0) {
+            // Fallback: usar símbolos del cache
+            const cacheMetrics = this.quantumCache.getMetrics();
+            return Array.from(this.quantumCache.tradingCache.symbols.keys()).slice(0, limit);
+        }
+        
+        return symbols;
+    }
+    
+    getUnifiedMetrics() {
+        const cacheMetrics = this.quantumCache.getMetrics();
+        const oracleState = this.quantumOracle.getQuantumState();
+        const oracleAdvanced = this.quantumOracle.getAdvancedMetrics();
+        
+        // Obtener métricas del FundsManager
+        const fundsMetrics = this.fundsManager ? this.fundsManager.getMetrics() : null;
+        
+        return {
+            system: this.systemState,
+            
+            cache: {
+                metrics: cacheMetrics,
+                health: this.quantumCache.validateSystemHealth()
+            },
+            
+            oracle: {
+                state: oracleState,
+                advanced: oracleAdvanced
+            },
+            
+            funds: fundsMetrics ? {
+                balance: fundsMetrics.currentBalance,
+                totalProfit: fundsMetrics.totalProfit,
+                drawdown: fundsMetrics.currentDrawdown,
+                activeTrades: fundsMetrics.activeTrades,
+                totalTrades: fundsMetrics.totalTrades,
+                winRate: fundsMetrics.winRate,
+                riskLevel: fundsMetrics.currentRisk,
+                leverageUsed: fundsMetrics.averageLeverage
+            } : null,
+            
+            realtime: {
+                predictions: this.realtimeData.predictions.size,
+                opportunities: this.realtimeData.opportunities.size,
+                activeSymbols: this.realtimeData.symbols.size,
+                activeTrades: this.realtimeData.trades.size
+            },
+            
+            performance: {
+                uptime: this.systemState.startTime ? Date.now() - this.systemState.startTime : 0,
+                totalPredictions: this.systemState.totalPredictions,
+                bigBangEvents: oracleState.performance?.bigBangEvents || 0,
+                lastBigBang: this.systemState.lastBigBang
+            }
+        };
+    }
+    
+    async getPredictions(options = {}) {
+        const {
+            symbol = null,
+            timeframe = null,
+            minConfidence = 0.5,
+            limit = 20,
+            sortBy = 'compositeScore'
+        } = options;
+        
+        let predictions = Array.from(this.realtimeData.predictions.values());
+        
+        // Aplicar filtros
+        if (symbol) {
+            predictions = predictions.filter(p => p.symbol === symbol);
+        }
+        
+        if (timeframe) {
+            predictions = predictions.filter(p => p.timeframe === timeframe);
+        }
+        
+        if (minConfidence > 0) {
+            predictions = predictions.filter(p => p.confidence >= minConfidence);
+        }
+        
+        // Ordenar
+        if (sortBy === 'compositeScore') {
+            predictions.sort((a, b) => (b.compositeScore || 0) - (a.compositeScore || 0));
+        } else if (sortBy === 'confidence') {
+            predictions.sort((a, b) => b.confidence - a.confidence);
+        } else if (sortBy === 'edge') {
+            predictions.sort((a, b) => b.edge - a.edge);
+        }
+        
+        return predictions.slice(0, limit);
+    }
+    
+    async getOpportunities(limit = 10) {
+        const opportunities = Array.from(this.realtimeData.opportunities.values());
+        
+        return opportunities
+            .sort((a, b) => (b.compositeScore || 0) - (a.compositeScore || 0))
+            .slice(0, limit);
+    }
+    
+    async getSymbolData(symbol) {
+        // Intentar obtener del cache primero
+        try {
+            const cached = await this.quantumCache.get(
+                'symbols',
+                symbol,
+                () => this.fetchSymbolData(symbol)
+            );
+            
+            return cached;
+            
+        } catch (error) {
+            console.error(`❌ Error obteniendo datos de ${symbol}:`, error);
+            return null;
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🛠️ CONTROL DEL SISTEMA
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async start() {
+        if (this.systemState.isRunning) {
+            console.log('⚠️ Sistema ya está ejecutándose');
+            return;
+        }
+        
+        if (!this.systemState.isInitialized) {
+            await this.initialize();
+        }
+        
+        // Arrancar TradingEngine si existe
+        try {
+            if (this.tradingEngine && typeof this.tradingEngine.start === 'function') {
+                await this.tradingEngine.start();
+            }
+        } catch (e) {
+            console.error('No se pudo iniciar TradingEngine:', e.message);
+        }
+
+        this.systemState.isRunning = true;
+        console.log('🚀 QUANTUM UNIFIED SYSTEM STARTED');
+        this.emit('system:started');
+    }
+    
+    async stop() {
+        if (!this.systemState.isRunning) {
+            return;
+        }
+        
+        this.systemState.isRunning = false;
+        
+        // Detener todos los intervalos
+        Object.values(this.intervals).forEach(interval => {
+            if (interval) clearInterval(interval);
+        });
+        
+        console.log('🛑 QUANTUM UNIFIED SYSTEM STOPPED');
+        this.emit('system:stopped');
+    }
+    
+    async restart() {
+        await this.stop();
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Pausa 2s
+        await this.start();
+    }
+    
+    async destroy() {
+        await this.stop();
+        
+        // Destruir componentes con limpieza completa
+        if (this.quantumOracle) {
+            this.quantumOracle.destroy();
+        }
+        
+        // Shutdown del cache cuántico
+        if (this.quantumCache && typeof this.quantumCache.shutdown === 'function') {
+            this.quantumCache.shutdown();
+        }
+        
+        // Limpiar TODOS los intervalos por si acaso
+        Object.keys(this.intervals).forEach(key => {
+            if (this.intervals[key]) {
+                clearInterval(this.intervals[key]);
+                this.intervals[key] = null;
+            }
+        });
+        
+        // Limpiar caches de datos
+        this.realtimeData.symbols.clear();
+        this.realtimeData.predictions.clear();
+        this.realtimeData.opportunities.clear();
+        this.realtimeData.trades.clear();
+        this.realtimeData.metrics.clear();
+        
+        console.log('🌌 QUANTUM UNIFIED SYSTEM DESTROYED COMPLETELY');
+        this.emit('system:destroyed');
+    }
+}
+
+module.exports = { QuantumUnifiedSystem };

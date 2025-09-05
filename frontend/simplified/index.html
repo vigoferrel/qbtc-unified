@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QBTC Leonardo | Espejo Cuántico de Trading</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Cuántico Mejorado -->
+    <header class="header">
+        <div class="logo">
+            <h1>QBTC Leonardo</h1>
+            <span class="subtitle">Espejo Cuantico | Supervision y Control Integral</span>
+        </div>
+        <div class="header-metrics">
+            <div class="mini-metric" id="mini-consciousness">
+                <span class="metric-value">0.000</span>
+                <span class="metric-label">Consciencia</span>
+            </div>
+            <div class="mini-metric" id="mini-coherence">
+                <span class="metric-value">0.000</span>
+                <span class="metric-label">Coherencia</span>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot" id="system-status"></div>
+                <span id="status-text">Conectando...</span>
+            </div>
+        </div>
+    </header>
+    <!-- Contenedor Principal -->
+    <main class="main-container">
+        
+        <!-- Sección 1: Pool de Oportunidades (Vista Bosque) -->
+        <section class="opportunities-pool">
+            <h2>Pool de Trades Emergentes</h2>
+            <div class="pool-grid" id="opportunities-grid">
+                <!-- Oportunidades generadas dinámicamente -->
+                <div class="opportunity-card loading">
+                    <div class="spinner"></div>
+                    <p>Detectando oportunidades...</p>
+                </div>
+            </div>
+        </section>
+        <!-- Sección 2: Modo Secuencial -->
+        <section class="sequential-mode">
+            <h2>Modo Secuencial: Validacion de Hipotesis</h2>
+            <div class="sequence-flow">
+                <div class="step" id="step-detect">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Detectar</h3>
+                        <p id="detect-status">Esperando selección...</p>
+                    </div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step" id="step-validate">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Validar</h3>
+                        <p id="validate-status">Pendiente</p>
+                    </div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step" id="step-execute">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Ejecutar</h3>
+                        <p id="execute-status">Pendiente</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel de Acción -->
+            <div class="action-panel" id="action-panel">
+                <button class="action-btn primary" id="execute-btn" disabled>
+                    EJECUTAR TRADE
+                </button>
+                <button class="action-btn secondary" id="reset-btn">
+                    REINICIAR SECUENCIA
+                </button>
+            </div>
+        </section>
+        <!-- Sección 3: Métricas Esenciales -->
+        <section class="essential-metrics">
+            <h2>Metricas Esenciales</h2>
+            <div class="metrics-grid">
+                <div class="metric-card consciousness">
+                    <div class="metric-value" id="consciousness-value">0.000</div>
+                    <div class="metric-label">Conciencia Cuántica</div>
+                </div>
+                <div class="metric-card coherence">
+                    <div class="metric-value" id="coherence-value">0.000</div>
+                    <div class="metric-label">Coherencia</div>
+                </div>
+                <div class="metric-card decisions">
+                    <div class="metric-value" id="decisions-value">0</div>
+                    <div class="metric-label">Decisiones Activas</div>
+                </div>
+                <div class="metric-card entropy">
+                    <div class="metric-value" id="entropy-value">0.000</div>
+                    <div class="metric-label">Entropia</div>
+                </div>
+                <div class="metric-card energy">
+                    <div class="metric-value" id="energy-value">0.000</div>
+                    <div class="metric-label">Energia</div>
+                </div>
+                <div class="metric-card resonance">
+                    <div class="metric-value" id="resonance-value">0.000</div>
+                    <div class="metric-label">Resonancia</div>
+                </div>
+            </div>
+        </section>
+        <!-- Sección 4: Panel de Riesgo y Rentabilidad -->
+        <section class="risk-pnl-panel">
+            <h2>Gestion de Riesgo y Rentabilidad</h2>
+            <div class="risk-pnl-grid">
+                <div class="pnl-summary">
+                    <h3>Resumen P&L</h3>
+                    <div class="pnl-metrics">
+                        <div class="pnl-item">
+                            <span class="pnl-label">Total P&L:</span>
+                            <span class="pnl-value" id="total-pnl">$0.00</span>
+                        </div>
+                        <div class="pnl-item">
+                            <span class="pnl-label">P&L Hoy:</span>
+                            <span class="pnl-value" id="daily-pnl">$0.00</span>
+                        </div>
+                        <div class="pnl-item">
+                            <span class="pnl-label">Win Rate:</span>
+                            <span class="pnl-value" id="win-rate">0%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="risk-controls">
+                    <h3>Controles de Riesgo</h3>
+                    <div class="risk-metrics">
+                        <div class="risk-item">
+                            <span class="risk-label">Exposición Actual:</span>
+                            <span class="risk-value" id="current-exposure">$0.00</span>
+                        </div>
+                        <div class="risk-item">
+                            <span class="risk-label">Max Drawdown:</span>
+                            <span class="risk-value" id="max-drawdown">-$0.00</span>
+                        </div>
+                        <div class="risk-item">
+                            <span class="risk-label">Risk Score:</span>
+                            <span class="risk-value" id="risk-score">0/10</span>
+                        </div>
+                    </div>
+                    <div class="emergency-controls">
+                        <button class="emergency-btn" id="emergency-stop">STOP INMEDIATO</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Ingeniería Inversa Cuántica -->
+        <section class="quantum-reverse-engineering">
+            <h2>🔬 Ingeniería Inversa Cuántica - Clasificación de Activos</h2>
+            <div class="reverse-eng-explanation">
+                <p class="quantum-insight">"El sistema mapea el ADN cuántico de cada símbolo, clasificándolos según sus patrones de comportamiento en dimensiones paralelas del mercado."</p>
+            </div>
+            <div class="asset-classification">
+                <div class="classification-grid">
+                    <div class="asset-category" id="majors-category">
+                        <div class="category-header">
+                            <h3>🏛️ MAJORS</h3>
+                            <span class="category-count" id="majors-count">0</span>
+                        </div>
+                        <div class="category-description">
+                            Titanes del ecosistema - Comportamiento predictible con alta liquidez
+                        </div>
+                        <div class="asset-list" id="majors-list"></div>
+                    </div>
+                    
+                    <div class="asset-category" id="memecoins-category">
+                        <div class="category-header">
+                            <h3>🚀 MEMECOINS</h3>
+                            <span class="category-count" id="memecoins-count">0</span>
+                        </div>
+                        <div class="category-description">
+                            Caos cuántico - Alta volatilidad con patrones impredecibles
+                        </div>
+                        <div class="asset-list" id="memecoins-list"></div>
+                    </div>
+                    
+                    <div class="asset-category" id="darkside-category">
+                        <div class="category-header">
+                            <h3>🌑 DARK SIDE</h3>
+                            <span class="category-count" id="darkside-count">0</span>
+                        </div>
+                        <div class="category-description">
+                            Lado oscuro del mercado - Manipulación y anomalías detectadas
+                        </div>
+                        <div class="asset-list" id="darkside-list"></div>
+                    </div>
+                    
+                    <div class="asset-category" id="emerging-category">
+                        <div class="category-header">
+                            <h3>🌱 EMERGENTES</h3>
+                            <span class="category-count" id="emerging-count">0</span>
+                        </div>
+                        <div class="category-description">
+                            Nuevos patrones cuánticos - Potencial disruptivo en formación
+                        </div>
+                        <div class="asset-list" id="emerging-list"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Pensamiento Cuántico -->
+        <section class="quantum-thinking">
+            <h2>🧠 Pensamiento Cuántico - Influencias Multidimensionales</h2>
+            <div class="quantum-factors">
+                <div class="factor-card" id="lunar-influence">
+                    <div class="factor-icon">🌙</div>
+                    <div class="factor-content">
+                        <h3>Influencia Lunar</h3>
+                        <div class="factor-value" id="lunar-value">--</div>
+                        <div class="factor-description" id="lunar-description">Analizando fase lunar...</div>
+                        <div class="factor-impact" id="lunar-impact">Impacto: <span>--</span></div>
+                    </div>
+                </div>
+                
+                <div class="factor-card" id="chaos-metric">
+                    <div class="factor-icon">🌀</div>
+                    <div class="factor-content">
+                        <h3>Índice de Caos</h3>
+                        <div class="factor-value" id="chaos-value">--</div>
+                        <div class="factor-description" id="chaos-description">Midiendo entropía del mercado...</div>
+                        <div class="factor-impact" id="chaos-impact">Volatilidad: <span>--</span></div>
+                    </div>
+                </div>
+                
+                <div class="factor-card" id="volatility-quantum">
+                    <div class="factor-icon">⚡</div>
+                    <div class="factor-content">
+                        <h3>Volatilidad Cuántica</h3>
+                        <div class="factor-value" id="volatility-value">--</div>
+                        <div class="factor-description" id="volatility-description">Patrón de oscilaciones detectado...</div>
+                        <div class="factor-impact" id="volatility-impact">Tendencia: <span>--</span></div>
+                    </div>
+                </div>
+                
+                <div class="factor-card" id="market-sentiment">
+                    <div class="factor-icon">🎭</div>
+                    <div class="factor-content">
+                        <h3>Sentimiento Colectivo</h3>
+                        <div class="factor-value" id="sentiment-value">--</div>
+                        <div class="factor-description" id="sentiment-description">Leyendo emociones del mercado...</div>
+                        <div class="factor-impact" id="sentiment-impact">Estado: <span>--</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Flujo de Datos Cuántico -->
+        <section class="quantum-data-flow">
+            <h2>📊 Flujo de Datos Cuántico - Binance ↔ QBTC</h2>
+            <div class="data-flow-visualization">
+                <div class="flow-step" id="binance-source">
+                    <div class="flow-icon">🏦</div>
+                    <h3>Binance API</h3>
+                    <div class="flow-status" id="binance-status">Conectado</div>
+                    <div class="flow-metrics">
+                        <div class="flow-metric">Llamadas/min: <span id="api-calls">--</span></div>
+                        <div class="flow-metric">Rate Limit: <span id="rate-limit">--</span></div>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-step" id="quantum-cache">
+                    <div class="flow-icon">💎</div>
+                    <h3>Quantum Cache</h3>
+                    <div class="flow-status" id="cache-status">Activo</div>
+                    <div class="flow-metrics">
+                        <div class="flow-metric">Hit Rate: <span id="cache-hit-rate">--</span></div>
+                        <div class="flow-metric">TTL: <span id="cache-ttl">1s</span></div>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-step" id="quantum-processing">
+                    <div class="flow-icon">⚛️</div>
+                    <h3>Procesamiento Cuántico</h3>
+                    <div class="flow-status" id="processing-status">Activo</div>
+                    <div class="flow-metrics">
+                        <div class="flow-metric">Ops/seg: <span id="ops-per-second">--</span></div>
+                        <div class="flow-metric">Latencia: <span id="processing-latency">--</span></div>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-step" id="trading-decisions">
+                    <div class="flow-icon">🎯</div>
+                    <h3>Decisiones de Trading</h3>
+                    <div class="flow-status" id="decisions-status">Optimizado</div>
+                    <div class="flow-metrics">
+                        <div class="flow-metric">Precisión: <span id="decision-accuracy">--</span></div>
+                        <div class="flow-metric">Velocidad: <span id="decision-speed">--</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cache-explanation">
+                <div class="explanation-card">
+                    <h4>🛡️ Protección contra Rate Limiting</h4>
+                    <p>El Quantum Cache actúa como un escudo inteligente, almacenando datos críticos durante 1 segundo para reducir las llamadas directas a Binance en un 85%, manteniendo la frescura de los datos sin comprometer la velocidad de respuesta.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 5: Cubo de Mercado (con Caché) -->
+        <section class="market-cube">
+            <h2>🧊 Cubo de Mercado – Otra cara de la luna (Binance All-Symbols)</h2>
+            <div class="cube-controls">
+                <span class="badge" id="cube-sentiment">sentimiento: --</span>
+                <span class="badge kpi" id="cube-coherence">coherencia: --</span>
+                <span class="badge kpi" id="cube-entropy">entropía: --</span>
+                <button class="refresh-btn" id="cube-refresh">Actualizar</button>
+                <span class="cube-updated" id="cube-updated">--:--:--</span>
+            </div>
+            <div class="cube-grid">
+                <div class="cube-kpis">
+                    <div class="kpi-block">
+                        <div class="kpi-title">Consciencia</div>
+                        <div class="kpi-value" id="cube-consciousness">--</div>
+                    </div>
+                    <div class="kpi-block">
+                        <div class="kpi-title">Coherencia</div>
+                        <div class="kpi-value" id="cube-kpi-coherence">--</div>
+                    </div>
+                    <div class="kpi-block">
+                        <div class="kpi-title">Entropía</div>
+                        <div class="kpi-value" id="cube-kpi-entropy">--</div>
+                    </div>
+                    <div class="kpi-block">
+                        <div class="kpi-title">Energía</div>
+                        <div class="kpi-value" id="cube-kpi-energy">--</div>
+                    </div>
+                    <div class="kpi-block">
+                        <div class="kpi-title">Resonancia</div>
+                        <div class="kpi-value" id="cube-kpi-resonance">--</div>
+                    </div>
+                </div>
+                <div class="cube-clusters">
+                    <h3>Barómetros por Cluster</h3>
+                    <div id="cube-clusters-list" class="clusters-list"></div>
+                </div>
+                <div class="cube-radar">
+                    <h3>Radar Universal</h3>
+                    <div class="radar-row">
+                        <div class="radar-col">
+                            <div class="radar-title">Corredor Verde</div>
+                            <ul id="cube-radar-green" class="radar-list"></ul>
+                        </div>
+                        <div class="radar-col">
+                            <div class="radar-title">Corredor Ámbar</div>
+                            <ul id="cube-radar-amber" class="radar-list"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="cube-narrative">
+                    <h3>Narrativa Operador</h3>
+                    <div id="cube-narrative-text" class="narrative-text">Cargando narrativa...</div>
+                </div>
+            </div>
+        </section>
+        <!-- Sección 4: Log Mínimo -->
+        <section class="minimal-log">
+            <h2>📝 Log de Eventos</h2>
+            <div class="log-container" id="log-container">
+                <div class="log-entry">
+                    <span class="log-time">--:--:--</span>
+                    <span class="log-message">Sistema iniciando...</span>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Modal de Confirmación -->
+    <div class="modal" id="confirmation-modal">
+        <div class="modal-content">
+            <h3>Confirmar Ejecución de Trade</h3>
+            <div class="trade-details" id="trade-details">
+                <!-- Detalles del trade seleccionado -->
+            </div>
+            <div class="modal-actions">
+                <button class="action-btn primary" id="confirm-trade">CONFIRMAR</button>
+                <button class="action-btn secondary" id="cancel-trade">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+    <!-- Overlay de Loading -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner large"></div>
+            <p id="loading-message">Procesando...</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

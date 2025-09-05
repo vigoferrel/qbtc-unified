@@ -1,0 +1,49 @@
+QBTC-UNIFIED | LAYOUT PUERTOS E IPs
+====================================
+
+SERVICIOS CORE:
+--------------
+quantum-engine    : 18000  (motor principal)
+coordinator       : 18100  (coordinador bots)
+api-gateway       : 18200  (gateway API)
+nxn-system        : 18300  (sistema NxN)
+
+TRADING:
+--------
+futures-bot       : 18400  (futuros)
+options-bot       : 18500  (opciones)
+
+SOPORTE:
+--------
+websocket-service : 18600  (tiempo real)
+metrics-monitor   : 18700  (metricas)
+logs-monitor      : 18800  (logs)
+backup-service    : 18900  (backup)
+
+CONFIGURACION:
+--------------
+RED_BOTS   : 192.168.100.0/24
+RANGO_IPS  : 192.168.100.10-250
+GATEWAY    : 192.168.100.1
+DNS        : 8.8.8.8, 8.8.4.4
+
+PUERTOS_BOTS:
+TRADER_BOT     : 19000-19999
+SCALPER_BOT    : 20000-20999
+ARBITRAGE_BOT  : 21000-21999
+QUANTUM_ANALYZER: 22000-22999
+
+VARIABLES_ENTORNO:
+------------------
+$QBTC_PORT_QUANTUM_ENGINE = 18000
+$QBTC_PORT_COORDINATOR = 18100
+$QBTC_PORT_FUTURES_BOT = 18400
+$QBTC_PORT_OPTIONS_BOT = 18500
+
+COMANDOS:
+---------
+Get-PortAssignments      # Ver estado
+Test-PortConflicts       # Verificar
+Start-PortMappingService # Iniciar
+
+ACTUALIZADO: 2025-01-09 16:08

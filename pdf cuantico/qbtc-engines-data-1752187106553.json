@@ -1,0 +1,130 @@
+{
+  "timestamp": "2025-07-10T22:38:26.549Z",
+  "uptime": "00:04:24",
+  "engines": {
+    "quantumEngine13": {
+      "matrixSize": 13,
+      "resonance": 1.0769232740587078,
+      "qubits": 169,
+      "opportunities": [
+        "MOMENTUM",
+        "REVERSAL"
+      ],
+      "marketPhase": "ACCUMULATION"
+    },
+    "validationMetrics": {
+      "accuracy": 99.69617398731681,
+      "precision": 95.70848597891977,
+      "recall": 96.04970100691204,
+      "f1Score": 95.8787899134517,
+      "sharpeRatio": 1.840256788366972,
+      "winRate": 94.48625721564632,
+      "timeframes": {
+        "5s": 91.71568842712517,
+        "15s": 98.08979644437632,
+        "30s": 98.51855430775358,
+        "1m": 94.89871791448574,
+        "5m": 97.15189995391681
+      }
+    },
+    "cobolTemporal": {
+      "velocity": {
+        "instantaneous": 575.6709620861476,
+        "acceleration": 1.9790357192931385,
+        "jerk": 2.547899482743222,
+        "explosiveness": 92.77775568354258
+      },
+      "volume": {
+        "predictive": 1224323.086395952,
+        "microDivergences": 77.4245870451075,
+        "resonance": 9.553602369235524
+      },
+      "momentum": {
+        "sectorial": 87.1723274819511,
+        "differential": -45.346195172930756,
+        "timingReversal": 27.548053082666474
+      }
+    },
+    "mlPredictor": {
+      "models": [
+        {
+          "name": "LSTM",
+          "status": "ACTIVO",
+          "accuracy": 96.87986818514092
+        },
+        {
+          "name": "TRANSFORMER",
+          "status": "ACTIVO",
+          "accuracy": 95.62760509996406
+        },
+        {
+          "name": "NEURAL_NET",
+          "status": "ACTIVO",
+          "accuracy": 95.37117545172656
+        },
+        {
+          "name": "ENSEMBLE",
+          "status": "ACTIVO",
+          "accuracy": 94.26386022158967
+        },
+        {
+          "name": "QUANTUM_NN",
+          "status": "ACTIVO",
+          "accuracy": 97.07374817291473
+        },
+        {
+          "name": "COBOL_PATTERN",
+          "status": "VIGOLEON",
+          "accuracy": 96.24156998961487
+        },
+        {
+          "name": "HYBRID_DEEP",
+          "status": "ACTIVO",
+          "accuracy": 95.88763621981732
+        }
+      ],
+      "predictions": {
+        "1m": {
+          "price": 47323.86323601034,
+          "confidence": 86.59829434859459
+        },
+        "5m": {
+          "price": 47305.506020864625,
+          "confidence": 97.40300741524327
+        },
+        "15m": {
+          "price": 47316.91171932582,
+          "confidence": 86.50952018612082
+        }
+      },
+      "cobolPatterns": [
+        {
+          "name": "VIGOLEON_PRIME",
+          "type": "vigoleon"
+        },
+        {
+          "name": "TEMPORAL_LOOP",
+          "type": "temporal"
+        },
+        {
+          "name": "QUANTUM_BRIDGE",
+          "type": "quantum"
+        },
+        {
+          "name": "COBOL_MATRIX",
+          "type": "vigoleon"
+        },
+        {
+          "name": "NEURAL_SYNC",
+          "type": "quantum"
+        }
+      ]
+    }
+  },
+  "globalMetrics": {
+    "totalQubits": 393,
+    "averageCoherence": 97.1514536577162,
+    "averageSpeed": 575.6709620861476,
+    "totalProfit": 47.32386323601034
+  }
+}

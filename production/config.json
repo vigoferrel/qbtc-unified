@@ -1,0 +1,14 @@
+{
+  "ports": {
+    "unified": 8080,
+    "quantum": 8080,
+    "leonardo": 8080
+  },
+  "endpoints": {
+    "leonardo": "/api/leonardo-stream",
+    "quantum": "/quantum/stream",
+    "health": "/api/unified/health",
+    "metrics": "/api/quantum/metrics",
+    "status": "/api/system/status"
+  }
+}

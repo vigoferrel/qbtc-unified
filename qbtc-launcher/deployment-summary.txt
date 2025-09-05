@@ -1,0 +1,78 @@
+=== QBTC UNIFIED - DEPLOYMENT SUMMARY ===
+Fecha: 2025-08-13 06:55
+
+ESTADO DEL DESPLIEGUE: EXITOSO
+================================
+
+BACKEND PRINCIPAL:
+- Proceso ID: 23836
+- Puerto: 18020
+- Estado: RUNNING
+- Uptime: 22+ minutos
+- Memory: ~173 MB
+- CPU: 14.89s
+
+ENDPOINTS ACTIVOS:
+- Frontend: http://localhost:18020/
+- Health: http://localhost:18020/api/health
+- Metrics: http://localhost:18020/api/metrics
+- Edge Summary: http://localhost:18020/api/edge/summary
+
+SISTEMAS ACTIVOS:
+- Decision Engine: ACTIVE
+- Quantum Engine: ACTIVE (Consciousness: 0.618)
+- Metrics Engine: ACTIVE
+- Edge Service: ACTIVE
+- Symbols Tracked: 3 (BTCUSDT, ETHUSDT, BNBUSDT)
+
+MONITOREO:
+- Monitor activo en PID: 24724
+- Logs disponibles en: deploy-output.log, deploy-error.log
+- Metricas guardadas en: deployment-metrics.log
+
+COMANDOS UTILES:
+===============
+
+Verificacion rapida:
+    .\quick-check.ps1
+
+Monitor continuo:
+    .\monitor-deployment.ps1
+
+Verificar proceso backend:
+    Get-Process -Id 23836
+
+Test endpoints:
+    Invoke-WebRequest -Uri "http://localhost:18020/api/health"
+    Invoke-WebRequest -Uri "http://localhost:18020/api/metrics"
+
+Ver logs:
+    Get-Content deploy-output.log -Tail 20
+    Get-Content deployment-metrics.log -Tail 10
+
+Verificar puerto:
+    netstat -ano | Select-String ":18020"
+
+ARQUITECTURA DESPLEGADA:
+=======================
+- FuturesEdgeService (SSOT)
+- FuturesQuantumEdgeEngine (microestructura + path-integrals)  
+- QBTCMetricsEngine (metricas centralizadas)
+- Trading/Decision engines (consumiendo servicio)
+- API + Frontend integrados
+
+FILOSOFIA FUTUROS-ONLY:
+======================
+- Edge cuantico de microestructura
+- OFI, CVD, funding rates, open interest
+- Kyle's lambda, liquidation density
+- Path-integrals de Feynman
+- Sin duplicaciones, servicio aislado
+
+METRICAS CLAVE:
+==============
+- Requests totales: 1627
+- Errors: 794 (monitorear)
+- Conexiones activas: 5
+- Edge Score: 0 (en desarrollo)
+- Quantum States: Estables

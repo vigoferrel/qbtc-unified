@@ -1,0 +1,13 @@
+﻿{
+    "TotalSystems":  7,
+    "CriticalSystemsOK":  [
+                              true,
+                              false
+                          ],
+    "LastCheck":  {
+                      "value":  "\/Date(1755013765181)\/",
+                      "DisplayHint":  2,
+                      "DateTime":  "martes, 12 de agosto de 2025 11:49:25"
+                  },
+    "ConnectedSystems":  1
+}

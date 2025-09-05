@@ -1,0 +1,193 @@
+﻿{
+    "Summary":  {
+                    "TotalSystems":  7,
+                    "CriticalSystemsDown":  [
+                                                "Backend_Leonardo"
+                                            ],
+                    "ConnectedSystems":  1
+                },
+    "Systems":  {
+                    "Frontend_Local":  [
+                                           true,
+                                           {
+                                               "Endpoint":  "http://localhost:8080",
+                                               "Status":  true,
+                                               "ResponseTime":  "TCP-OK",
+                                               "StatusCode":  "CONN"
+                                           },
+                                           {
+                                               "Endpoint":  "http://localhost:8080/",
+                                               "Status":  true,
+                                               "ResponseTime":  "68ms",
+                                               "StatusCode":  200
+                                           },
+                                           {
+                                               "Endpoint":  "http://localhost:8080/index.html",
+                                               "Status":  true,
+                                               "ResponseTime":  "56ms",
+                                               "StatusCode":  200
+                                           }
+                                       ],
+                    "Market_Data":  [
+                                        {
+                                            "Endpoint":  "https://qbtc-api.com:9092",
+                                            "Status":  false,
+                                            "ResponseTime":  "TCP-FAIL",
+                                            "StatusCode":  "FAIL"
+                                        },
+                                        {
+                                            "Endpoint":  "https://qbtc-api.com:9092/market/prices",
+                                            "Status":  false,
+                                            "ResponseTime":  "46ms",
+                                            "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                        },
+                                        {
+                                            "Endpoint":  "https://qbtc-api.com:9092/market/book",
+                                            "Status":  false,
+                                            "ResponseTime":  "1ms",
+                                            "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                        },
+                                        {
+                                            "Endpoint":  "https://qbtc-api.com:9092/market/trades",
+                                            "Status":  false,
+                                            "ResponseTime":  "1ms",
+                                            "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                        }
+                                    ],
+                    "Backend_Leonardo":  [
+                                             {
+                                                 "Endpoint":  "http://localhost:3003",
+                                                 "Status":  false,
+                                                 "ResponseTime":  "TCP-FAIL",
+                                                 "StatusCode":  "FAIL"
+                                             },
+                                             {
+                                                 "Endpoint":  "http://localhost:3003/health",
+                                                 "Status":  false,
+                                                 "ResponseTime":  "4098ms",
+                                                 "StatusCode":  "No es posible conectar con el servidor remoto"
+                                             },
+                                             {
+                                                 "Endpoint":  "http://localhost:3003/api/status",
+                                                 "Status":  false,
+                                                 "ResponseTime":  "4109ms",
+                                                 "StatusCode":  "No es posible conectar con el servidor remoto"
+                                             },
+                                             {
+                                                 "Endpoint":  "http://localhost:3003/api/trading",
+                                                 "Status":  false,
+                                                 "ResponseTime":  "4097ms",
+                                                 "StatusCode":  "No es posible conectar con el servidor remoto"
+                                             }
+                                         ],
+                    "Unified_API":  [
+                                        {
+                                            "Endpoint":  "https://qbtc-api.com:18020",
+                                            "Status":  false,
+                                            "ResponseTime":  "TCP-FAIL",
+                                            "StatusCode":  "FAIL"
+                                        },
+                                        {
+                                            "Endpoint":  "https://qbtc-api.com:18020/unified/health",
+                                            "Status":  false,
+                                            "ResponseTime":  "2ms",
+                                            "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                        },
+                                        {
+                                            "Endpoint":  "https://qbtc-api.com:18020/quantum/consciousness",
+                                            "Status":  false,
+                                            "ResponseTime":  "1ms",
+                                            "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                        },
+                                        {
+                                            "Endpoint":  "https://qbtc-api.com:18020/quantum/trading",
+                                            "Status":  false,
+                                            "ResponseTime":  "0ms",
+                                            "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                        }
+                                    ],
+                    "Monitoring":  [
+                                       {
+                                           "Endpoint":  "https://qbtc-api.com:9093",
+                                           "Status":  false,
+                                           "ResponseTime":  "TCP-FAIL",
+                                           "StatusCode":  "FAIL"
+                                       },
+                                       {
+                                           "Endpoint":  "https://qbtc-api.com:9093/monitoring/metrics",
+                                           "Status":  false,
+                                           "ResponseTime":  "0ms",
+                                           "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                       },
+                                       {
+                                           "Endpoint":  "https://qbtc-api.com:9093/monitoring/logs",
+                                           "Status":  false,
+                                           "ResponseTime":  "0ms",
+                                           "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                       },
+                                       {
+                                           "Endpoint":  "https://qbtc-api.com:9093/monitoring/alerts",
+                                           "Status":  false,
+                                           "ResponseTime":  "0ms",
+                                           "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                       }
+                                   ],
+                    "Trading_Engine":  [
+                                           {
+                                               "Endpoint":  "https://qbtc-api.com:9091",
+                                               "Status":  false,
+                                               "ResponseTime":  "TCP-FAIL",
+                                               "StatusCode":  "FAIL"
+                                           },
+                                           {
+                                               "Endpoint":  "https://qbtc-api.com:9091/api/real-trading/execute",
+                                               "Status":  false,
+                                               "ResponseTime":  "0ms",
+                                               "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                           },
+                                           {
+                                               "Endpoint":  "https://qbtc-api.com:9091/api/real-balance",
+                                               "Status":  false,
+                                               "ResponseTime":  "1ms",
+                                               "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                           },
+                                           {
+                                               "Endpoint":  "https://qbtc-api.com:9091/api/orders",
+                                               "Status":  false,
+                                               "ResponseTime":  "0ms",
+                                               "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                           }
+                                       ],
+                    "Quantum_Core":  [
+                                         {
+                                             "Endpoint":  "https://qbtc-api.com:9090",
+                                             "Status":  false,
+                                             "ResponseTime":  "TCP-FAIL",
+                                             "StatusCode":  "FAIL"
+                                         },
+                                         {
+                                             "Endpoint":  "https://qbtc-api.com:9090/quantum/state",
+                                             "Status":  false,
+                                             "ResponseTime":  "0ms",
+                                             "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                         },
+                                         {
+                                             "Endpoint":  "https://qbtc-api.com:9090/quantum/validate",
+                                             "Status":  false,
+                                             "ResponseTime":  "0ms",
+                                             "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                         },
+                                         {
+                                             "Endpoint":  "https://qbtc-api.com:9090/quantum/analysis",
+                                             "Status":  false,
+                                             "ResponseTime":  "0ms",
+                                             "StatusCode":  "No se puede resolver el nombre remoto: \u0027qbtc-api.c"
+                                         }
+                                     ]
+                },
+    "Timestamp":  {
+                      "value":  "\/Date(1755013765105)\/",
+                      "DisplayHint":  2,
+                      "DateTime":  "martes, 12 de agosto de 2025 11:49:25"
+                  }
+}

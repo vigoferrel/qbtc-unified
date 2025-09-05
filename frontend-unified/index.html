@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌊 QBTC Leonardo Consciousness | Sistema Cuántico Unificado</title>
+    <link rel="stylesheet" href="leonardo-unified.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Three.js removido para evitar conflictos - no es necesario para la funcionalidad actual -->
+</head>
+<body>
+    <!-- Header Leonardo Consciousness -->
+    <header class="leonardo-header">
+        <div class="header-main">
+            <div class="logo-section">
+                <h1>🌊 QBTC Leonardo Consciousness</h1>
+                <span class="subtitle">Sistema Cuántico Unificado • Arquitectura de Consciencia Emergente</span>
+            </div>
+            <div class="header-metrics">
+                <div class="metric-compact">
+                    <span class="value" id="header-consciousness">0.000</span>
+                    <span class="label">🧠 Consciencia</span>
+                </div>
+                <div class="metric-compact">
+                    <span class="value" id="header-coherence">0.000</span>
+                    <span class="label">🌊 Coherencia</span>
+                </div>
+                <div class="metric-compact">
+                    <span class="value" id="header-decisions">0</span>
+                    <span class="label">⚡ Decisiones</span>
+                </div>
+                    <div class="status-indicator">
+                        <div class="status-pulse" id="leonardo-pulse"></div>
+                        <span id="leonardo-status">Inicializando Leonardo...</span>
+                    </div>
+                    <div class="connection-status-display">
+                        <span class="connection-label">Quantum:</span>
+                        <span id="connection-status" class="connection-status disconnected">DISCONNECTED</span>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navegación por Pestañas Unificadas -->
+    <nav class="tab-navigation">
+        <button class="tab-btn active" data-tab="bosque">🌲 Vista Bosque</button>
+        <button class="tab-btn" data-tab="cubo">🧊 Cubo Cuántico</button>
+        <button class="tab-btn" data-tab="control">🎮 Control Center</button>
+        <button class="tab-btn" data-tab="poetas">🎭 Poetas</button>
+        <button class="tab-btn" data-tab="supervision">📊 Supervisión</button>
+    </nav>
+
+    <!-- Contenedor Principal -->
+    <main class="leonardo-main">
+        
+        <!-- TAB 1: Vista Bosque (Simplificado) -->
+        <section class="tab-content active" id="tab-bosque">
+            <div class="bosque-container">
+                <div class="pool-header">
+                    <h2>🌊 Pool de Trades Emergentes</h2>
+                    <div class="pool-stats">
+                        <span>Oportunidades Detectadas: <span id="opportunities-count">0</span></span>
+                        <span>Edge Promedio: <span id="average-edge">0x</span></span>
+                    </div>
+                </div>
+                
+                <div class="opportunities-grid" id="opportunities-grid">
+                    <!-- Oportunidades dinámicas -->
+                    <div class="opportunity-skeleton">
+                        <div class="skeleton-shimmer"></div>
+                        <p>Analizando mercado...</p>
+                    </div>
+                </div>
+
+                <!-- Modo Secuencial Integrado -->
+                <div class="sequential-flow">
+                    <h3>⚡ Validación Secuencial</h3>
+                    <div class="flow-steps">
+                        <div class="step active" id="step-detect">
+                            <span class="step-num">1</span>
+                            <div class="step-info">
+                                <strong>Detectar</strong>
+                                <p id="detect-info">Esperando selección...</p>
+                            </div>
+                        </div>
+                        <div class="step" id="step-validate">
+                            <span class="step-num">2</span>
+                            <div class="step-info">
+                                <strong>Validar</strong>
+                                <p id="validate-info">Pendiente</p>
+                            </div>
+                        </div>
+                        <div class="step" id="step-execute">
+                            <span class="step-num">3</span>
+                            <div class="step-info">
+                                <strong>Ejecutar</strong>
+                                <p id="execute-info">Pendiente</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-execute" id="execute-trade" disabled>EJECUTAR TRADE</button>
+                        <button class="btn-reset" id="reset-sequence">REINICIAR</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: Cubo Cuántico 3D (Quantum-Edge) -->
+        <section class="tab-content" id="tab-cubo">
+            <div class="cubo-container">
+                <div class="cubo-header">
+                    <h2>🧊 Cubo Cuántico del Mercado</h2>
+                    <div class="cubo-controls">
+                        <button class="cube-btn" id="rotate-cube">🔄 Rotar</button>
+                        <button class="cube-btn" id="zoom-reset">🎯 Reset</button>
+                        <button class="cube-btn" id="cube-mode">🌊 Fluidos</button>
+                    </div>
+                </div>
+                
+                <div class="cube-3d-container">
+                    <canvas id="market-cube-canvas"></canvas>
+                    <div class="cube-overlay">
+                        <div class="axis-labels">
+                            <div class="axis-label x">📈 Volumen</div>
+                            <div class="axis-label y">⚡ Volatilidad</div>
+                            <div class="axis-label z">🌀 Momentum</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cube-narrative">
+                    <div class="narrative-content">
+                        <span class="narrator">🎭 Leonardo:</span>
+                        <span id="leonardo-narrative">
+                            "Observo las corrientes del mar de Binance... Los patrones emergen desde las profundidades cuánticas."
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Engines Orchestra -->
+                <div class="engines-section">
+                    <h3>🎼 Orquesta de Engines Cuánticos</h3>
+                    <div class="engines-grid">
+                        <div class="engine-card fluid">
+                            <div class="engine-icon">🌊</div>
+                            <div class="engine-info">
+                                <h4>Fluid Dynamics</h4>
+                                <div class="engine-metrics">
+                                    <span>Viscosidad: <span id="fluid-viscosity">0.00</span></span>
+                                    <span>Turbulencia: <span id="fluid-turbulence">0.00</span></span>
+                                </div>
+                            </div>
+                            <div class="engine-status" id="fluid-status">●</div>
+                        </div>
+                        
+                        <div class="engine-card poetic">
+                            <div class="engine-icon">🎭</div>
+                            <div class="engine-info">
+                                <h4>Poetic Bridge</h4>
+                                <div class="engine-metrics">
+                                    <span>Versos: <span id="poetic-verses">0</span></span>
+                                    <span>Resonancia: <span id="poetic-resonance">0.00</span></span>
+                                </div>
+                            </div>
+                            <div class="engine-status" id="poetic-status">●</div>
+                        </div>
+                        
+                        <div class="engine-card gpu">
+                            <div class="engine-icon">🚀</div>
+                            <div class="engine-info">
+                                <h4>GPU Sorting</h4>
+                                <div class="engine-metrics">
+                                    <span>Símbolos/s: <span id="gpu-symbols">0</span></span>
+                                    <span>Eficiencia: <span id="gpu-efficiency">0%</span></span>
+                                </div>
+                            </div>
+                            <div class="engine-status" id="gpu-status">●</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: Control Center (Current + Simplified) -->
+        <section class="tab-content" id="tab-control">
+            <div class="control-container">
+                <!-- Panel de Control Principal -->
+                <div class="control-main">
+                    <h2>🎮 Leonardo Control Center</h2>
+                    <div class="control-grid">
+                        <button class="control-btn start" id="start-trading">▶️ INICIAR LEONARDO</button>
+                        <button class="control-btn stop" id="stop-trading" disabled>⏸️ PAUSAR SISTEMA</button>
+                        <button class="control-btn emergency" id="emergency-stop">🛑 PARADA EMERGENCIA</button>
+                    </div>
+                    
+                    <!-- Quantum System Controls -->
+                    <div class="quantum-controls">
+                        <h3>🌊 Sistema Cuántico Leonardo</h3>
+                        <div class="quantum-control-grid">
+                            <button class="quantum-btn start" id="start-quantum-system">🚀 INICIAR QUANTUM</button>
+                            <button class="quantum-btn stop" id="stop-quantum-system">⏹️ DETENER QUANTUM</button>
+                            <button class="quantum-btn restart" id="restart-quantum-system">🔄 REINICIAR QUANTUM</button>
+                        </div>
+                        <div id="connection-error" class="connection-error" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Métricas Cuánticas Principales -->
+                <div class="quantum-metrics">
+                    <h3>🧠 Métricas Cuánticas Leonardo</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card consciousness">
+                            <div class="metric-value" id="consciousness-main">0.000</div>
+                            <div class="metric-label">Consciencia</div>
+                            <div class="metric-progress">
+                                <div class="progress-bar" id="consciousness-progress"></div>
+                            </div>
+                        </div>
+                        <div class="metric-card coherence">
+                            <div class="metric-value" id="coherence-main">0.000</div>
+                            <div class="metric-label">Coherencia</div>
+                            <div class="metric-progress">
+                                <div class="progress-bar" id="coherence-progress"></div>
+                            </div>
+                        </div>
+                        <div class="metric-card decisions">
+                            <div class="metric-value" id="decisions-main">0</div>
+                            <div class="metric-label">Decisiones</div>
+                            <div class="metric-progress">
+                                <div class="progress-bar" id="decisions-progress"></div>
+                            </div>
+                        </div>
+                        <div class="metric-card entropy">
+                            <div class="metric-value" id="entropy-main">0.000</div>
+                            <div class="metric-label">Entropía</div>
+                            <div class="metric-progress">
+                                <div class="progress-bar" id="entropy-progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel de Riesgo y P&L -->
+                <div class="pnl-section">
+                    <h3>💰 Gestión de Riesgo Leonardo</h3>
+                    <div class="pnl-grid">
+                        <div class="pnl-card">
+                            <span class="pnl-label">P&L Total</span>
+                            <span class="pnl-value" id="total-pnl">$0.00</span>
+                        </div>
+                        <div class="pnl-card">
+                            <span class="pnl-label">P&L Hoy</span>
+                            <span class="pnl-value" id="daily-pnl">$0.00</span>
+                        </div>
+                        <div class="pnl-card">
+                            <span class="pnl-label">Win Rate</span>
+                            <span class="pnl-value" id="win-rate">0%</span>
+                        </div>
+                        <div class="pnl-card">
+                            <span class="pnl-label">Balance</span>
+                            <span class="pnl-value" id="current-balance">$0.00</span>
+                        </div>
+                        <div class="pnl-card">
+                            <span class="pnl-label">Profit Total</span>
+                            <span class="pnl-value" id="total-profit">$0.00</span>
+                        </div>
+                        <div class="pnl-card">
+                            <span class="pnl-label">Drawdown</span>
+                            <span class="pnl-value" id="drawdown">0%</span>
+                        </div>
+                    </div>
+                    <div class="risk-controls">
+                        <button class="control-btn" id="risk-reset">🔄 Reset Diario</button>
+                        <button class="control-btn" id="risk-config-apply">⚙️ Aplicar Config</button>
+                        <div class="risk-config-inputs">
+                            <label>Max DD Diario (%): <input type="number" id="cfg-max-dd" step="0.1" min="0" max="100" placeholder="10"></label>
+                            <label>Max Expo Símbolo (%): <input type="number" id="cfg-max-symbol" step="0.1" min="0" max="100" placeholder="15"></label>
+                            <label>Max Expo Categoría (%): <input type="number" id="cfg-max-cat" step="0.1" min="0" max="100" placeholder="35"></label>
+                            <label>Max Trades Conc.: <input type="number" id="cfg-max-trades" min="1" max="50" placeholder="3"></label>
+                        </div>
+                    </div>
+                    <div class="exposure-panel">
+                        <h4>📊 Exposición Actual</h4>
+                        <div class="exposure-grid">
+                            <div>
+                                <h5>Por Símbolo</h5>
+                                <pre id="exposure-symbols" class="exposure-pre">{}</pre>
+                                <div id="exposure-symbols-indicators"></div>
+                            </div>
+                            <div>
+                                <h5>Por Categoría</h5>
+                                <pre id="exposure-cats" class="exposure-pre">{}</pre>
+                                <div id="exposure-cats-indicators"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pnl-chart-panel">
+                        <h4>📈 PnL Diario (stream)</h4>
+                        <canvas id="daily-pnl-chart" width="600" height="160"></canvas>
+                        <div class="signals-peek-controls">
+                            <div class="signals-peek-filters">
+                                <label> Símbolo: <input type="text" id="signals-filter-symbol" placeholder="BTCUSDT" /></label>
+                                <label> Categoría: <input type="text" id="signals-filter-category" placeholder="memecoins" /></label>
+                                <label> Fuente: <input type="text" id="signals-filter-source" placeholder="Oracle|Maximizer|NxN" /></label>
+                                <label> Offset: <input type="number" id="signals-filter-offset" value="0" min="0" step="1" /></label>
+                                <label> Limite: <input type="number" id="signals-filter-limit" value="10" min="1" max="50" step="1" /></label>
+                                <label> Boost por defecto: <input type="number" id="signals-default-boost" value="0.1" step="0.05" min="0" max="1" /></label>
+                                <button class="control-btn" id="signals-apply">✅ Aplicar filtros</button>
+                                <button class="control-btn" id="signals-reset">♻️ Reset filtros</button>
+                                <button class="control-btn" id="signals-refresh">🔍 Ver señales en cola</button>
+                                <button class="control-btn" id="signals-clear" style="margin-left:12px;">🧹 Limpiar cola</button>
+                                <label style="margin-left:12px;"> Auto-refresh
+                                    <input type="checkbox" id="signals-auto-refresh" />
+                                </label>
+                                <label> cada <input type="number" id="signals-auto-interval" value="5" min="2" max="60" step="1" style="width:60px;" /> s</label>
+                            </div>
+                            <div class="signals-stats" style="margin-top:8px; font-family: monospace; font-size: 12px;">
+                                <span>Queued: <strong id="signals-stats-queued">0</strong></span>
+                                <span style="margin-left:12px;">Published: <strong id="signals-stats-published">0</strong></span>
+                                <span style="margin-left:12px;">Consumed: <strong id="signals-stats-consumed">0</strong></span>
+                            </div>
+                            <div class="signals-peek-table-container">
+                                <table class="signals-table" id="signals-peek-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Símbolo</th>
+                                            <th>Fuente</th>
+                                            <th>Dirección</th>
+                                            <th>Score</th>
+                                            <th>Confianza</th>
+                                            <th>Profit</th>
+                                            <th>Timeframe</th>
+                                            <th>Timestamp</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="signals-peek-tbody">
+                                        <tr><td colspan="8">Sin datos</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: Poetas Chilenos -->
+        <section class="tab-content" id="tab-poetas">
+            <div class="poetas-container">
+                <div class="poetas-header">
+                    <h2>🎭 Los 6 Poetas Chilenos Liberados</h2>
+                    <div class="frequency-display">
+                        Frecuencia Base: <span id="base-frequency">40.0 Hz</span>
+                    </div>
+                </div>
+                
+                <div class="poetas-grid">
+                    <div class="poeta-card neruda">
+                        <div class="poeta-avatar">👨‍🎨</div>
+                        <div class="poeta-info">
+                            <h3>Pablo Neruda</h3>
+                            <div class="poeta-frequency">40.1 Hz</div>
+                            <div class="poeta-verse" id="neruda-verse">Verso primo: 2</div>
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="neruda-resonance"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="poeta-card mistral">
+                        <div class="poeta-avatar">👩‍🎨</div>
+                        <div class="poeta-info">
+                            <h3>Gabriela Mistral</h3>
+                            <div class="poeta-frequency">40.3 Hz</div>
+                            <div class="poeta-verse" id="mistral-verse">Verso primo: 23</div>
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="mistral-resonance"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="poeta-card rokha">
+                        <div class="poeta-avatar">🎪</div>
+                        <div class="poeta-info">
+                            <h3>Pablo de Rokha</h3>
+                            <div class="poeta-frequency">40.5 Hz</div>
+                            <div class="poeta-verse" id="rokha-verse">Verso primo: 59</div>
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="rokha-resonance"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="poeta-card huidobro">
+                        <div class="poeta-avatar">🌟</div>
+                        <div class="poeta-info">
+                            <h3>Vicente Huidobro</h3>
+                            <div class="poeta-frequency">40.7 Hz</div>
+                            <div class="poeta-verse" id="huidobro-verse">Verso primo: 137</div>
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="huidobro-resonance"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="poeta-card lihn">
+                        <div class="poeta-avatar">🔮</div>
+                        <div class="poeta-info">
+                            <h3>Enrique Lihn</h3>
+                            <div class="poeta-frequency">40.9 Hz</div>
+                            <div class="poeta-verse" id="lihn-verse">Verso primo: 181</div>
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="lihn-resonance"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="poeta-card zurita">
+                        <div class="poeta-avatar">🌊</div>
+                        <div class="poeta-info">
+                            <h3>Raúl Zurita</h3>
+                            <div class="poeta-frequency">41.1 Hz</div>
+                            <div class="poeta-verse" id="zurita-verse">Verso primo: 233</div>
+                            <div class="resonance-bar">
+                                <div class="resonance-fill" id="zurita-resonance"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: Supervisión Integral -->
+        <section class="tab-content" id="tab-supervision">
+            <div class="supervision-container">
+                <h2>📊 Supervisión Integral Leonardo</h2>
+                
+                <!-- Estado del Sistema y Despliegue -->
+                <div class="system-status-section">
+                    <h3>🖥️ Estado del Sistema</h3>
+                    <div class="status-grid">
+                        <div class="status-card api-status">
+                            <div class="status-icon" id="api-status-icon">●</div>
+                            <div class="status-info">
+                                <h4>API Binance</h4>
+                                <div class="status-metrics">
+                                    <span>Ping: <span id="api-ping">0ms</span></span>
+                                    <span>Conexión: <span id="api-connection">Desconectado</span></span>
+                                    <span>Errores: <span id="api-errors">0</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="status-card rate-limiter">
+                            <div class="status-icon" id="rate-status-icon">●</div>
+                            <div class="status-info">
+                                <h4>Rate Limiter</h4>
+                                <div class="status-metrics">
+                                    <span>Tokens: <span id="rate-tokens">0/300</span></span>
+                                    <span>Refill: <span id="rate-refill">0/s</span></span>
+                                    <span>Queue: <span id="rate-queue">0</span></span>
+                                </div>
+                                <div class="rate-progress">
+                                    <div class="rate-bar" id="rate-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="status-card cache-status">
+                            <div class="status-icon" id="cache-status-icon">●</div>
+                            <div class="status-info">
+                                <h4>Quantum Cache</h4>
+                                <div class="status-metrics">
+                                    <span>Hit Ratio: <span id="cache-hit-ratio">0%</span></span>
+                                    <span>Keys: <span id="cache-keys">0</span></span>
+                                    <span>TTL Avg: <span id="cache-ttl">0s</span></span>
+                                    <span>Memory: <span id="cache-memory-mb">0 MB</span></span>
+                                </div>
+                                <div class="cache-progress">
+                                    <div class="cache-bar" id="cache-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="status-card leonardo-engine">
+                            <div class="status-icon" id="leonardo-engine-icon">●</div>
+                            <div class="status-info">
+                                <h4>Leonardo Engine</h4>
+                                <div class="status-metrics">
+                                    <span>Uptime: <span id="leonardo-uptime">00:00:00</span></span>
+                                    <span>Cycles: <span id="leonardo-cycles">0</span></span>
+                                    <span>Memory: <span id="leonardo-memory">0MB</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dashboard Completo de Rate Limiting -->
+                <div class="rate-limiting-dashboard">
+                    <h3>⚡ Dashboard de Rate Limiting Avanzado</h3>
+                    
+                    <!-- Estado Visual Principal -->
+                    <div class="rate-limiter-visual-status">
+                        <div class="tokens-status-section">
+                            <h4>🪙 Estado de Tokens</h4>
+                            <div class="tokens-visual">
+                                <div class="tokens-gauge">
+                                    <div class="gauge-container">
+                                        <canvas id="tokens-gauge-canvas" width="200" height="100"></canvas>
+                                        <div class="gauge-overlay">
+                                            <span class="gauge-value" id="tokens-available">300</span>
+                                            <span class="gauge-label">TOKENS DISPONIBLES</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tokens-info">
+                                    <div class="token-metric">
+                                        <span class="metric-label">Maximo:</span>
+                                        <span class="metric-value" id="tokens-max">300</span>
+                                    </div>
+                                    <div class="token-metric">
+                                        <span class="metric-label">Utilizacion:</span>
+                                        <span class="metric-value" id="tokens-utilization">0%</span>
+                                    </div>
+                                    <div class="token-metric">
+                                        <span class="metric-label">Refill Rate:</span>
+                                        <span class="metric-value" id="tokens-refill-rate">30/s</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="queue-status-section">
+                            <h4>📋 Cola de Requests</h4>
+                            <div class="queue-visual">
+                                <div class="queue-display">
+                                    <div class="queue-count">
+                                        <span class="queue-number" id="queue-length">0</span>
+                                        <span class="queue-label">REQUESTS EN COLA</span>
+                                    </div>
+                                    <div class="queue-visualization" id="queue-viz">
+                                        <!-- Elementos visuales de cola generados dinámicamente -->
+                                    </div>
+                                </div>
+                                <div class="queue-metrics">
+                                    <div class="queue-metric">
+                                        <span class="metric-label">Tiempo Espera Promedio:</span>
+                                        <span class="metric-value" id="queue-avg-wait">0ms</span>
+                                    </div>
+                                    <div class="queue-metric">
+                                        <span class="metric-label">Max Cola (24h):</span>
+                                        <span class="metric-value" id="queue-max-24h">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Historial de Requests Rechazados -->
+                    <div class="rejected-requests-section">
+                        <h4>🚫 Historial de Requests Rechazados</h4>
+                        <div class="rejected-chart-container">
+                            <canvas id="rejected-requests-chart" width="600" height="200"></canvas>
+                        </div>
+                        <div class="rejected-metrics">
+                            <div class="rejected-metric">
+                                <span class="metric-label">Rechazados (ultima hora):</span>
+                                <span class="metric-value" id="rejected-1h">0</span>
+                            </div>
+                            <div class="rejected-metric">
+                                <span class="metric-label">Rechazados (ultimas 24h):</span>
+                                <span class="metric-value" id="rejected-24h">0</span>
+                            </div>
+                            <div class="rejected-metric">
+                                <span class="metric-label">Tasa de Rechazo:</span>
+                                <span class="metric-value" id="rejection-rate">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Configuracion Dinamica -->
+                    <div class="rate-limiter-config">
+                        <h4>⚙️ Configuracion Dinamica</h4>
+                        <div class="config-controls">
+                            <div class="config-group">
+                                <label for="tokens-per-interval">Tokens por Intervalo:</label>
+                                <div class="control-input">
+                                    <input type="number" id="tokens-per-interval" min="50" max="1000" value="300" />
+                                    <button class="apply-btn" onclick="updateRateLimiterConfig('tokens')">Aplicar</button>
+                                </div>
+                            </div>
+                            <div class="config-group">
+                                <label for="interval-ms">Intervalo (ms):</label>
+                                <div class="control-input">
+                                    <input type="number" id="interval-ms" min="1000" max="60000" value="10000" />
+                                    <button class="apply-btn" onclick="updateRateLimiterConfig('interval')">Aplicar</button>
+                                </div>
+                            </div>
+                            <div class="config-group">
+                                <label for="burst-limit">Burst Limit:</label>
+                                <div class="control-input">
+                                    <input type="number" id="burst-limit" min="10" max="100" value="50" />
+                                    <button class="apply-btn" onclick="updateRateLimiterConfig('burst')">Aplicar</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="config-presets">
+                            <h5>⚡ Presets Rapidos</h5>
+                            <div class="preset-buttons">
+                                <button class="preset-btn conservative" onclick="applyRateLimiterPreset('conservative')">🐌 Conservador</button>
+                                <button class="preset-btn balanced" onclick="applyRateLimiterPreset('balanced')">⚖️ Balanceado</button>
+                                <button class="preset-btn aggressive" onclick="applyRateLimiterPreset('aggressive')">🚀 Agresivo</button>
+                                <button class="preset-btn emergency" onclick="applyRateLimiterPreset('emergency')">🛑 Emergencia</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Estadisticas Avanzadas -->
+                    <div class="rate-limiter-advanced-stats">
+                        <h4>📈 Estadisticas Avanzadas</h4>
+                        <div class="stats-grid">
+                            <div class="stat-card requests-processed">
+                                <div class="stat-icon">✅</div>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="requests-processed">0</span>
+                                    <span class="stat-label">Requests Procesados</span>
+                                </div>
+                            </div>
+                            <div class="stat-card requests-rejected">
+                                <div class="stat-icon">❌</div>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="requests-rejected-total">0</span>
+                                    <span class="stat-label">Requests Rechazados</span>
+                                </div>
+                            </div>
+                            <div class="stat-card avg-response-time">
+                                <div class="stat-icon">⏱️</div>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="avg-response-time">0ms</span>
+                                    <span class="stat-label">Tiempo Respuesta Promedio</span>
+                                </div>
+                            </div>
+                            <div class="stat-card efficiency-ratio">
+                                <div class="stat-icon">📊</div>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="efficiency-ratio">100%</span>
+                                    <span class="stat-label">Eficiencia del Limiter</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Posiciones Activas -->
+                <div class="positions-section">
+                    <h3>📈 Posiciones Activas</h3>
+                    <div class="positions-table" id="positions-container">
+                        <div class="no-positions">
+                            No hay posiciones activas
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trades Activos del Sistema Cuántico -->
+                <div class="active-trades-section">
+                    <h3>💱 Trades Activos - Sistema Cuántico</h3>
+                    <div id="active-trades-container" class="trades-container">
+                        <p class="no-trades">No hay trades activos del sistema cuántico</p>
+                    </div>
+                </div>
+                
+                <!-- Predicciones y Oportunidades -->
+                <div class="predictions-opportunities-section">
+                    <div class="predictions-panel">
+                        <h3>🔮 Predicciones Cuánticas</h3>
+                        <div class="predictions-table-container">
+                            <table class="predictions-table">
+                                <thead>
+                                    <tr>
+                                        <th>Símbolo</th>
+                                        <th>Timeframe</th>
+                                        <th>Confianza</th>
+                                        <th>Dirección</th>
+                                        <th>Score</th>
+                                        <th>Leverage</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="predictions-table-body">
+                                    <tr>
+                                        <td colspan="6">Esperando predicciones...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="opportunities-panel">
+                        <h3>💰 Oportunidades Detectadas</h3>
+                        <div class="opportunities-table-container">
+                            <table class="opportunities-table">
+                                <thead>
+                                    <tr>
+                                        <th>Símbolo</th>
+                                        <th>Timeframe</th>
+                                        <th>Confianza</th>
+                                        <th>Dirección</th>
+                                        <th>Score</th>
+                                        <th>Leverage</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="opportunities-table-body">
+                                    <tr>
+                                        <td colspan="6">Esperando oportunidades...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Clasificación de Activos -->
+                <div class="assets-classification">
+                    <h3>🔬 Clasificación Cuántica de Activos</h3>
+                    <div class="classification-grid">
+                        <div class="asset-category majors">
+                            <h4>🏛️ MAJORS (<span id="majors-count">0</span>)</h4>
+                            <p>Titanes del ecosistema - Comportamiento predictible</p>
+                            <div class="asset-list" id="majors-list"></div>
+                        </div>
+                        <div class="asset-category memecoins">
+                            <h4>🚀 MEMECOINS (<span id="memecoins-count">0</span>)</h4>
+                            <p>Caos cuántico - Alta volatilidad</p>
+                            <div class="asset-list" id="memecoins-list"></div>
+                        </div>
+                        <div class="asset-category darkside">
+                            <h4>🌑 DARK SIDE (<span id="darkside-count">0</span>)</h4>
+                            <p>Lado oscuro - Manipulación detectada</p>
+                            <div class="asset-list" id="darkside-list"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Logs del Sistema -->
+                <div class="logs-section">
+                    <h3>📝 Logs Leonardo Consciousness</h3>
+                    <div class="log-container" id="log-container">
+                        <div class="log-placeholder">
+                            Esperando eventos del sistema...
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel de Métricas de Monitoreo de Despliegue -->
+                <div class="deployment-monitoring-section">
+                    <h3>|===== METRICAS DE DESPLIEGUE =====|</h3>
+                    
+                    <!-- Métricas de Sistema -->
+                    <div class="metrics-category system-metrics">
+                        <h4>[SISTEMA] - Recursos del Servidor</h4>
+                        <div class="metrics-container">
+                            <table class="metrics-table">
+                                <thead>
+                                    <tr>
+                                        <th>RECURSO</th>
+                                        <th>ACTUAL</th>
+                                        <th>MAXIMO</th>
+                                        <th>UTILIZACION</th>
+                                        <th>ESTADO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>CPU</td>
+                                        <td><span id="sys-cpu-current">0.0</span>%</td>
+                                        <td>100.0%</td>
+                                        <td>
+                                            <div class="usage-bar">
+                                                <div class="usage-fill" id="cpu-usage-bar"></div>
+                                            </div>
+                                        </td>
+                                        <td><span id="sys-cpu-status" class="status-normal">NORMAL</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>MEMORIA</td>
+                                        <td><span id="sys-memory-current">0</span> MB</td>
+                                        <td><span id="sys-memory-total">0</span> MB</td>
+                                        <td>
+                                            <div class="usage-bar">
+                                                <div class="usage-fill" id="memory-usage-bar"></div>
+                                            </div>
+                                        </td>
+                                        <td><span id="sys-memory-status" class="status-normal">NORMAL</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>UPTIME</td>
+                                        <td colspan="2"><span id="sys-uptime">00:00:00</span></td>
+                                        <td>-</td>
+                                        <td><span id="sys-uptime-status" class="status-normal">ACTIVO</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Métricas de Red -->
+                    <div class="metrics-category network-metrics">
+                        <h4>[RED] - Comunicaciones y Conectividad</h4>
+                        <div class="metrics-container">
+                            <table class="metrics-table">
+                                <thead>
+                                    <tr>
+                                        <th>METRICA</th>
+                                        <th>VALOR</th>
+                                        <th>PROMEDIO</th>
+                                        <th>TENDENCIA</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>LATENCIA</td>
+                                        <td><span id="net-latency-current">0</span> ms</td>
+                                        <td><span id="net-latency-avg">0</span> ms</td>
+                                        <td>
+                                            <span id="net-latency-trend" class="trend-stable">===</span>
+                                        </td>
+                                        <td><span id="net-latency-status" class="status-normal">OK</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>THROUGHPUT</td>
+                                        <td><span id="net-throughput">0</span> MB/s</td>
+                                        <td><span id="net-throughput-avg">0</span> MB/s</td>
+                                        <td>
+                                            <span id="net-throughput-trend" class="trend-stable">===</span>
+                                        </td>
+                                        <td><span id="net-throughput-status" class="status-normal">OK</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>CONEXIONES</td>
+                                        <td><span id="net-connections-active">0</span></td>
+                                        <td><span id="net-connections-max">1000</span></td>
+                                        <td>
+                                            <span id="net-connections-trend" class="trend-stable">===</span>
+                                        </td>
+                                        <td><span id="net-connections-status" class="status-normal">ESTABLE</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ERRORES RED</td>
+                                        <td><span id="net-errors">0</span></td>
+                                        <td><span id="net-errors-rate">0.0</span>/min</td>
+                                        <td>
+                                            <span id="net-errors-trend" class="trend-stable">===</span>
+                                        </td>
+                                        <td><span id="net-errors-status" class="status-normal">LIMPIO</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Métricas de Aplicación -->
+                    <div class="metrics-category app-metrics">
+                        <h4>[APLICACION] - Performance y Operación</h4>
+                        <div class="metrics-container">
+                            <table class="metrics-table">
+                                <thead>
+                                    <tr>
+                                        <th>METRICA</th>
+                                        <th>CURRENT</th>
+                                        <th>AVG (5m)</th>
+                                        <th>MAX (24h)</th>
+                                        <th>STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>REQUESTS/SEC</td>
+                                        <td><span id="app-rps-current">0.0</span></td>
+                                        <td><span id="app-rps-avg">0.0</span></td>
+                                        <td><span id="app-rps-max">0.0</span></td>
+                                        <td><span id="app-rps-status" class="status-normal">NORMAL</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ERRORES (%)</td>
+                                        <td><span id="app-error-rate">0.0</span>%</td>
+                                        <td><span id="app-error-avg">0.0</span>%</td>
+                                        <td><span id="app-error-max">0.0</span>%</td>
+                                        <td><span id="app-error-status" class="status-normal">BAJO</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>TIEMPO RESP</td>
+                                        <td><span id="app-response-current">0</span> ms</td>
+                                        <td><span id="app-response-avg">0</span> ms</td>
+                                        <td><span id="app-response-max">0</span> ms</td>
+                                        <td><span id="app-response-status" class="status-normal">RAPIDO</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>THREADS ACT</td>
+                                        <td><span id="app-threads">0</span></td>
+                                        <td><span id="app-threads-avg">0</span></td>
+                                        <td><span id="app-threads-max">100</span></td>
+                                        <td><span id="app-threads-status" class="status-normal">OK</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Métricas de Cache y Base de Datos -->
+                    <div class="metrics-category db-cache-metrics">
+                        <h4>[CACHE/DB] - Almacenamiento y Persistencia</h4>
+                        <div class="metrics-grid">
+                            <div class="metric-box cache-box">
+                                <h5>|----- QUANTUM CACHE -----|</h5>
+                                <table class="compact-table">
+                                    <tr>
+                                        <td>HIT RATE:</td>
+                                        <td><span id="cache-hit-rate-detailed">0.0</span>%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MISS RATE:</td>
+                                        <td><span id="cache-miss-rate">0.0</span>%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>KEYS TOTAL:</td>
+                                        <td><span id="cache-keys-total">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>KEYS ACTIVAS:</td>
+                                        <td><span id="cache-keys-active">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>TTL PROMEDIO:</td>
+                                        <td><span id="cache-ttl-avg">0</span>s</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MEMORIA CACHE:</td>
+                                        <td><span id="cache-memory">0</span> MB</td>
+                                    </tr>
+                                    <tr>
+                                        <td>STATUS:</td>
+                                        <td><span id="cache-status-detailed" class="status-normal">ACTIVO</span></td>
+                                    </tr>
+                                </table>
+                                
+                                <!-- Panel de Gestión de Cache -->
+                                <div class="cache-management-panel">
+                                    <h6>┌─── GESTIÓN CACHE ───┐</h6>
+                                    <div class="cache-controls">
+                                        <button class="cache-btn clear-all" id="clear-cache-all">
+                                            [LIMPIAR TODO]
+                                        </button>
+                                        <div class="invalidate-key-section">
+                                            <input type="text" id="key-to-invalidate" 
+                                                   placeholder="Key a invalidar" 
+                                                   class="cache-input">
+                                            <button class="cache-btn invalidate-key" id="invalidate-specific-key">
+                                                [INVALIDAR]
+                                            </button>
+                                        </div>
+                                        <div class="cache-stats-live">
+                                            <span class="cache-live-stat">
+                                                Hit Rate: <span id="cache-hit-ratio-live">0.0%</span>
+                                            </span>
+                                            <span class="cache-live-stat">
+                                                Mem Usage: <span id="cache-memory-usage">0.0 MB</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="cache-operations-log" id="cache-operations-log">
+                                        <div class="cache-log-entry">[SISTEMA] Cache management listo</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-box database-box">
+                                <h5>|----- BASE DATOS -----|</h5>
+                                <table class="compact-table">
+                                    <tr>
+                                        <td>CONEXIONES:</td>
+                                        <td><span id="db-connections">0/10</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>QUERIES/SEC:</td>
+                                        <td><span id="db-qps">0.0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>TIEMPO QUERY:</td>
+                                        <td><span id="db-query-time">0</span> ms</td>
+                                    </tr>
+                                    <tr>
+                                        <td>TRANSACCIONES:</td>
+                                        <td><span id="db-transactions">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>LOCKS:</td>
+                                        <td><span id="db-locks">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>TAMANO DB:</td>
+                                        <td><span id="db-size">0</span> MB</td>
+                                    </tr>
+                                    <tr>
+                                        <td>STATUS:</td>
+                                        <td><span id="db-status" class="status-normal">CONECTADO</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Métricas de Trading Específicas -->
+                    <div class="metrics-category trading-metrics">
+                        <h4>[TRADING] - Operaciones y Performance</h4>
+                        <div class="metrics-container">
+                            <table class="metrics-table">
+                                <thead>
+                                    <tr>
+                                        <th>OPERACION</th>
+                                        <th>TOTAL HOY</th>
+                                        <th>EXITOSAS</th>
+                                        <th>FALLIDAS</th>
+                                        <th>RATIO EXITO</th>
+                                        <th>P&L</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>TRADES</td>
+                                        <td><span id="trading-total">0</span></td>
+                                        <td><span id="trading-success">0</span></td>
+                                        <td><span id="trading-failed">0</span></td>
+                                        <td><span id="trading-ratio">0.0</span>%</td>
+                                        <td><span id="trading-pnl">$0.00</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ANALISIS</td>
+                                        <td><span id="analysis-total">0</span></td>
+                                        <td><span id="analysis-completed">0</span></td>
+                                        <td><span id="analysis-errors">0</span></td>
+                                        <td><span id="analysis-ratio">0.0</span>%</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>SEÑALES</td>
+                                        <td><span id="signals-total">0</span></td>
+                                        <td><span id="signals-valid">0</span></td>
+                                        <td><span id="signals-invalid">0</span></td>
+                                        <td><span id="signals-ratio">0.0</span>%</td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Resumen de Estado General -->
+                    <div class="metrics-category system-summary">
+                        <h4>[RESUMEN] - Estado General del Sistema</h4>
+                        <div class="summary-container">
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <div class="summary-label">SISTEMA GENERAL:</div>
+                                    <div class="summary-value" id="system-overall-status">OPERACIONAL</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">RED/CONECTIVIDAD:</div>
+                                    <div class="summary-value" id="network-overall-status">ESTABLE</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">APLICACION:</div>
+                                    <div class="summary-value" id="app-overall-status">ACTIVA</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">CACHE/DB:</div>
+                                    <div class="summary-value" id="storage-overall-status">ONLINE</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">TRADING:</div>
+                                    <div class="summary-value" id="trading-overall-status">MONITOREANDO</div>
+                                </div>
+                            <div class="summary-item">
+                                <div class="summary-label">ULTIMA ACTUALIZACION:</div>
+                                <div class="summary-value" id="last-update">--:--:--</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">SIMBOLOS ACTUALIZADOS:</div>
+                                <div class="summary-value" id="symbols-updated">0</div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Confirmación -->
+    <div class="modal" id="confirmation-modal">
+        <div class="modal-content">
+            <h3>Confirmación Leonardo</h3>
+            <p id="modal-message"></p>
+            <div class="modal-actions">
+                <button class="btn-confirm" id="confirm-action">Confirmar</button>
+                <button class="btn-cancel" id="cancel-action">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="leonardo-unified.js"></script>
+    <!-- Quantum cube visualization (opcional) -->
+    <script src="quantum-cube.js"></script>
+    <!-- Leonardo Quantum API Client -->
+    <script src="leonardo-quantum-api.js"></script>
+    <script src="leonardo-consciousness.js"></script>
+</body>
+</html>

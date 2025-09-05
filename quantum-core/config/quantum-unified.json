@@ -1,0 +1,94 @@
+{
+    "system": {
+        "name": "QBTC Unified Quantum System",
+        "version": "4.0.0-leonardo-quantum",
+        "environment": "production"
+    },
+    "servers": {
+        "unified": {
+            "port": 18020,
+            "host": "localhost",
+            "description": "Centro de comando unificado"
+        },
+        "frontend": {
+            "port": 8080,
+            "host": "localhost",
+            "description": "Interfaz de usuario"
+        },
+        "quantum_core": {
+            "port": 9090,
+            "host": "localhost",
+            "description": "Núcleo cuántico principal"
+        },
+        "trading_engine": {
+            "port": 9091,
+            "host": "localhost", 
+            "description": "Motor de trading"
+        },
+        "market_data": {
+            "port": 9092,
+            "host": "localhost",
+            "description": "Datos de mercado"
+        },
+        "monitoring": {
+            "port": 9093,
+            "host": "localhost",
+            "description": "Sistema de monitoreo"
+        }
+    },
+    "quantum": {
+        "consciousness": {
+            "target": 0.941,
+            "threshold": 0.75,
+            "update_interval": 1000
+        },
+        "coherence": {
+            "target": 0.964,
+            "threshold": 0.65,
+            "update_interval": 500
+        },
+        "constants": {
+            "phi": 1.618033988749895,
+            "lambda_888": 888,
+            "primo_7919": 7919,
+            "resonance": 0.618,
+            "transformation": 0.941,
+            "hook_factor": 0.382,
+            "simbiosis": 0.888
+        }
+    },
+    "trading": {
+        "validation": {
+            "consciousness_required": 0.75,
+            "coherence_required": 0.65,
+            "quantum_signature": true
+        },
+        "execution": {
+            "retry_attempts": 3,
+            "timeout_ms": 5000,
+            "confirmation_required": true
+        },
+        "risk": {
+            "max_leverage": 10,
+            "stop_loss": 0.02,
+            "take_profit": 0.05,
+            "max_position": 100
+        }
+    },
+    "monitoring": {
+        "metrics_interval": 1000,
+        "log_level": "INFO",
+        "performance_tracking": true,
+        "quantum_tracking": true
+    },
+    "cache": {
+        "quantum_ttl": 7919,
+        "market_ttl": 1000,
+        "metrics_ttl": 5000
+    },
+    "websocket": {
+        "heartbeat": 30000,
+        "reconnect_interval": 5000,
+        "max_reconnect_attempts": 5
+    }
+}

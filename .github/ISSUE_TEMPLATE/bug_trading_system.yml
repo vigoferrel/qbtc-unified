@@ -1,0 +1,197 @@
+name: 🐛 Bug en Trading System
+description: Reportar un bug crítico en el sistema de trading QBTC-UNIFIED
+title: "[BUG] "
+labels: ["bug", "trading-system", "needs-triage"]
+assignees:
+  - vigoferrel
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ ADVERTENCIA CRÍTICA
+        Si este bug involucra **dinero real** o **pérdidas financieras**, marca como urgente y contacta inmediatamente por email.
+        
+        🚨 **Para emergencias**: support@qbtc-unified.com
+        
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severidad del Bug
+      description: ¿Qué tan crítico es este bug?
+      options:
+        - "🔴 CRÍTICO - Pérdidas de dinero real"
+        - "🟠 ALTO - Sistema no funciona"
+        - "🟡 MEDIO - Funcionalidad degradada"
+        - "🟢 BAJO - Problema cosmético"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Componente Afectado
+      description: ¿Qué parte del sistema tiene el problema?
+      options:
+        - "Portfolio Manager (14801)"
+        - "Leonardo IA Server (8090)"
+        - "Guardian System (14601)"
+        - "Metrics Server (14701)"
+        - "Quantum Cache System"
+        - "Binance API Integration"
+        - "Risk Management (VaR/Kelly)"
+        - "Sistema Completo"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Entorno
+      description: ¿Dónde ocurrió el problema?
+      options:
+        - "🧪 Testnet (desarrollo)"
+        - "🚢 Staging (pre-producción)"
+        - "🌟 Producción (¡CUIDADO!)"
+        - "💻 Local development"
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug_description
+    attributes:
+      label: Descripción del Bug
+      description: Describe claramente qué pasó y qué esperabas que pasara
+      placeholder: |
+        Ejemplo: "El Portfolio Manager calculó incorrectamente el tamaño de posición usando Kelly Criterion, 
+        resultando en una posición de $50k cuando debería haber sido máximo $20k..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: financial_impact
+    attributes:
+      label: 💰 Impacto Financiero
+      description: Si hubo pérdidas monetarias, detalla el impacto
+      placeholder: |
+        - Pérdida estimada: $XXX USD
+        - Posiciones afectadas: BTC, ETH, etc.
+        - Capital total en riesgo: $XXX USD
+        - ¿Se activaron circuit breakers?: Sí/No
+    validations:
+      required: false
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: 🔄 Pasos para Reproducir
+      description: Pasos específicos para reproducir el bug
+      placeholder: |
+        1. Iniciar Portfolio Manager con capital de $100k
+        2. Configurar VaR máximo al 2%
+        3. Ejecutar análisis de Kelly Criterion para BTC
+        4. Observar cálculo incorrecto de tamaño de posición
+        5. Ver error en logs...
+    validations:
+      required: true
+
+  - type: textarea
+    id: trading_context
+    attributes:
+      label: 📊 Contexto de Trading
+      description: Información del estado del sistema al momento del bug
+      placeholder: |
+        - Portfolio VaR actual: X.XX%
+        - Posiciones activas: BTC, ETH, etc.
+        - Leonardo Consciousness Level: XX.X%
+        - Coherence Score: XX.X%
+        - Volatilidad del mercado: Alta/Media/Baja
+        - Símbolos en Quantum Cache: XXX
+    validations:
+      required: false
+
+  - type: textarea
+    id: system_logs
+    attributes:
+      label: 📋 Logs del Sistema
+      description: Logs relevantes (REMOVER cualquier API key o información sensible)
+      placeholder: |
+        ```
+        [2025-09-05 04:42:26] ERROR Portfolio Manager: Kelly calculation failed
+        [2025-09-05 04:42:26] ERROR VaR calculation returned NaN
+        [2025-09-05 04:42:26] WARN Guardian System: Position size exceeds limit
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: system_info
+    attributes:
+      label: 🖥️ Información del Sistema
+      description: Detalles técnicos del entorno
+      placeholder: |
+        - OS: Windows 11 / Ubuntu 22.04 / macOS 13
+        - Node.js: v18.17.0
+        - npm: v9.8.1
+        - Memoria RAM: 16GB
+        - QBTC-UNIFIED Version: v2.0.1
+        - Binance API: Testnet / Production
+    validations:
+      required: true
+
+  - type: textarea
+    id: metrics_snapshot
+    attributes:
+      label: 📈 Snapshot de Métricas
+      description: Estado de las métricas al momento del error
+      placeholder: |
+        ```json
+        {
+          "portfolio_var": 0.025,
+          "sharpe_ratio": 1.2,
+          "total_positions": 5,
+          "leonardo_consciousness": 0.943,
+          "quantum_cache_hit_rate": 0.97,
+          "system_uptime": 86400000
+        }
+        ```
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: security_check
+    attributes:
+      label: 🔒 Verificación de Seguridad
+      description: Confirma que has removido información sensible
+      options:
+        - label: He removido todas las API keys del reporte
+          required: true
+        - label: He removido información personal/financiera sensible
+          required: true
+        - label: Los logs no contienen credenciales o tokens
+          required: true
+
+  - type: checkboxes
+    id: attempted_fixes
+    attributes:
+      label: 🔧 Intentos de Solución
+      description: ¿Qué has intentado para resolver el problema?
+      options:
+        - label: Reiniciar los servicios afectados
+        - label: Verificar configuración (.env)
+        - label: Revisar logs completos
+        - label: Probar en Testnet
+        - label: Consultar documentación técnica
+        - label: Ejecutar health checks del sistema
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: 📝 Contexto Adicional
+      description: Cualquier información adicional que pueda ayudar
+      placeholder: |
+        - ¿Es la primera vez que ocurre?
+        - ¿Hay algún patrón temporal?
+        - ¿Coincide con alta volatilidad del mercado?
+        - ¿Otros usuarios reportaron problemas similares?
+    validations:
+      required: false

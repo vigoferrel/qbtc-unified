@@ -1,0 +1,1172 @@
+/**
+ * ========================================================================
+ * 🎨 LEONARDO QUANTUM API CLIENT
+ * ========================================================================
+ * 
+ * Cliente JavaScript para interactuar con el LeonardoQuantumServer
+ * Maneja todas las comunicaciones HTTP y WebSocket con el servidor
+ */
+
+class LeonardoQuantumAPI {
+    constructor(config = {}) {
+        // Infer API base: prefer provided config, else map frontend 18021 -> API 18020
+        const DEFAULT_API = 'http://localhost:18020';
+        let inferred = DEFAULT_API;
+        try {
+            if (typeof window !== 'undefined' && window.location) {
+                const { hostname } = window.location;
+                // Keep localhost mapping to unified API 18020
+                inferred = `http://${hostname}:18020`;
+            }
+        } catch (_) { /* ignore */ }
+        this.baseURL = config.baseURL || inferred;
+
+        this.timeout = config.timeout || 10000;
+        this.retryAttempts = config.retryAttempts || 3;
+        this.retryDelay = config.retryDelay || 1000;
+        
+        console.log('🎨 Leonardo Quantum API Client initialized');
+        console.log(`📡 Base URL: ${this.baseURL}`);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🌐 HTTP REQUEST HELPERS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async makeRequest(endpoint, options = {}) {
+        const url = `${this.baseURL}${endpoint}`;
+        const config = {
+            timeout: this.timeout,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            },
+            ...options
+        };
+        
+        let attempts = 0;
+        while (attempts < this.retryAttempts) {
+            try {
+                const response = await fetch(url, config);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${data.error || 'Unknown error'}`);
+                }
+                
+                return data;
+            } catch (error) {
+                attempts++;
+                console.warn(`Request failed (attempt ${attempts}/${this.retryAttempts}):`, error.message);
+                
+                if (attempts >= this.retryAttempts) {
+                    throw error;
+                }
+                
+                await this.sleep(this.retryDelay);
+            }
+        }
+    }
+    
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 📊 SYSTEM INFORMATION ENDPOINTS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async getSystemInfo() {
+        // Use health endpoint to ensure JSON (avoid HTML at '/')
+        return await this.makeRequest('/api/health');
+    }
+    
+    async getMetrics() {
+        return await this.makeRequest('/api/metrics');
+    }
+    
+    async getHealth() {
+        return await this.makeRequest('/api/health');
+    }
+
+    // ───────────────────────────────────────────────────────────────────
+    // 🛡️ RIESGO / EXPOSICIÓN
+    // ───────────────────────────────────────────────────────────────────
+    async getRiskExposure() {
+        return await this.makeRequest('/api/risk/exposure');
+    }
+
+    async resetRisk() {
+        return await this.makeRequest('/api/risk/reset', { method: 'POST' });
+    }
+
+    async updateRiskConfig(cfg = {}) {
+        return await this.makeRequest('/api/risk/config', {
+            method: 'POST',
+            body: JSON.stringify(cfg)
+        });
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🔮 PREDICTION ENDPOINTS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async getPredictions(options = {}) {
+        const params = new URLSearchParams();
+        
+        if (options.symbol) params.append('symbol', options.symbol);
+        if (options.timeframe) params.append('timeframe', options.timeframe);
+        if (options.minConfidence) params.append('minConfidence', options.minConfidence);
+        if (options.limit) params.append('limit', options.limit);
+        if (options.sortBy) params.append('sortBy', options.sortBy);
+        
+        const queryString = params.toString();
+        const endpoint = queryString ? `/api/predictions?${queryString}` : '/api/predictions';
+        
+        return await this.makeRequest(endpoint);
+    }
+    
+    async getOpportunities(limit = 10) {
+        const params = new URLSearchParams();
+        if (limit) params.append('limit', limit);
+        
+        const queryString = params.toString();
+        const endpoint = queryString ? `/api/opportunities?${queryString}` : '/api/opportunities';
+        
+        return await this.makeRequest(endpoint);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 💱 TRADING ENDPOINTS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async getTradingBalance() {
+        return await this.makeRequest('/api/trading/balance');
+    }
+    
+    async getActivePositions() {
+        return await this.makeRequest('/api/trading/positions');
+    }
+    
+    async executeTrade(tradeData) {
+        return await this.makeRequest('/api/trading/execute', {
+            method: 'POST',
+            body: JSON.stringify(tradeData)
+        });
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 📈 MARKET DATA ENDPOINTS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async getSymbols(limit = 50) {
+        const params = new URLSearchParams();
+        if (limit) params.append('limit', limit);
+        
+        const queryString = params.toString();
+        const endpoint = queryString ? `/api/symbols?${queryString}` : '/api/symbols';
+        
+        return await this.makeRequest(endpoint);
+    }
+    
+    async getSymbolData(symbol) {
+        return await this.makeRequest(`/api/symbols/${symbol}`);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🛠️ SYSTEM CONTROL ENDPOINTS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    async startSystem() {
+        return await this.makeRequest('/api/system/start', {
+            method: 'POST'
+        });
+    }
+    
+    async stopSystem() {
+        return await this.makeRequest('/api/system/stop', {
+            method: 'POST'
+        });
+    }
+    
+    async restartSystem() {
+        return await this.makeRequest('/api/system/restart', {
+            method: 'POST'
+        });
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🌊 STREAMING HELPERS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    createEventSource(onMessage, onError = null) {
+        try {
+            const eventSource = new EventSource(`${this.baseURL}/api/stream`);
+            
+            /**
+             * Event listeners for different event types
+             * - Add compatibility for server-sent 'connection' and 'leonardo_metrics'
+             *   by normalizing them to 'connected' and 'metrics' respectively.
+             */
+            const eventTypes = [
+                'connected', 'metrics', 'predictions', 'opportunities', 'trade',
+                'bigBang', 'realtime', 'risk', 'riskEmergency', 'signal',
+                // Unified server aliases:
+                'connection', 'leonardo_metrics'
+            ];
+            
+            eventTypes.forEach(eventType => {
+                eventSource.addEventListener(eventType, (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        const normalized =
+                            eventType === 'connection' ? 'connected' :
+                            eventType === 'leonardo_metrics' ? 'metrics' :
+                            eventType;
+                        onMessage(normalized, data);
+                    } catch (error) {
+                        console.error(`Error parsing ${eventType} event:`, error);
+                    }
+                });
+            });
+            
+            eventSource.addEventListener('error', (event) => {
+                console.warn('EventSource error:', event);
+                if (onError) onError(event);
+            });
+            
+            return eventSource;
+        } catch (error) {
+            console.error('Error creating EventSource:', error);
+            if (onError) onError(error);
+            return null;
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// 🎯 LEONARDO QUANTUM DASHBOARD MANAGER
+// ═══════════════════════════════════════════════════════════════════
+
+class LeonardoQuantumDashboard {
+    constructor() {
+        this.api = new LeonardoQuantumAPI();
+        this.eventSource = null;
+        this.updateInterval = null;
+        this.isConnected = false;
+        
+        this.init();
+    }
+    
+    async init() {
+        console.log('🚀 Initializing Leonardo Quantum Dashboard...');
+        
+        try {
+            // Test connection
+            await this.testConnection();
+            
+            // Setup periodic updates
+            this.setupPeriodicUpdates();
+            
+            // Setup streaming
+            this.setupStreaming();
+            
+            // Setup UI event listeners
+            this.setupUIEventListeners();
+            
+            console.log('✅ Leonardo Quantum Dashboard initialized');
+            
+        } catch (error) {
+            console.error('❌ Failed to initialize dashboard:', error);
+            this.showConnectionError(error);
+        }
+    }
+    
+    async testConnection() {
+        try {
+            const systemInfo = await this.api.getSystemInfo();
+            console.log('🎨 Connected to Leonardo Consciousness Quantum Engine:', systemInfo.version);
+            this.isConnected = true;
+            this.showConnectionStatus('connected');
+        } catch (error) {
+            this.isConnected = false;
+            this.showConnectionStatus('disconnected');
+            throw error;
+        }
+    }
+    
+    setupPeriodicUpdates() {
+        // Update metrics every 5 seconds as fallback
+        this.updateInterval = setInterval(async () => {
+            if (!this.isConnected) return;
+            
+            try {
+                await this.updateDashboardData();
+            } catch (error) {
+                console.warn('Periodic update failed:', error);
+            }
+        }, 5000);
+    }
+    
+    setupStreaming() {
+        this.eventSource = this.api.createEventSource(
+            (eventType, data) => this.handleStreamEvent(eventType, data),
+            (error) => this.handleStreamError(error)
+        );
+    }
+    
+    handleStreamEvent(eventType, data) {
+        switch (eventType) {
+            case 'connected':
+                console.log('🎨 Stream connected:', data.clientId);
+                this.showConnectionStatus('streaming');
+                break;
+                
+            case 'metrics':
+                this.updateMetricsDisplay(data);
+                break;
+                
+            case 'predictions':
+                this.updatePredictionsDisplay(data);
+                break;
+                
+            case 'opportunities':
+                this.updateOpportunitiesDisplay(data);
+                break;
+                
+            case 'trade':
+                this.updateTradeDisplay(data);
+                break;
+                
+            case 'bigBang':
+                this.handleBigBangEvent(data);
+                break;
+                
+            case 'realtime':
+                this.updateRealtimeCounters(data);
+                break;
+            case 'signal':
+                this.updateSignalDisplay(data);
+                break;
+            case 'risk':
+                this.updateRiskDisplay(data);
+                break;
+            case 'riskEmergency':
+                this.handleRiskEmergency(data);
+                break;
+                
+            default:
+                console.log(`Unknown event type: ${eventType}`, data);
+        }
+    }
+    
+    handleStreamError(error) {
+        console.warn('Stream error:', error);
+        this.showConnectionStatus('error');
+        
+        // Attempt to reconnect after 5 seconds
+        setTimeout(() => {
+            if (!this.eventSource || this.eventSource.readyState === EventSource.CLOSED) {
+                console.log('Attempting to reconnect stream...');
+                this.setupStreaming();
+            }
+        }, 5000);
+    }
+    
+    async updateDashboardData() {
+        try {
+            // Get latest metrics
+            const metrics = await this.api.getMetrics();
+            this.updateMetricsDisplay(metrics.data);
+            
+            // Get latest predictions
+            const predictions = await this.api.getPredictions({ limit: 5 });
+            this.updatePredictionsDisplay(predictions.data);
+            
+            // Get opportunities
+            const opportunities = await this.api.getOpportunities(5);
+            this.updateOpportunitiesDisplay(opportunities.data);
+            
+            // Get trading balance
+            const balance = await this.api.getTradingBalance();
+            this.updateBalanceDisplay(balance.data);
+            
+        } catch (error) {
+            console.error('Error updating dashboard data:', error);
+        }
+    }
+    
+    // UI Update Methods
+    updateMetricsDisplay(metrics) {
+        if (window.leonardo && window.leonardo.processQuantumMetrics) {
+            window.leonardo.processQuantumMetrics(metrics);
+        }
+        // Also update risk widgets if available in metrics
+        try {
+            const risk = metrics.risk || {};
+            const engine = metrics.engineMetrics || {};
+            const drawdownEl = document.getElementById('drawdown');
+            if (drawdownEl && typeof engine.currentDrawdown === 'number') {
+                drawdownEl.textContent = `${(engine.currentDrawdown * 100).toFixed(2)}%`;
+                this.styleDrawdown(engine.currentDrawdown);
+            }
+            const totalPnLEl = document.getElementById('total-pnl');
+            if (totalPnLEl && typeof engine.totalProfit === 'number') {
+                totalPnLEl.textContent = `$${engine.totalProfit.toFixed(2)}`;
+            }
+            const dailyPnLEl = document.getElementById('daily-pnl');
+            if (dailyPnLEl && typeof risk?.dailyPnL === 'number') {
+                dailyPnLEl.textContent = `$${risk.dailyPnL.toFixed(2)}`;
+            }
+        } catch (_) {}
+    }
+
+    updateRiskDisplay(payload) {
+        try {
+            const drawdownEl = document.getElementById('drawdown');
+            if (drawdownEl && typeof payload?.currentDrawdown === 'number') {
+                drawdownEl.textContent = `${(payload.currentDrawdown * 100).toFixed(2)}%`;
+                this.styleDrawdown(payload.currentDrawdown);
+            }
+            const dailyPnLEl = document.getElementById('daily-pnl');
+            if (dailyPnLEl && typeof payload?.riskState?.dailyPnL === 'number') {
+                dailyPnLEl.textContent = `$${payload.riskState.dailyPnL.toFixed(2)}`;
+            }
+
+            // Indicadores de exposición si tenemos snapshot disponible
+            if (payload?.exposure) {
+                this.renderExposureIndicators(payload.exposure);
+            } else {
+                // Intentar obtener exposición reciente
+                this.refreshExposurePanel().catch(() => {});
+            }
+
+            // Actualizar gráfico PnL diario si existe
+            if (typeof payload?.riskState?.dailyPnL === 'number') {
+                this.updateDailyPnlChart(payload.riskState.dailyPnL);
+            }
+        } catch (e) { console.warn('risk display error', e); }
+    }
+
+    handleRiskEmergency(payload) {
+        try {
+            this.updateRiskDisplay(payload);
+            const statusEl = document.getElementById('trading-overall-status');
+            if (statusEl) {
+                statusEl.textContent = 'EMERGENCY STOP';
+                statusEl.classList.add('status-error');
+            }
+            // Desactivar temporalmente el botón Reset Diario
+            const resetBtn = document.getElementById('risk-reset');
+            if (resetBtn) {
+                resetBtn.disabled = true;
+                setTimeout(() => { resetBtn.disabled = false; }, 10000);
+            }
+            // Log visual
+            const log = document.getElementById('log-container');
+            if (log) {
+                const el = document.createElement('div');
+                el.className = 'log-entry error';
+                el.textContent = `[${new Date().toLocaleTimeString()}] EMERGENCY STOP ACTIVADO - Drawdown ${(payload.currentDrawdown*100).toFixed(2)}%`;
+                log.prepend(el);
+            }
+        } catch (_) {}
+    }
+
+    styleDrawdown(dd) {
+        try {
+            const ddCard = document.getElementById('drawdown')?.parentElement;
+            const ddEl = document.getElementById('drawdown');
+            if (!ddEl || !ddCard) return;
+            // Intentar obtener límites actuales del backend (en caché local)
+            if (!this._riskLimits) {
+                // Cargar una vez
+                this.api.getRiskExposure().then(r => {
+                    if (r && r.success && r.data && r.data.limits) this._riskLimits = r.data.limits;
+                }).catch(()=>{});
+            }
+            const warn = typeof this._riskLimits?.MAX_DAILY_DRAWDOWN === 'number' ? this._riskLimits.MAX_DAILY_DRAWDOWN * 0.8 : 0.08;
+            const err = typeof this._riskLimits?.MAX_DAILY_DRAWDOWN === 'number' ? this._riskLimits.MAX_DAILY_DRAWDOWN : 0.10;
+            ddCard.classList.remove('warn','error');
+            ddEl.style.color = '';
+            if (dd >= err) {
+                ddCard.classList.add('error');
+                ddEl.style.color = '#e74c3c';
+            } else if (dd >= warn) {
+                ddCard.classList.add('warn');
+                ddEl.style.color = '#f39c12';
+            } else {
+                ddEl.style.color = '#2ecc71';
+            }
+        } catch (_) {}
+    }
+    
+    updatePredictionsDisplay(predictions) {
+        if (window.leonardo && window.leonardo.processPredictions) {
+            window.leonardo.processPredictions(predictions);
+        }
+    }
+    
+    updateOpportunitiesDisplay(opportunities) {
+        if (window.leonardo && window.leonardo.processOpportunities) {
+            window.leonardo.processOpportunities(opportunities);
+        }
+    }
+    
+    updateTradeDisplay(trade) {
+        if (window.leonardo && window.leonardo.processTrade) {
+            window.leonardo.processTrade(trade);
+        }
+    }
+    
+    handleBigBangEvent(data) {
+        if (window.leonardo && window.leonardo.processBigBang) {
+            window.leonardo.processBigBang(data);
+        }
+    }
+    
+    updateRealtimeCounters(data) {
+        if (window.leonardo && window.leonardo.processRealtime) {
+            window.leonardo.processRealtime(data);
+        }
+    }
+
+    updateSignalDisplay(signal) {
+        try {
+            const log = document.getElementById('log-container');
+            if (!log) return;
+            const el = document.createElement('div');
+            el.className = 'log-entry info';
+            const src = signal.source || 'unknown';
+            const sym = signal.symbol;
+            const dir = signal.direction || 'N/A';
+            const sc = (signal.compositeScore ?? signal.potentialProfit ?? signal.confidence ?? 0);
+            el.textContent = `[${new Date().toLocaleTimeString()}] SIGNAL(${src}) ${sym} ${dir} score=${Number(sc).toFixed(3)}`;
+            log.prepend(el);
+        } catch (_) {}
+    }
+
+    renderSignalsTable(items) {
+        try {
+            const tbody = document.getElementById('signals-peek-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (!items.length) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = '<td colspan="9">Sin datos</td>';
+                tbody.appendChild(tr);
+                return;
+            }
+            const fmt = (n, d=3) => (typeof n === 'number' ? n.toFixed(d) : '-');
+            items.forEach(op => {
+                const tr = document.createElement('tr');
+                const score = op.compositeScore ?? op.potentialProfit ?? op.confidence ?? 0;
+                tr.dataset.symbol = op.symbol || '';
+                tr.dataset.timeframe = op.timeframe || '';
+                const src = String(op.source || '-').toLowerCase();
+                const badge = src.includes('oracle') ? 'oracle' : (src.includes('maximizer') ? 'maximizer' : (src.includes('nxn') ? 'nxn' : ''));
+                tr.innerHTML = `
+                    <td>${op.symbol || '-'}</td>
+                    <td>${op.source || '-'} ${badge ? `<span class="badge ${badge}">${badge}</span>` : ''}</td>
+                    <td>${op.direction || '-'}</td>
+                    <td>${fmt(Number(score), 3)}</td>
+                    <td>${fmt(Number(op.confidence), 3)}</td>
+                    <td>${fmt(Number(op.potentialProfit), 3)}</td>
+                    <td>${op.timeframe || '-'}</td>
+                    <td>${op.publishedAt ? new Date(op.publishedAt).toLocaleTimeString() : '-'}</td>
+                    <td>
+                        <button class="mini-btn" data-action="requeue">Enviar</button>
+                        <button class="mini-btn warn" data-action="discard">Descartar</button>
+                    </td>
+                `;
+                if (Number(score) >= 0.8) tr.classList.add('hi-score');
+                else if (Number(score) >= 0.6) tr.classList.add('mid-score');
+                tbody.appendChild(tr);
+            });
+        } catch (_) {}
+    }
+    
+    updateBalanceDisplay(balanceData) {
+        try {
+            const balanceEl = document.getElementById('current-balance');
+            if (balanceEl && balanceData.currentBalance) {
+                balanceEl.textContent = `$${balanceData.currentBalance.toLocaleString()}`;
+            }
+        } catch (error) {
+            console.error('Error updating balance display:', error);
+        }
+    }
+    
+    showConnectionStatus(status) {
+        const statusEl = document.getElementById('connection-status');
+        if (statusEl) {
+            statusEl.textContent = status.toUpperCase();
+            statusEl.className = `connection-status ${status}`;
+        }
+    }
+    
+    showConnectionError(error) {
+        const errorEl = document.getElementById('connection-error');
+        if (errorEl) {
+            errorEl.textContent = `Connection Error: ${error.message}`;
+            errorEl.style.display = 'block';
+        }
+    }
+    
+    // Preferencias locales (filtros/auto-refresh/boost)
+    loadSignalPrefs() {
+        try {
+            const raw = localStorage.getItem('signalsPrefs');
+            if (!raw) return;
+            const prefs = JSON.parse(raw);
+            const set = (id, val, isCheckbox = false) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (isCheckbox) el.checked = !!val; else el.value = val ?? el.value;
+            };
+            set('signals-filter-symbol', prefs.symbol || '');
+            set('signals-filter-category', prefs.category || '');
+            set('signals-filter-source', prefs.source || '');
+            set('signals-filter-offset', prefs.offset ?? '0');
+            set('signals-filter-limit', prefs.limit ?? '10');
+            set('signals-default-boost', prefs.boost ?? '0.1');
+            set('signals-auto-interval', prefs.autoInterval ?? '5');
+            set('signals-auto-refresh', !!prefs.autoRefresh, true);
+        } catch (_) {}
+    }
+
+    saveSignalPrefs() {
+        try {
+            const get = (id, isCheckbox = false) => {
+                const el = document.getElementById(id);
+                if (!el) return isCheckbox ? false : '';
+                return isCheckbox ? !!el.checked : el.value;
+            };
+            const prefs = {
+                symbol: get('signals-filter-symbol'),
+                category: get('signals-filter-category'),
+                source: get('signals-filter-source'),
+                offset: get('signals-filter-offset'),
+                limit: get('signals-filter-limit'),
+                boost: parseFloat(get('signals-default-boost')) || 0.1,
+                autoRefresh: get('signals-auto-refresh', true),
+                autoInterval: get('signals-auto-interval')
+            };
+            localStorage.setItem('signalsPrefs', JSON.stringify(prefs));
+        } catch (_) {}
+    }
+
+    setupUIEventListeners() {
+        // System control buttons
+        document.getElementById('start-quantum-system')?.addEventListener('click', async () => {
+            try {
+                await this.api.startSystem();
+                console.log('System started');
+            } catch (error) {
+                console.error('Error starting system:', error);
+            }
+        });
+        
+        document.getElementById('stop-quantum-system')?.addEventListener('click', async () => {
+            try {
+                await this.api.stopSystem();
+                console.log('System stopped');
+            } catch (error) {
+                console.error('Error stopping system:', error);
+            }
+        });
+        
+        document.getElementById('restart-quantum-system')?.addEventListener('click', async () => {
+            try {
+                await this.api.restartSystem();
+                console.log('System restarted');
+            } catch (error) {
+                console.error('Error restarting system:', error);
+            }
+        });
+
+        // Risk controls
+        document.getElementById('risk-reset')?.addEventListener('click', async () => {
+            try {
+                const res = await this.api.resetRisk();
+                this.logInfo('Riesgo reseteado');
+                await this.refreshExposurePanel();
+            } catch (e) {
+                this.logError('Error reseteando riesgo');
+            }
+        });
+
+        document.getElementById('risk-config-apply')?.addEventListener('click', async () => {
+            const dd = parseFloat(document.getElementById('cfg-max-dd')?.value);
+            const sym = parseFloat(document.getElementById('cfg-max-symbol')?.value);
+            const cat = parseFloat(document.getElementById('cfg-max-cat')?.value);
+            const mt = parseInt(document.getElementById('cfg-max-trades')?.value);
+            const cfg = {};
+            if (!isNaN(dd)) cfg.MAX_DAILY_DRAWDOWN = dd / 100;
+            if (!isNaN(sym)) cfg.MAX_SYMBOL_EXPOSURE_PCT = sym / 100;
+            if (!isNaN(cat)) cfg.MAX_CATEGORY_EXPOSURE_PCT = cat / 100;
+            if (!isNaN(mt)) cfg.MAX_CONCURRENT_TRADES = mt;
+            try {
+                await this.api.updateRiskConfig(cfg);
+                this.logInfo('Configuración de riesgo aplicada');
+                await this.refreshExposurePanel();
+            } catch (e) {
+                this.logError('Error aplicando configuración de riesgo');
+            }
+        });
+
+        // Cargar exposición inicial al abrir
+        this.refreshExposurePanel().catch(() => {});
+
+        // Cargar preferencias guardadas al iniciar UI controls
+        this.loadSignalPrefs();
+
+        // Señales: peek manual
+        const updateStats = async () => {
+            try {
+                const resp = await fetch(`${this.api.baseURL}/api/signals/stats`);
+                const data = await resp.json();
+                if (data && data.success && data.data) {
+                    const s = data.data;
+                    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = String(val); };
+                    set('signals-stats-queued', s.queued ?? 0);
+                    set('signals-stats-published', s.published ?? 0);
+                    set('signals-stats-consumed', s.consumed ?? 0);
+
+                    // colorear por umbral de cola
+                    try {
+                        const qEl = document.getElementById('signals-stats-queued');
+                        if (qEl) {
+                            qEl.classList.remove('stat-warn','stat-error');
+                            const q = Number(s.queued || 0);
+                            if (q >= 200) qEl.classList.add('stat-error');
+                            else if (q >= 100) qEl.classList.add('stat-warn');
+                        }
+                    } catch (_) {}
+                    return s;
+                }
+            } catch (_) {}
+        };
+
+        const doPeek = async () => {
+            const qs = new URLSearchParams();
+            const symbol = document.getElementById('signals-filter-symbol')?.value || '';
+            const category = document.getElementById('signals-filter-category')?.value || '';
+            const source = document.getElementById('signals-filter-source')?.value || '';
+            const offset = document.getElementById('signals-filter-offset')?.value || '0';
+            const limit = document.getElementById('signals-filter-limit')?.value || '10';
+            if (symbol) qs.set('symbol', symbol.toUpperCase());
+            if (category) qs.set('category', category.toLowerCase());
+            if (source) qs.set('source', source.toLowerCase());
+            qs.set('offset', String(offset));
+            qs.set('limit', String(limit));
+            this.saveSignalPrefs();
+            const resp = await fetch(`${this.api.baseURL}/api/signals/peek?${qs.toString()}`);
+            const data = await resp.json();
+            if (data && data.success) {
+                this.renderSignalsTable(data.data || []);
+            }
+            const stats = await updateStats();
+            // Ajuste dinámico de limit si la cola es grande
+            try {
+                const limitEl = document.getElementById('signals-filter-limit');
+                if (limitEl && stats) {
+                    const q = Number(stats.queued || 0);
+                    let newLimit = Number(limitEl.value || 10);
+                    if (q >= 500) newLimit = 10;
+                    else if (q >= 200) newLimit = Math.min(newLimit, 20);
+                    else if (q >= 100) newLimit = Math.min(newLimit, 30);
+                    if (newLimit !== Number(limitEl.value)) {
+                        limitEl.value = String(newLimit);
+                        this.saveSignalPrefs();
+                    }
+                }
+            } catch (_) {}
+        };
+
+        document.getElementById('signals-refresh')?.addEventListener('click', async () => {
+            try {
+                await doPeek();
+            } catch (_) { /* ignore */ }
+        });
+
+        document.getElementById('signals-apply')?.addEventListener('click', async () => {
+            await doPeek();
+        });
+
+        document.getElementById('signals-reset')?.addEventListener('click', async () => {
+            try {
+                const ids = ['signals-filter-symbol','signals-filter-category','signals-filter-source','signals-filter-offset','signals-filter-limit'];
+                ids.forEach(id => { const el = document.getElementById(id); if (el) el.value = (id.includes('offset') ? '0' : (id.includes('limit') ? '10' : '')); });
+                const boostEl = document.getElementById('signals-default-boost');
+                if (boostEl) boostEl.value = '0.1';
+                const intervalEl = document.getElementById('signals-auto-interval');
+                if (intervalEl) intervalEl.value = '5';
+                const auto = document.getElementById('signals-auto-refresh'); if (auto) auto.checked = false;
+                this.saveSignalPrefs();
+                await doPeek();
+            } catch (_) {}
+        });
+
+        document.getElementById('signals-clear')?.addEventListener('click', async () => {
+            try {
+                if (!confirm('¿Seguro que deseas limpiar toda la cola de señales?')) return;
+                const resp = await fetch(`${this.api.baseURL}/api/signals/clear`, { method: 'POST' });
+                const data = await resp.json();
+                if (data && data.success) {
+                    this.logInfo(`Cola limpiada (${data.removed || 0} señales removidas)`);
+                    await doPeek();
+                }
+            } catch (_) { /* ignore */ }
+        });
+        // Auto-refresh del peek
+        const autoCb = document.getElementById('signals-auto-refresh');
+        const autoSec = document.getElementById('signals-auto-interval');
+        if (autoCb && autoSec) {
+            let autoTimer = null;
+            const startAuto = () => {
+                const s = Math.max(2, parseInt(autoSec.value || '5')) * 1000;
+                autoTimer = setInterval(async () => { await doPeek(); }, s);
+                this.saveSignalPrefs();
+            };
+            const stopAuto = () => { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } };
+            autoCb.addEventListener('change', () => { (autoCb && autoCb.checked) ? startAuto() : stopAuto(); this.saveSignalPrefs(); });
+            autoSec.addEventListener('change', () => { if (autoCb && autoCb.checked) { stopAuto(); startAuto(); } this.saveSignalPrefs(); });
+            // Arrancar si ya está marcado
+            if (autoCb && autoCb.checked) startAuto();
+        }
+
+        // Delegación de acciones en la tabla de señales
+        const signalsTable = document.getElementById('signals-peek-table');
+        if (signalsTable) {
+            signalsTable.addEventListener('click', async (e) => {
+                try {
+                    const btn = e.target.closest('button[data-action]');
+                    if (!btn) return;
+                    const tr = btn.closest('tr');
+                    const symbol = tr?.dataset?.symbol;
+                    const timeframe = tr?.dataset?.timeframe || '';
+                    if (!symbol) return;
+                    const action = btn.dataset.action;
+                    if (action === 'discard') {
+                        await fetch(`${this.api.baseURL}/api/signals/discard`, {
+                            method: 'POST', headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ symbol, timeframe })
+                        });
+                        this.logInfo(`Descartada señal ${symbol}`);
+                        document.getElementById('signals-refresh')?.click();
+                    } else if (action === 'requeue') {
+                        const def = parseFloat(document.getElementById('signals-default-boost')?.value || '0.1');
+                        const inp = prompt('Boost de score (Enter para usar por defecto):', String(def));
+                        const boost = parseFloat(inp || def);
+                        await fetch(`${this.api.baseURL}/api/signals/requeue`, {
+                            method: 'POST', headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ symbol, timeframe, boost })
+                        });
+                        this.logInfo(`Re-encolada señal ${symbol} con boost ${boost}`);
+                        document.getElementById('signals-refresh')?.click();
+                    }
+                } catch (_) { /* ignore */ }
+            });
+        }
+    }
+
+    async refreshExposurePanel() {
+        try {
+            const resp = await this.api.getRiskExposure();
+            if (resp && resp.success && resp.data) {
+                const symEl = document.getElementById('exposure-symbols');
+                const catEl = document.getElementById('exposure-cats');
+                if (symEl) symEl.textContent = JSON.stringify(resp.data.bySymbol, null, 2);
+                if (catEl) catEl.textContent = JSON.stringify(resp.data.byCategory, null, 2);
+                this.renderExposureIndicators(resp.data);
+            }
+        } catch (_) { /* ignore */ }
+    }
+
+    renderExposureIndicators(data) {
+        try {
+            const equityEl = document.getElementById('current-balance');
+            // Robust currency parsing: handle $1.042 (thousands dot) and $1,042.00 (US) and $1.042,00 (EU)
+            let equity = 0;
+            if (equityEl) {
+                let raw = String(equityEl.textContent || '0').trim();
+                // Keep digits, separators and minus
+                raw = raw.replace(/[^\d.,-]/g, '');
+                if (raw.includes('.') && raw.includes(',')) {
+                    // Assume dot as thousands, comma as decimals -> remove dots, convert comma to dot
+                    raw = raw.replace(/\./g, '').replace(',', '.');
+                } else if (raw.includes(',')) {
+                    // Only comma present -> treat as decimal separator
+                    raw = raw.replace(',', '.');
+                } else {
+                    // Only dot present -> if looks like thousands (e.g., 1.234), remove dots
+                    if (/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(raw)) raw = raw.replace(/\./g, '');
+                }
+                equity = parseFloat(raw) || 0;
+            }
+            const symInd = document.getElementById('exposure-symbols-indicators');
+            const catInd = document.getElementById('exposure-cats-indicators');
+            const sym = data.bySymbol || {};
+            const cat = data.byCategory || {};
+            const limSym = data.limits?.MAX_SYMBOL_EXPOSURE_PCT || 0.15;
+            const limCat = data.limits?.MAX_CATEGORY_EXPOSURE_PCT || 0.35;
+
+            const build = (obj, limit, container) => {
+                if (!container) return;
+                container.innerHTML = '';
+                Object.entries(obj).forEach(([k, v]) => {
+                    const pct = equity > 0 ? (Number(v) / equity) : 0;
+                    const level = pct >= limit ? 'error' : (pct >= limit * 0.8 ? 'warn' : 'ok');
+                    const row = document.createElement('div');
+                    row.className = `exposure-row ${level}`;
+                    row.textContent = `${k}: ${(pct * 100).toFixed(1)}% (lim ${Math.round(limit*100)}%)`;
+                    container.appendChild(row);
+                });
+            };
+
+            build(sym, limSym, symInd);
+            build(cat, limCat, catInd);
+        } catch (_) {}
+    }
+
+    updateDailyPnlChart(pnl) {
+        try {
+            if (!this._pnlSeries) this._pnlSeries = [];
+            if (!this._pnlCanvas) this._pnlCanvas = document.getElementById('daily-pnl-chart');
+            if (!this._pnlCanvas) return;
+            this._pnlSeries.push({ t: Date.now(), v: Number(pnl) || 0 });
+            if (this._pnlSeries.length > 120) this._pnlSeries.shift();
+            const ctx = this._pnlCanvas.getContext('2d');
+            ctx.clearRect(0, 0, this._pnlCanvas.width, this._pnlCanvas.height);
+            // Ejes simples
+            const w = this._pnlCanvas.width, h = this._pnlCanvas.height;
+            ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(40, 10); ctx.lineTo(40, h-20); ctx.lineTo(w-10, h-20); ctx.stroke();
+            if (this._pnlSeries.length < 2) return;
+            const vals = this._pnlSeries.map(p => p.v);
+            const min = Math.min(...vals), max = Math.max(...vals);
+            const pad = (max - min) * 0.1 || 1; const lo = min - pad, hi = max + pad;
+            const xs = (w - 60) / (this._pnlSeries.length - 1);
+            const ys = (h - 40) / (hi - lo);
+            ctx.strokeStyle = '#2ecc71'; ctx.lineWidth = 2; ctx.beginPath();
+            this._pnlSeries.forEach((p, i) => {
+                const x = 40 + i * xs;
+                const y = (h - 20) - (p.v - lo) * ys;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+        } catch (_) {}
+    }
+
+    logInfo(msg) {
+        const log = document.getElementById('log-container');
+        if (!log) return;
+        const el = document.createElement('div');
+        el.className = 'log-entry info';
+        el.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        log.prepend(el);
+    }
+
+    logError(msg) {
+        const log = document.getElementById('log-container');
+        if (!log) return;
+        const el = document.createElement('div');
+        el.className = 'log-entry error';
+        el.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        log.prepend(el);
+    }
+    
+    destroy() {
+        if (this.eventSource) {
+            this.eventSource.close();
+            this.eventSource = null;
+        }
+        
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+            this.updateInterval = null;
+        }
+        
+        console.log('Leonardo Quantum Dashboard destroyed');
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.quantumDashboard = new LeonardoQuantumDashboard();
+});
+
+// Export for use in other modules
+window.LeonardoQuantumAPI = LeonardoQuantumAPI;
+window.LeonardoQuantumDashboard = LeonardoQuantumDashboard;
+
+
+// ===== ADVANCED API ENDPOINTS =====
+function addAdvancedEndpoints(app) {
+    // Endpoint para métricas avanzadas
+    app.get('/api/advanced/metrics', (req, res) => {
+        try {
+            const metrics = {
+                system: {
+                    uptime: process.uptime(),
+                    memory: process.memoryUsage(),
+                    cpu: process.cpuUsage()
+                },
+                binance: global.binanceConnector?.getPerformanceMetrics?.() || null,
+                cache: global.quantumCache?.getMetrics() || null,
+                quantum: global.quantumSystem?.getSystemMetrics?.() || null
+            };
+            
+            res.json({
+                success: true,
+                timestamp: new Date().toISOString(),
+                data: metrics
+            });
+            
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+    
+    // Endpoint para optimización manual
+    app.post('/api/advanced/optimize', async (req, res) => {
+        try {
+            console.log('🔧 [API] Optimización manual solicitada...');
+            
+            if (global.quantumSystem?.performAutoOptimization) {
+                await global.quantumSystem.performAutoOptimization();
+            }
+            
+            res.json({
+                success: true,
+                message: 'Optimización ejecutada correctamente',
+                timestamp: new Date().toISOString()
+            });
+            
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+    
+    // Endpoint para estado del sistema
+    app.get('/api/advanced/status', (req, res) => {
+        try {
+            const status = {
+                services: {
+                    binance: !!global.binanceConnector,
+                    cache: !!global.quantumCache,
+                    quantum: !!global.quantumSystem
+                },
+                performance: 'OPTIMAL',
+                lastOptimization: global.lastOptimizationTime || null
+            };
+            
+            res.json({
+                success: true,
+                data: status
+            });
+            
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+}
+
+// Auto-aplicar endpoints si existe una app
+if (typeof app !== 'undefined') {
+    addAdvancedEndpoints(app);
+}
+
+// ===== ADVANCED API ENDPOINTS =====
+function addAdvancedEndpoints(app) {
+    // Endpoint para métricas avanzadas
+    app.get('/api/advanced/metrics', (req, res) => {
+        try {
+            const metrics = {
+                system: {
+                    uptime: process.uptime(),
+                    memory: process.memoryUsage(),
+                    cpu: process.cpuUsage()
+                },
+                binance: global.binanceConnector?.getPerformanceMetrics?.() || null,
+                cache: global.quantumCache?.getMetrics() || null,
+                quantum: global.quantumSystem?.getSystemMetrics?.() || null
+            };
+            
+            res.json({
+                success: true,
+                timestamp: new Date().toISOString(),
+                data: metrics
+            });
+            
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+    
+    // Endpoint para optimización manual
+    app.post('/api/advanced/optimize', async (req, res) => {
+        try {
+            console.log('🔧 [API] Optimización manual solicitada...');
+            
+            if (global.quantumSystem?.performAutoOptimization) {
+                await global.quantumSystem.performAutoOptimization();
+            }
+            
+            res.json({
+                success: true,
+                message: 'Optimización ejecutada correctamente',
+                timestamp: new Date().toISOString()
+            });
+            
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+    
+    // Endpoint para estado del sistema
+    app.get('/api/advanced/status', (req, res) => {
+        try {
+            const status = {
+                services: {
+                    binance: !!global.binanceConnector,
+                    cache: !!global.quantumCache,
+                    quantum: !!global.quantumSystem
+                },
+                performance: 'OPTIMAL',
+                lastOptimization: global.lastOptimizationTime || null
+            };
+            
+            res.json({
+                success: true,
+                data: status
+            });
+            
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+}
+
+// Auto-aplicar endpoints si existe una app
+if (typeof app !== 'undefined') {
+    addAdvancedEndpoints(app);
+}

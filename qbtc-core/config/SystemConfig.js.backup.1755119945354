@@ -1,0 +1,219 @@
+/**
+ * QBTC UNIFIED - System Configuration
+ * Configuración centralizada para entorno monousuario local
+ */
+
+class SystemConfig {
+    constructor() {
+        // Configuración básica del sistema
+        this.system = {
+            name: 'QBTC UNIFIED',
+            version: '2.0.0-Local',
+            environment: 'local',
+            singleUser: true,
+            debug: true
+        };
+
+        // Configuración de red - simplificada para monousuario
+        this.network = {
+            host: 'localhost',
+            port: 18020,
+            frontendPort: 18021,
+            metricsPort: 18022,
+            cors: {
+                origin: ['http://localhost:18021', 'http://localhost:8080'],
+                credentials: true
+            }
+        };
+
+        // Configuración de autenticación
+        this.auth = {
+            required: true,
+            tradingKey: process.env.TRADING_API_KEY || null,
+            headerName: 'X-Trading-Key'
+        };
+
+        // Configuración de Binance
+        this.binance = {
+            api: {
+                apiKey: process.env.BINANCE_API_KEY || 'demo_key',
+                apiSecret: process.env.BINANCE_API_SECRET || 'demo_secret',
+                testnet: false // Producción real - desactivado explícitamente para evitar bloqueo de claves
+            },
+            ws: {
+                maxConnections: 1, // Monousuario - una sola conexión
+                reconnectInterval: 5000,
+                timeout: 30000
+            },
+            limits: {
+                requests: {
+                    weight: 2400, // Límite real de producción
+                    minute: 2400
+                },
+                orders: {
+                    day: 100000, // Límite real de producción
+                    minute: 1200
+                }
+            }
+        };
+
+        // Configuración de trading
+        this.trading = {
+            enabled: true,
+            simulated: process.env.SIMULATED_TRADING === 'true' || false, // Trading real en producción
+            maxPositions: 8, // Aumentado para producción con Z-Plane
+            riskPerTrade: 0.02,
+            maxRisk: 0.10,
+            stopLoss: 0.03,
+            takeProfit: 0.15,
+            symbols: ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'ADAUSDT', 'DOGEUSDT', 'AVAXUSDT', 'MATICUSDT'] // Símbolos completos para Z-Plane
+        };
+
+        // Configuración de fondos
+        this.funds = {
+            initialBalance: 10000, // Balance inicial para producción
+            maxLeverage: 125.0, // Leverage máximo para Z-Plane
+            kellyNumerator: 0.25,
+            minPositionSize: 0.001,
+            maxPositionSize: 5.0
+        };
+
+        // Configuración cuántica simplificada
+        this.quantum = {
+            enabled: true,
+            cube: {
+                visible: true,
+                rotationSpeed: 0.01,
+                stateUpdateInterval: 1000
+            },
+            calculations: {
+                precision: 6,
+                maxIterations: 1000
+            }
+        };
+
+        // Configuración de logging
+        this.logging = {
+            level: process.env.LOG_LEVEL || 'info',
+            file: {
+                enabled: false, // Deshabilitado para monousuario local
+                path: './logs/qbtc.log',
+                maxSize: '10MB',
+                maxFiles: 5
+            },
+            console: {
+                enabled: true,
+                colorize: true,
+                timestamp: true
+            }
+        };
+
+        // Configuración de caché - optimizada para producción
+        this.cache = {
+            enabled: true,
+            ttl: 15000, // 15 segundos para producción
+            maxSize: 5000, // Aumentado para producción
+            cleanupInterval: 30000 // 30 segundos
+        };
+
+        // Configuración de métricas
+        this.metrics = {
+            enabled: true,
+            interval: 10000, // 10 segundos
+            retainData: 3600000 // 1 hora
+        };
+    }
+
+    /**
+     * Obtener configuración completa
+     */
+    getConfig() {
+        return {
+            system: this.system,
+            network: this.network,
+            auth: this.auth,
+            binance: this.binance,
+            trading: this.trading,
+            funds: this.funds,
+            quantum: this.quantum,
+            logging: this.logging,
+            cache: this.cache,
+            metrics: this.metrics
+        };
+    }
+
+    /**
+     * Obtener configuración de red
+     */
+    getNetworkConfig() {
+        return this.network;
+    }
+
+    /**
+     * Obtener configuración de Binance
+     */
+    getBinanceConfig() {
+        return this.binance;
+    }
+
+    /**
+     * Obtener configuración de trading
+     */
+    getTradingConfig() {
+        return this.trading;
+    }
+
+    /**
+     * Obtener configuración de fondos
+     */
+    getFundsConfig() {
+        return this.funds;
+    }
+
+    /**
+     * Obtener configuración cuántica
+     */
+    getQuantumConfig() {
+        return this.quantum;
+    }
+
+    /**
+     * Validar configuración
+     */
+    validate() {
+        const errors = [];
+
+        // Validar configuración de red
+        if (this.network.port < 1 || this.network.port > 65535) {
+            errors.push('Puerto de red inválido');
+        }
+
+        // Validar configuración de Binance
+        if (!this.binance.api.key || !this.binance.api.secret) {
+            if (!this.trading.simulated) {
+                errors.push('Se requieren credenciales de Binance para trading real');
+            }
+        }
+
+        // Validar configuración de trading
+        if (this.trading.riskPerTrade > this.trading.maxRisk) {
+            errors.push('El riesgo por operación no puede ser mayor al riesgo máximo');
+        }
+
+        return {
+            valid: errors.length === 0,
+            errors: errors
+        };
+    }
+
+    /**
+     * Actualizar configuración
+     */
+    updateConfig(newConfig) {
+        Object.assign(this, newConfig);
+        return this.validate();
+    }
+}
+
+// Exportar instancia única
+module.exports = new SystemConfig();

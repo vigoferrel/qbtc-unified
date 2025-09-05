@@ -1,0 +1,66 @@
+{
+    "system": {
+        "name": "QBTC Unified Quantum System",
+        "version": "3.0",
+        "environment": "production"
+    },
+    "ports": {
+        "MAIN_SERVER": 8080,
+        "QUANTUM_CORE": 9090,
+        "TRADING_ENGINE": 9091,
+        "MARKET_DATA": 9092,
+        "MONITORING": 9093
+    },
+    "quantum": {
+        "consciousness": {
+            "target": 0.941,
+            "minThreshold": 0.7,
+            "updateInterval": 3000
+        },
+        "coherence": {
+            "target": 0.964,
+            "minThreshold": 0.65,
+            "updateInterval": 1000
+        },
+        "poets": [
+            {"name": "Neruda", "frequency": 40.1},
+            {"name": "Mistral", "frequency": 40.3},
+            {"name": "Huidobro", "frequency": 40.5},
+            {"name": "Parra", "frequency": 40.7},
+            {"name": "Zurita", "frequency": 40.9},
+            {"name": "Ferrel", "frequency": 41.1}
+        ],
+        "microtubules": {
+            "total": 169,
+            "minActive": 100,
+            "gridSize": 13
+        }
+    },
+    "trading": {
+        "risk": {
+            "maxLeverage": 10,
+            "stopLoss": 0.02,
+            "takeProfit": 0.04,
+            "maxDrawdown": 0.05
+        },
+        "execution": {
+            "retryAttempts": 3,
+            "retryDelay": 1000,
+            "timeoutMs": 5000
+        },
+        "monitoring": {
+            "healthCheckInterval": 5000,
+            "metricsUpdateInterval": 1000,
+            "alertThresholds": {
+                "consciousness": 0.7,
+                "coherence": 0.65,
+                "decisions": 5
+            }
+        }
+    },
+    "websocket": {
+        "reconnectInterval": 3000,
+        "maxReconnectAttempts": 5,
+        "pingInterval": 30000
+    }
+}

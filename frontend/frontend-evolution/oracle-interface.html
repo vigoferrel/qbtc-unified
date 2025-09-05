@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 Quantum Oracle - Oráculo Multitimeframe Cuántico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0e27 0%, #1e3c72 50%, #2a5298 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .oracle-header {
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 3px solid #f0b90b;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(240, 185, 11, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .oracle-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .oracle-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .oracle-status {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .status-metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+        }
+
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f0b90b;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.25rem;
+        }
+
+        .oracle-pulse {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: quantumPulse 2s infinite;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+        }
+
+        @keyframes quantumPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.4); }
+        }
+
+        .oracle-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .predictions-section {
+            background: rgba(26, 35, 50, 0.9);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 2px solid rgba(240, 185, 11, 0.3);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(240, 185, 11, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .section-info {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .predictions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .prediction-card {
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.8) 0%, rgba(30, 60, 114, 0.6) 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prediction-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff, #f0b90b, #00ff88);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .prediction-card:hover {
+            transform: translateY(-4px);
+            border-color: #00d4ff;
+            box-shadow: 0 12px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .prediction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .symbol-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #f0b90b;
+        }
+
+        .direction-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .direction-up {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .direction-down {
+            background: rgba(246, 70, 93, 0.2);
+            color: #f6465d;
+            border: 1px solid #f6465d;
+        }
+
+        .direction-sideways {
+            background: rgba(255, 184, 0, 0.2);
+            color: #ffb800;
+            border: 1px solid #ffb800;
+        }
+
+        .prediction-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-name {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+        }
+
+        .metric-val {
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .timeframe-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeframe-header {
+            font-size: 0.9rem;
+            color: #f0b90b;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .timeframes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .timeframe-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeframe-name {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .timeframe-direction {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tf-up { color: #00ff88; }
+        .tf-down { color: #f6465d; }
+        .tf-sideways { color: #ffb800; }
+
+        .oracle-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(15, 20, 25, 0.8);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(240, 185, 11, 0.2);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 212, 255, 0.2);
+            border-top: 4px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #00d4ff;
+            font-size: 1.1rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+        }
+
+        .quantum-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #00d4ff;
+            border-radius: 50%;
+            animation: quantumFloat 8s infinite linear;
+            opacity: 0.6;
+        }
+
+        @keyframes quantumFloat {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .integration-status {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(15, 20, 25, 0.95);
+            border: 1px solid rgba(240, 185, 11, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            min-width: 200px;
+        }
+
+        .integration-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .status-connected { color: #00ff88; }
+        .status-disconnected { color: #f6465d; }
+
+        @media (max-width: 768px) {
+            .oracle-container {
+                padding: 1rem;
+            }
+            
+            .predictions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .oracle-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Partículas cuánticas de fondo -->
+    <div class="quantum-particles" id="quantumParticles"></div>
+
+    <!-- Header del Oráculo -->
+    <header class="oracle-header">
+        <div class="header-content">
+            <div class="oracle-title">
+                <h1>🔮 Quantum Oracle</h1>
+                <div class="oracle-pulse"></div>
+            </div>
+            <div class="oracle-status">
+                <div class="status-metric">
+                    <div class="metric-value" id="totalSymbols">0</div>
+                    <div class="metric-label">Símbolos</div>
+                </div>
+                <div class="status-metric">
+                    <div class="metric-value" id="consciousness">0.000</div>
+                    <div class="metric-label">Consciencia</div>
+                </div>
+                <div class="status-metric">
+                    <div class="metric-value" id="coherence">0.000</div>
+                    <div class="metric-label">Coherencia</div>
+                </div>
+                <div class="status-metric">
+                    <div class="metric-value" id="accuracy">0%</div>
+                    <div class="metric-label">Precisión</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="oracle-container">
+        
+        <!-- Sección de Predicciones -->
+        <section class="predictions-section">
+            <div class="section-header">
+                <h2 class="section-title">🎯 Predicciones Multitimeframe</h2>
+                <div class="section-info">
+                    <span>Análisis cuántico en tiempo real</span>
+                    <span id="lastUpdate">Actualizando...</span>
+                </div>
+            </div>
+            
+            <div id="predictionsContainer">
+                <!-- Loading inicial -->
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Inicializando Oráculo Cuántico...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estadísticas del Oráculo -->
+        <section class="predictions-section">
+            <div class="section-header">
+                <h2 class="section-title">📊 Estado Cuántico del Oráculo</h2>
+                <div class="section-info">Métricas del sistema integrado</div>
+            </div>
+            
+            <div class="oracle-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="quantumCycles">0</div>
+                    <div class="stat-label">Ciclos Cuánticos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalPredictions">0</div>
+                    <div class="stat-label">Predicciones Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="globalConsciousness">0.000</div>
+                    <div class="stat-label">Consciencia Global</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="evolutionLevel">0</div>
+                    <div class="stat-label">Nivel Evolución</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Estado de integración -->
+    <div class="integration-status" id="integrationStatus">
+        <div style="font-weight: 600; margin-bottom: 0.5rem; color: #f0b90b;">Estado Integración</div>
+        <div class="integration-item">
+            <span>QuantumCore:</span>
+            <span id="quantumCoreStatus" class="status-disconnected">❌</span>
+        </div>
+        <div class="integration-item">
+            <span>BinanceConnector:</span>
+            <span id="binanceStatus" class="status-disconnected">❌</span>
+        </div>
+        <div class="integration-item">
+            <span>ConsciousnessEngine:</span>
+            <span id="consciousnessStatus" class="status-disconnected">❌</span>
+        </div>
+    </div>
+
+    <script>
+        class OracleInterface {
+            constructor() {
+                this.oracle = null;
+                this.updateInterval = null;
+                this.particleCount = 20;
+                
+                this.init();
+            }
+
+            init() {
+                console.log('🔮 Inicializando interfaz del Quantum Oracle...');
+                
+                this.createQuantumParticles();
+                this.waitForOracle();
+                
+                // Actualizar cada 2 segundos
+                this.updateInterval = setInterval(() => {
+                    this.updateInterface();
+                }, 2000);
+            }
+
+            createQuantumParticles() {
+                const container = document.getElementById('quantumParticles');
+                
+                for (let i = 0; i < this.particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 8 + 's';
+                    particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+                    container.appendChild(particle);
+                }
+            }
+
+            waitForOracle() {
+                // Esperar a que el oráculo esté disponible
+                const checkOracle = () => {
+                    this.oracle = window.quantumOracle;
+                    
+                    if (this.oracle) {
+                        console.log('✅ Oracle conectado - Inicializando interfaz');
+                        this.updateInterface();
+                        this.setupEventListeners();
+                    } else {
+                        console.log('⏳ Esperando Oracle...');
+                        setTimeout(checkOracle, 1000);
+                    }
+                };
+                
+                checkOracle();
+            }
+
+            setupEventListeners() {
+                // Escuchar actualizaciones del oráculo
+                window.addEventListener('quantumOracleUpdate', (event) => {
+                    this.handleOracleUpdate(event.detail);
+                });
+            }
+
+            handleOracleUpdate(data) {
+                console.log('📊 Actualización del Oracle recibida', data);
+                
+                if (data.predictions) {
+                    this.displayPredictions(data.predictions);
+                }
+                
+                if (data.oracleState) {
+                    this.updateOracleStats(data.oracleState);
+                }
+                
+                if (data.globalMetrics) {
+                    this.updateGlobalMetrics(data.globalMetrics);
+                }
+                
+                this.updateLastUpdate();
+            }
+
+            updateInterface() {
+                if (!this.oracle) return;
+                
+                try {
+                    // Obtener mejores predicciones
+                    const bestPredictions = this.oracle.getBestPredictions(6);
+                    this.displayPredictions(bestPredictions);
+                    
+                    // Obtener estado del oráculo
+                    const oracleState = this.oracle.getOracleState();
+                    this.updateOracleStats(oracleState);
+                    this.updateGlobalMetrics(oracleState.realMetrics);
+                    this.updateIntegrationStatus(oracleState.integration);
+                    
+                    this.updateLastUpdate();
+                    
+                } catch (error) {
+                    console.error('Error actualizando interfaz:', error);
+                }
+            }
+
+            displayPredictions(predictions) {
+                const container = document.getElementById('predictionsContainer');
+                
+                if (!predictions || predictions.length === 0) {
+                    container.innerHTML = '<div class="no-data">No hay predicciones disponibles</div>';
+                    return;
+                }
+                
+                const predictionsHTML = predictions.map(pred => this.createPredictionCard(pred)).join('');
+                container.innerHTML = `<div class="predictions-grid">${predictionsHTML}</div>`;
+            }
+
+            createPredictionCard(prediction) {
+                const directionClass = `direction-${prediction.direction.toLowerCase()}`;
+                const directionIcon = prediction.direction === 'UP' ? '📈' : 
+                                    prediction.direction === 'DOWN' ? '📉' : '➡️';
+                
+                // Crear timeframes si están disponibles
+                let timeframesHTML = '';
+                if (prediction.multitimeframe) {
+                    const timeframes = ['1m', '5m', '15m', '1h', '4h', '1d'];
+                    const timeframeItems = timeframes.map(tf => {
+                        const tfPred = prediction.multitimeframe[tf];
+                        if (!tfPred) return '';
+                        
+                        const tfClass = `tf-${tfPred.direction.toLowerCase()}`;
+                        const tfIcon = tfPred.direction === 'UP' ? '↗' : 
+                                      tfPred.direction === 'DOWN' ? '↘' : '→';
+                        
+                        return `
+                            <div class="timeframe-item">
+                                <span class="timeframe-name">${tf}</span>
+                                <span class="timeframe-direction ${tfClass}">${tfIcon}</span>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    timeframesHTML = `
+                        <div class="timeframe-section">
+                            <div class="timeframe-header">Análisis Multitimeframe</div>
+                            <div class="timeframes-grid">${timeframeItems}</div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="prediction-card">
+                        <div class="prediction-header">
+                            <div class="symbol-name">${prediction.symbol}</div>
+                            <div class="direction-badge ${directionClass}">
+                                ${directionIcon} ${prediction.direction}
+                            </div>
+                        </div>
+                        
+                        <div class="prediction-metrics">
+                            <div class="metric">
+                                <span class="metric-name">Confianza</span>
+                                <span class="metric-val">${(prediction.confidence * 100).toFixed(1)}%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-name">Consciencia</span>
+                                <span class="metric-val">${prediction.consciousness.toFixed(3)}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-name">Coherencia</span>
+                                <span class="metric-val">${prediction.coherence.toFixed(3)}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-name">Oportunidad</span>
+                                <span class="metric-val">${(prediction.opportunity * 100).toFixed(1)}%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-name">Riesgo</span>
+                                <span class="metric-val">${(prediction.risk * 100).toFixed(1)}%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-name">Consenso</span>
+                                <span class="metric-val">${(prediction.consensus * 100).toFixed(1)}%</span>
+                            </div>
+                        </div>
+                        
+                        ${timeframesHTML}
+                    </div>
+                `;
+            }
+
+            updateOracleStats(oracleState) {
+                document.getElementById('quantumCycles').textContent = oracleState.quantumCycles || 0;
+                document.getElementById('totalPredictions').textContent = oracleState.totalPredictions || 0;
+                document.getElementById('globalConsciousness').textContent = (oracleState.globalConsciousness || 0).toFixed(3);
+                document.getElementById('evolutionLevel').textContent = oracleState.evolution || 0;
+            }
+
+            updateGlobalMetrics(metrics) {
+                document.getElementById('totalSymbols').textContent = this.oracle?.oracleState?.activeSymbols || 0;
+                document.getElementById('consciousness').textContent = (metrics.consciousness || 0).toFixed(3);
+                document.getElementById('coherence').textContent = (metrics.coherence || 0).toFixed(3);
+                document.getElementById('accuracy').textContent = ((this.oracle?.oracleState?.accuracyRate || 0) * 100).toFixed(1) + '%';
+            }
+
+            updateIntegrationStatus(integration) {
+                const statusElements = {
+                    quantumCoreStatus: integration.quantumCore,
+                    binanceStatus: integration.binanceConnector,
+                    consciousnessStatus: integration.consciousnessEngine
+                };
+                
+                Object.entries(statusElements).forEach(([elementId, status]) => {
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.textContent = status ? '✅' : '❌';
+                        element.className = status ? 'status-connected' : 'status-disconnected';
+                    }
+                });
+            }
+
+            updateLastUpdate() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString();
+                document.getElementById('lastUpdate').textContent = `Actualizado: ${timeString}`;
+            }
+        }
+
+        // Inicializar interfaz cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🔮 Cargando Quantum Oracle Interface...');
+            new OracleInterface();
+        });
+    </script>
+
+    <!-- Cargar el oráculo integrado -->
+    <script src="quantum-oracle-integrated.js"></script>
+</body>
+</html>

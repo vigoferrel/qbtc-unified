@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QBTC Unified Quantum System v3.0</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <div class="logo">
+                <h1>QBTC v3.0</h1>
+                <span class="subtitle">Unified Quantum System</span>
+            </div>
+            <div class="system-status">
+                <div class="status-indicator" id="quantumStatus"></div>
+                <span id="statusText">Iniciando...</span>
+            </div>
+        </header>
+
+        <main class="dashboard-grid">
+            <!-- Quantum Metrics Panel -->
+            <section class="panel quantum-metrics">
+                <h2>Métricas Cuánticas</h2>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <label>Consciousness</label>
+                        <span id="consciousnessValue">0.000</span>
+                        <div class="metric-bar" id="consciousnessBar"></div>
+                    </div>
+                    <div class="metric">
+                        <label>Coherence</label>
+                        <span id="coherenceValue">0.000</span>
+                        <div class="metric-bar" id="coherenceBar"></div>
+                    </div>
+                    <div class="metric">
+                        <label>Decisions</label>
+                        <span id="decisionsValue">0</span>
+                        <div class="metric-bar" id="decisionsBar"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trading Control Panel -->
+            <section class="panel trading-control">
+                <h2>🎮 Control Panel</h2>
+                <div class="control-grid">
+                    <button id="startTrading" class="btn primary">Start Trading</button>
+                    <button id="stopTrading" class="btn danger" disabled>Stop Trading</button>
+                    <button id="emergencyStop" class="btn emergency">Emergency Stop</button>
+                </div>
+            </section>
+
+            <!-- Active Positions -->
+            <section class="panel positions">
+                <h2>📊 Posiciones Activas</h2>
+                <div class="positions-table" id="positionsContainer">
+                    <!-- Positions will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- Quantum State -->
+            <section class="panel quantum-state">
+                <h2>⚛️ Estado Cuántico</h2>
+                <div class="poets-grid" id="poetsContainer">
+                    <!-- Poet states will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- System Performance Charts -->
+            <section class="panel performance-charts">
+                <h2>Gr\u00e1ficos de Rendimiento</h2>
+                <div class="charts-container">
+                    <div class="ascii-chart" id="cpuChart">
+                        <h4>CPU Usage</h4>
+                        <div class="chart-area" id="cpuChartArea"></div>
+                    </div>
+                    <div class="ascii-chart" id="memoryChart">
+                        <h4>Memory Usage</h4>
+                        <div class="chart-area" id="memoryChartArea"></div>
+                    </div>
+                    <div class="ascii-chart" id="errorsChart">
+                        <h4>Error Rate</h4>
+                        <div class="chart-area" id="errorsChartArea"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real-time Alerts -->
+            <section class="panel alerts-panel">
+                <h2>Alertas en Tiempo Real</h2>
+                <div class="alerts-container" id="alertsContainer">
+                    <!-- Dynamic alerts will appear here -->
+                </div>
+                <div class="thresholds-config">
+                    <h4>Configuraci\u00f3n de Umbrales</h4>
+                    <div class="threshold-item">
+                        <label>CPU > <span id="cpuThresholdValue">80</span>%</label>
+                        <input type="range" id="cpuThreshold" min="50" max="95" value="80">
+                    </div>
+                    <div class="threshold-item">
+                        <label>Errores > <span id="errorThresholdValue">5</span>/min</label>
+                        <input type="range" id="errorThreshold" min="1" max="20" value="5">
+                    </div>
+                    <div class="threshold-item">
+                        <label>Cache Hit < <span id="cacheThresholdValue">70</span>%</label>
+                        <input type="range" id="cacheThreshold" min="50" max="90" value="70">
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Logs -->
+            <section class="panel system-logs">
+                <h2>Logs del Sistema</h2>
+                <div class="log-container" id="logContainer">
+                    <!-- Logs will be dynamically inserted here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <h3>Confirmar Acción</h3>
+            <p id="modalMessage"></p>
+            <div class="modal-actions">
+                <button class="btn primary" id="confirmAction">Confirmar</button>
+                <button class="btn secondary" id="cancelAction">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="quantum-bridge.js"></script>
+    <script src="trading-controller.js"></script>
+    <script src="ui-controller.js"></script>
+</body>
+</html>

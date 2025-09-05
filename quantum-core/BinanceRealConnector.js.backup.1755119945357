@@ -1,0 +1,1722 @@
+﻿/*
+  Copyright Â© 2025 VIGOLEONROCKS QUANTUM TECHNOLOGIES.
+  Binance Real Connector - Conector Real para Binance
+  Ãšnica fuente de verdad para trading real
+*/
+
+const axios = require('axios');
+const crypto = require('crypto');
+const WebSocket = require('ws');
+const QuantumInfiniteCache = require('./QuantumInfiniteCache');
+const { BinanceRequestValidator } = require('./binance-request-validator');
+const fs = require('fs');
+const path = require('path');
+
+class BinanceRealConnector {
+    constructor() {
+        // Enforce singleton across the process
+        if (BinanceRealConnector._instance) {
+            return BinanceRealConnector._instance;
+        }
+        const firstInit = true;
+
+        // Configuración de Binance como única fuente de verdad - PRODUCCIÓN
+        this.baseURL = 'https://fapi.binance.com';  // FUTURES API PRODUCTION
+        this.testnetURL = 'https://testnet.binancefuture.com';
+        // Production WebSocket URLs
+        this.wsURLBase = 'wss://fstream.binance.com';
+        this.testnetWsURLBase = 'wss://stream.binancefuture.com';
+        
+        // WebSocket connections
+        this.marketStreams = new Map();
+        this.wsConnections = new Map();
+        this.streamCallbacks = new Map();
+        this.reconnectTimers = new Map();
+        
+        // Track active streams
+        this.activeStreams = new Set();
+        
+        // Credenciales (deben configurarse en variables de entorno)
+        // Unificación de nombres para coherencia entre módulos
+        // Aceptar varias variantes para evitar errores de configuración
+        const unifiedApiKey = process.env.BINANCE_API_KEY || process.env.BINANCE_KEY || process.env.BINANCE_FUTURES_API_KEY || '';
+        const unifiedSecret = process.env.BINANCE_SECRET_KEY || process.env.BINANCE_API_SECRET || process.env.BINANCE_SECRET || process.env.BINANCE_FUTURES_API_SECRET || '';
+        const unifiedTestnet = (process.env.BINANCE_TESTNET || process.env.BINANCE_FUTURES_TESTNET || 'false') === 'true';
+
+        this.apiKey = unifiedApiKey;
+        this.secretKey = unifiedSecret;
+        this.isTestnet = unifiedTestnet;
+        
+        // Estado de conexiÃ³n
+        this.isConnected = false;
+        this.lastPing = null;
+        this.connectionRetries = 0;
+        this.maxRetries = 5;
+        this._initializationInProgress = false;
+        
+    // ConfiguraciÃ³n de trading real - UNIVERSO TOTAL SIN LÃMITES
+        this.assetCategories = {
+            majors: [],
+            memeCoins: [],
+            exotics: [],
+            darkSide: [],
+            defi: [],
+            gaming: [],
+            metaverse: [],
+            ai: [],
+            layer1: [],
+            layer2: [],
+            infrastructure: [],
+            privacy: [],
+            oracle: [],
+            storage: [],
+            interoperability: [],
+            highVolatility: [],
+            lowVolatility: [],
+            arbitrageTargets: [],
+            unlimitedLeverage: [],
+            quantumEdge: [],
+            chaosCore: [],
+            extremeVolatility: [],
+            maxLeverageTargets: [],
+            darkMatter: [] // SÃ­mbolos con comportamiento cuÃ¡ntico extremo
+        };
+        
+        this.allSymbols = [
+            ...this.assetCategories.majors,
+            ...this.assetCategories.memeCoins,
+            ...this.assetCategories.exotics,
+            ...this.assetCategories.darkSide
+        ];
+        
+        this.currentPrices = new Map();
+        this.volatilityMetrics = new Map();
+        this.lunarInfluence = new Map();
+        this.accountInfo = null;
+        this.unlimitedLeverage = process.env.TRADING_UNLIMITED_LEVERAGE === 'true';
+        this.maxLeverage = this.unlimitedLeverage ? 125 : parseInt(process.env.TRADING_MAX_LEVERAGE || '10');
+        
+        // **INICIALIZAR QUANTUM CACHE**: Para evitar rate limiting
+        this.quantumCache = new QuantumInfiniteCache();
+        console.log('[BINANCE REAL] 🌌 QuantumInfiniteCache inicializada para evitar rate limiting');
+        
+        // **INICIALIZAR VALIDADOR DE PARÁMETROS**: Para evitar errores 400
+        this.validator = new BinanceRequestValidator();
+        console.log('[BINANCE REAL] ✅ Validador de parámetros inicializado');
+        
+        // **INICIALIZAR RATE LIMITER AVANZADO**: Para respetar límites de Binance
+        const RateLimiter = require('./services/RateLimiter');
+        this.rateLimiter = new RateLimiter({
+            tokensPerInterval: parseInt(process.env.BINANCE_RATE_LIMIT_ORDERS) || 300,
+            intervalMs: parseInt(process.env.BINANCE_RATE_LIMIT_WINDOW) || 10000
+        });
+        
+        // Weight limiter para endpoints específicos
+        this.weightLimiter = new RateLimiter({
+            tokensPerInterval: parseInt(process.env.BINANCE_WEIGHT_LIMIT) || 1200,
+            intervalMs: parseInt(process.env.BINANCE_WEIGHT_WINDOW) || 60000
+        });
+        
+        console.log('[BINANCE REAL] ⚡ Rate limiters inicializados para protección anti-418/429');
+        
+        // Log only on first concrete initialization
+        console.log('[BINANCE REAL] Conector inicializado');
+        console.log(`[BINANCE REAL] Modo: ${this.isTestnet ? 'TESTNET' : 'PRODUCCIÓN'}`);
+        // Log de diagnóstico de configuración (sin exponer secretos)
+        const keySet = this.apiKey && this.apiKey.length > 5;
+        const secretSet = this.secretKey && this.secretKey.length > 5;
+        console.log(`[BINANCE REAL] Credenciales configuradas: API_KEY=${keySet ? 'SET' : 'MISSING'}, SECRET=${secretSet ? 'SET' : 'MISSING'}`);
+
+        // Set singleton instance
+        BinanceRealConnector._instance = this;
+        return this;
+    }
+
+    async initialize() {
+        if (this.isConnected || this._initializationInProgress) {
+            console.log('[BINANCE REAL] InicializaciÃ³n ignorada (ya conectando/conectado)');
+            return;
+        }
+        this._initializationInProgress = true;
+        try {
+            console.log('[BINANCE REAL] 🚀 Inicializando Market Maker Cuántico con TODOS los símbolos...');
+            
+            // Verificar credenciales
+            if (!this.apiKey || !this.secretKey) {
+            console.warn('[BINANCE REAL] ⚠️ Credenciales no configuradas - Modo solo lectura');
+            }
+
+            // **MARKET MAKER CUÃNTICO**: Obtener TODOS los sÃ­mbolos disponibles
+            await this.fetchAllAvailableSymbols();
+
+            // Verificar conexiÃ³n (skipear si estÃ¡ habilitado)
+            if (process.env.SKIP_API_VALIDATION !== 'true') {
+                await this.testConnection();
+            } else {
+                console.log('[BINANCE REAL] ⚠️ Validación API omitida - Modo desarrollo');
+            }
+            
+            // Obtener informaciÃ³n de la cuenta
+            if (this.apiKey && this.secretKey) {
+                await this.getAccountInfo();
+            }
+            
+            // Inicializar precios en tiempo real para TODOS los sÃ­mbolos
+            await this.initializeRealTimePrices();
+            
+            this.isConnected = true;
+            console.log('[BINANCE REAL] ✅ Market Maker Cuántico activado exitosamente');
+            console.log(`[BINANCE REAL] 🎯 ${this.allSymbols.length} símbolos bajo control cuántico total`);
+            
+        } catch (error) {
+            console.error('[BINANCE REAL] ❌ Error de inicialización:', error.message);
+            throw error;
+        } finally {
+            this._initializationInProgress = false;
+        }
+    }
+
+    async fetchAllAvailableSymbols() {
+        try {
+            console.log('[BINANCE REAL] 📡 Obteniendo universo de símbolos (override/env o Binance)...');
+
+            // 1) Intentar cargar universo externo desde ENV/archivo
+            const externalSymbols = this.loadSymbolsFromEnvOrFile();
+            const maxEnv = process.env.QUANTUM_MAX_SYMBOLS !== undefined
+                ? parseInt(String(process.env.QUANTUM_MAX_SYMBOLS), 10)
+                : NaN;
+
+            const cap = Number.isFinite(maxEnv) && maxEnv > 0 ? maxEnv : Number.isFinite(maxEnv) && maxEnv === 0 ? Number.MAX_SAFE_INTEGER : NaN;
+
+            if (externalSymbols && externalSymbols.length > 0) {
+                const capped = Number.isFinite(cap) ? externalSymbols.slice(0, cap) : externalSymbols.slice();
+                this.allSymbols = capped;
+                // Construir forma mínima para categorización
+                const availableSymbols = capped.map(sym => {
+                    const quote = (sym.match(/(USDT|BUSD|USDC|BTC|ETH|BNB)$/) || ['USDT'])[0];
+                    const base = sym.endsWith(quote) ? sym.slice(0, -quote.length) : sym;
+                    return {
+                        symbol: sym,
+                        baseAsset: base,
+                        quoteAsset: quote,
+                        filters: [],
+                        permissions: []
+                    };
+                });
+
+                this.categorizeAllSymbolsForQuantumEdge(availableSymbols);
+                console.log(`[BINANCE REAL] ✅ Universo externo aplicado (${this.allSymbols.length} símbolos)`);
+                console.log(`[BINANCE REAL] 📊 Categorías cargadas: Majors=${this.assetCategories.majors.length}, Memes=${this.assetCategories.memeCoins.length}, Exotics=${this.assetCategories.exotics.length}, Dark=${this.assetCategories.darkSide.length}`);
+                return;
+            }
+
+            // 2) Fallback: consultar a Binance exchangeInfo
+            const response = await this.makeRequest('GET', '/fapi/v1/exchangeInfo');
+
+            // Filtrar solo futuros perpetuos activos USDT
+            let allAvailableSymbols = response.symbols
+                .filter(symbol =>
+                    symbol.status === 'TRADING' &&
+                    symbol.contractType === 'PERPETUAL' &&
+                    symbol.quoteAsset === 'USDT' &&
+                    symbol.symbol.endsWith('USDT')
+                )
+                .map(symbol => ({
+                    symbol: symbol.symbol,
+                    baseAsset: symbol.baseAsset,
+                    quoteAsset: symbol.quoteAsset,
+                    filters: symbol.filters,
+                    permissions: symbol.permissions
+                }));
+
+            // Aplicar cap si corresponde
+            if (Number.isFinite(cap)) {
+                allAvailableSymbols = allAvailableSymbols.slice(0, cap);
+            }
+
+            // Clasificar y fijar universo
+            this.categorizeAllSymbolsForQuantumEdge(allAvailableSymbols);
+            if (allAvailableSymbols.length > 0) {
+                this.allSymbols = allAvailableSymbols.map(s => s.symbol);
+            } else {
+                console.warn('[BINANCE REAL] ⚠️ No se encontraron símbolos válidos, manteniendo lista actual');
+            }
+
+            console.log(`[BINANCE REAL] 🚀 ${this.allSymbols.length} símbolos identificados para explotación máxima`);
+            console.log(`[BINANCE REAL] 📈 Universo total en categorías: ${this.assetCategories.allSymbols?.length || 0} activos`);
+
+        } catch (error) {
+            console.error('[BINANCE REAL] Error obteniendo símbolos:', error.message);
+            // Fallback a símbolos básicos si falla
+            this.initializeFallbackSymbols();
+        }
+    }
+
+    categorizeAllSymbolsForQuantumEdge(availableSymbols) {
+        // **INGENIERÃA INVERSA TOTAL**: Categorizar TODOS sin lÃ­mites
+        
+        // Expandir categorÃ­as para mÃ¡ximo profit
+        this.assetCategories = {
+            allSymbols: [],
+            majors: [],
+            memeCoins: [],
+            darkSide: [],
+            exotics: [],
+            stablecoins: [],
+            defi: [],
+            gaming: [],
+            metaverse: [],
+            ai: [],
+            layer1: [],
+            layer2: [],
+            nft: [],
+            infrastructure: [],
+            privacy: [],
+            oracle: [],
+            storage: [],
+            interoperability: [],
+            highVolatility: [],
+            lowVolatility: [],
+            arbitrageTargets: [],
+            leverageTargets: []
+        };
+        
+        for (const symbolData of availableSymbols) {
+            const symbol = symbolData.symbol;
+            const baseAsset = symbolData.baseAsset;
+            const quoteAsset = symbolData.quoteAsset;
+            
+            // **TODOS LOS SÃMBOLOS** sin excepciÃ³n
+            this.assetCategories.allSymbols.push(symbol);
+            
+            // **CATEGORIZACIÃ“N PARA MÃXIMO EDGE**
+            
+            // Top Majors - MÃ¡xima liquidez y estabilidad relativa
+            if (['BTC', 'ETH', 'BNB', 'ADA', 'SOL', 'MATIC', 'DOT', 'AVAX', 'ATOM', 'NEAR', 'LINK', 'UNI', 'LTC', 'BCH', 'XRP'].some(major => baseAsset === major)) {
+                this.assetCategories.majors.push(symbol);
+                this.assetCategories.leverageTargets.push(symbol); // Alto leverage seguro
+            }
+            
+            // Meme Coins - MÃ¡ximo potencial viral y momentum
+            else if (['DOGE', 'SHIB', 'PEPE', 'FLOKI', 'BONK', 'WIF', 'MEME', 'BABYDOGE', 'ELON', 'SAMO', 'WOJAK', 'LADYS', 'TURBO'].some(meme => baseAsset.includes(meme))) {
+                this.assetCategories.memeCoins.push(symbol);
+                this.assetCategories.highVolatility.push(symbol);
+                this.assetCategories.arbitrageTargets.push(symbol); // Alto potencial arbitraje
+            }
+            
+            // Lado Oscuro - MÃ¡xima volatilidad, caos y edge extremo
+            else if (['1000RATS', '1000SATS', 'BOME', 'SLERF', 'MYRO', 'TNSR', 'W', 'ENA', 'OMNI', 'REZ', 'BB', 'NOT', 'IO', 'ZK', 'ZRO'].some(dark => baseAsset.includes(dark.replace('1000', '')))) {
+                this.assetCategories.darkSide.push(symbol);
+                this.assetCategories.highVolatility.push(symbol);
+                this.assetCategories.leverageTargets.push(symbol); // Leverage extremo
+            }
+            
+            // Stablecoins - Para arbitraje y hedge
+            else if (['USDT', 'USDC', 'BUSD', 'DAI', 'TUSD', 'USDP', 'FDUSD', 'USDD'].some(stable => baseAsset === stable || quoteAsset === stable)) {
+                this.assetCategories.stablecoins.push(symbol);
+                this.assetCategories.arbitrageTargets.push(symbol);
+                this.assetCategories.lowVolatility.push(symbol);
+            }
+            
+            // DeFi - Alto potencial y correlaciones
+            else if (['UNI', 'SUSHI', 'AAVE', 'COMP', 'MKR', 'SNX', 'YFI', 'CRV', 'BAL', '1INCH', 'CAKE', 'GMX', 'LDO', 'RPL', 'RUNE'].some(defi => baseAsset === defi)) {
+                this.assetCategories.defi.push(symbol);
+                this.assetCategories.leverageTargets.push(symbol);
+            }
+            
+            // Gaming & Metaverse - Momentum y tendencias
+            else if (['AXS', 'SAND', 'MANA', 'ENJ', 'GALA', 'CHR', 'TLM', 'SLP', 'ALICE', 'ILV', 'MAGIC', 'YGG', 'NFTX'].some(gaming => baseAsset === gaming)) {
+                this.assetCategories.gaming.push(symbol);
+                this.assetCategories.highVolatility.push(symbol);
+            }
+            
+            // AI & Technology - Tendencias futuras
+            else if (['FET', 'AGIX', 'OCEAN', 'NMR', 'CTXC', 'AI', 'RNDR', 'TAO', 'ARKM'].some(ai => baseAsset.includes(ai))) {
+                this.assetCategories.ai.push(symbol);
+                this.assetCategories.highVolatility.push(symbol);
+            }
+            
+            // Layer 1 & Layer 2 - Infraestructura
+            else if (['MATIC', 'ARB', 'OP', 'LRC', 'IMX', 'METIS', 'STRK', 'MANTA', 'ALT'].some(layer => baseAsset === layer)) {
+                this.assetCategories.layer2.push(symbol);
+                this.assetCategories.leverageTargets.push(symbol);
+            }
+            
+            // Todos los demÃ¡s como exÃ³ticos con potencial
+            else {
+                this.assetCategories.exotics.push(symbol);
+                
+                // AnÃ¡lisis de volatilidad para clasificaciÃ³n adicional
+                if (symbol.includes('USD')) {
+                    this.assetCategories.arbitrageTargets.push(symbol);
+                }
+            }
+        }
+        
+        console.log('[BINANCE REAL] ðŸŽ¯ CategorizaciÃ³n cuÃ¡ntica TOTAL completada:');
+        console.log(`  ðŸŒŒ UNIVERSO TOTAL: ${this.assetCategories.allSymbols.length} sÃ­mbolos`);
+        console.log(`  ðŸ† Majors: ${this.assetCategories.majors.length}`);
+        console.log(`  ðŸš€ Memes: ${this.assetCategories.memeCoins.length}`);
+        console.log(`  ðŸŒ‘ Lado Oscuro: ${this.assetCategories.darkSide.length}`);
+        console.log(`  ðŸ”¥ Alto Leverage: ${this.assetCategories.leverageTargets.length}`);
+        console.log(`  âš¡ Arbitraje: ${this.assetCategories.arbitrageTargets.length}`);
+        console.log(`  ðŸ’¥ Alta Volatilidad: ${this.assetCategories.highVolatility.length}`);
+        console.log(`  ðŸ—ï¸ DeFi: ${this.assetCategories.defi.length}`);
+        console.log(`  ðŸŽ® Gaming: ${this.assetCategories.gaming.length}`);
+        console.log(`  ðŸ¤– AI: ${this.assetCategories.ai.length}`);
+        console.log(`  ðŸ”— ExÃ³ticos: ${this.assetCategories.exotics.length}`);
+    }
+
+    initializeFallbackSymbols() {
+        console.log('[BINANCE REAL] 🔧 Inicializando símbolos de respaldo...');
+
+        // Símbolos básicos como fallback
+        this.assetCategories = {
+            majors: ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'ADAUSDT', 'SOLUSDT'],
+            memeCoins: ['DOGEUSDT', 'SHIBUSDT', 'PEPEUSDT', 'FLOKIUSDT', 'BONKUSDT'],
+            exotics: ['INJUSDT', 'TIAUSDT', 'CKBUSDT', 'MOVRUSDT', 'ORDIUSDT'],
+            darkSide: ['1000RATSUSDT', '1000SATSUSDT', 'WIFUSDT', 'BOMEUSDT'],
+            allSymbols: []
+        };
+
+        this.allSymbols = [
+            ...this.assetCategories.majors,
+            ...this.assetCategories.memeCoins,
+            ...this.assetCategories.exotics,
+            ...this.assetCategories.darkSide
+        ];
+
+        this.assetCategories.allSymbols = [...this.allSymbols];
+    }
+
+    // === UNIVERSO EXTERNO (ENV/FILE) Y DIAGNÓSTICOS ===
+
+    loadSymbolsFromEnvOrFile() {
+        try {
+            // Variables soportadas:
+            //  - QUANTUM_SYMBOLS_FILE / SYMBOLS_FILE: ruta JSON con ["BTCUSDT", ...] o { "symbols": [...] }
+            //  - SYMBOLS_UNIVERSE / QUANTUM_SYMBOLS / SYMBOLS_LIST: CSV o JSON string
+            const filePath = process.env.QUANTUM_SYMBOLS_FILE || process.env.SYMBOLS_FILE;
+            const listEnv = process.env.SYMBOLS_UNIVERSE || process.env.QUANTUM_SYMBOLS || process.env.SYMBOLS_LIST;
+
+            let universe = [];
+
+            if (filePath) {
+                const resolved = path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath);
+                if (fs.existsSync(resolved)) {
+                    const raw = fs.readFileSync(resolved, 'utf-8');
+                    try {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed)) {
+                            universe = parsed;
+                        } else if (Array.isArray(parsed.symbols)) {
+                            universe = parsed.symbols;
+                        }
+                    } catch (e) {
+                        // Si no es JSON válido, intentar parseo por líneas/CSV
+                        universe = raw
+                            .split(/\r?\n|,/g)
+                            .map(s => s.trim())
+                            .filter(Boolean);
+                    }
+                }
+            }
+
+            if (!universe.length && listEnv) {
+                universe = this.parseSymbolsInput(listEnv);
+            }
+
+            // Normalizar y filtrar vacíos
+            universe = (universe || [])
+                .map(s => String(s).trim().toUpperCase())
+                .filter(Boolean);
+
+            // Por defecto limitar a USDT para Futuros; permitir otros si se habilita
+            const allowNonUsdt = process.env.ALLOW_NON_USDT_SYMBOLS === 'true';
+            if (!allowNonUsdt) {
+                universe = universe.filter(s => s.endsWith('USDT'));
+            }
+
+            return universe;
+        } catch (e) {
+            console.warn('[BINANCE REAL] ⚠️ Error cargando universo externo:', e && e.message);
+            return [];
+        }
+    }
+
+    parseSymbolsInput(input) {
+        // Acepta CSV ("BTCUSDT,ETHUSDT") o JSON string '["BTCUSDT","ETHUSDT"]'
+        try {
+            if (!input) return [];
+            const trimmed = String(input).trim();
+            if (trimmed.startsWith('[')) {
+                const arr = JSON.parse(trimmed);
+                return Array.isArray(arr) ? arr : [];
+            }
+            return trimmed.split(',').map(s => s.trim()).filter(Boolean);
+        } catch (_) {
+            return [];
+        }
+    }
+
+    getSymbolsUniverse(limit = null) {
+        // Respeta QUANTUM_MAX_SYMBOLS si está definido (>0). 0 = sin límite
+        const envMax = process.env.QUANTUM_MAX_SYMBOLS !== undefined
+            ? parseInt(String(process.env.QUANTUM_MAX_SYMBOLS), 10)
+            : NaN;
+
+        const hardCap = Number.isFinite(envMax) && envMax > 0
+            ? envMax
+            : Number.isFinite(envMax) && envMax === 0
+                ? Number.MAX_SAFE_INTEGER
+                : Number.MAX_SAFE_INTEGER;
+
+        const effLimit = Math.min(
+            hardCap,
+            limit && Number.isFinite(limit) && limit > 0 ? limit : Number.MAX_SAFE_INTEGER
+        );
+        return this.allSymbols.slice(0, effLimit);
+    }
+
+    getUniverseStats() {
+        return {
+            total: this.allSymbols.length,
+            categories: {
+                majors: this.assetCategories.majors?.length || 0,
+                memeCoins: this.assetCategories.memeCoins?.length || 0,
+                exotics: this.assetCategories.exotics?.length || 0,
+                darkSide: this.assetCategories.darkSide?.length || 0
+            },
+            distribution: this.getAssetDistribution(),
+            readyForTrading: this.isReadyForTrading(),
+            dataStatus: this.getRealDataStatus()
+        };
+    }
+
+    async testConnection() {
+        try {
+            // Test basic connectivity
+            console.log('[BINANCE REAL] Probando conectividad bÃ¡sica...');
+            const pingResponse = await axios.get(`${this.getBaseURL()}/fapi/v1/ping`);
+            
+            if (pingResponse.status !== 200) {
+                throw new Error(`Ping fallÃ³ con status ${pingResponse.status}`);
+            }
+            
+            // Test API key permissions
+            console.log('[BINANCE REAL] Verificando permisos de API...');
+            const timestamp = Date.now();
+            const queryString = `timestamp=${timestamp}&recvWindow=5000`;
+            const signature = this.generateSignature(queryString);
+            
+            // Use correct Futures endpoint: /fapi/v2/account
+            const apiResponse = await axios.get(`${this.getBaseURL()}/fapi/v2/account`, {
+                headers: {
+                    'X-MBX-APIKEY': this.apiKey
+                },
+                params: { timestamp, recvWindow: 5000, signature }
+            });
+            
+            if (apiResponse.status === 200) {
+                console.log('[BINANCE REAL] Permisos de API verificados');
+                return true;
+            }
+            
+            throw new Error(`API check fallÃ³ con status ${apiResponse.status}`);
+            
+        } catch (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error('[BINANCE REAL] Error de respuesta:', {
+                    status: error.response.status,
+                    data: error.response.data,
+                    headers: error.response.headers
+                });
+                // If HTML came back, likely wrong host/path or blocked; surface status text
+                const apiMsg = typeof error.response.data === 'object' ? (error.response.data.msg || error.message) : `HTTP ${error.response.status}`;
+                throw new Error(`Error de API Binance: ${apiMsg}`);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error('[BINANCE REAL] Error de red:', error.request);
+                throw new Error('Error de red al conectar con Binance');
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('[BINANCE REAL] Error de configuraciÃ³n:', error.message);
+                throw new Error(`Error de configuraciÃ³n: ${error.message}`);
+            }
+        }
+    }
+
+    async getAccountInfo() {
+        try {
+            const timestamp = Date.now();
+            const recvWindow = 5000;
+            const queryString = `timestamp=${timestamp}&recvWindow=${recvWindow}`;
+            const signature = this.generateSignature(queryString);
+            
+            const response = await axios.get(`${this.getBaseURL()}/fapi/v2/account`, {
+                headers: {
+                    'X-MBX-APIKEY': this.apiKey
+                },
+                params: {
+                    timestamp: timestamp,
+                    recvWindow: recvWindow,
+                    signature: signature
+                }
+            });
+
+            this.accountInfo = response.data;
+            console.log('[BINANCE REAL] Informacion de cuenta obtenida correctamente');
+            console.log(`[BINANCE REAL] Balance USDT disponible: ${this.accountInfo.totalWalletBalance || 'N/A'}`);
+            return this.accountInfo;
+            
+        } catch (error) {
+            if (error.response) {
+                console.error('[BINANCE REAL] Error respuesta API getAccountInfo:', {
+                    status: error.response.status,
+                    statusText: error.response.statusText,
+                    data: error.response.data
+                });
+                const apiMsg = error.response.data?.msg || error.response.statusText || error.message;
+                throw new Error(`Error API Binance getAccountInfo: ${apiMsg}`);
+            } else if (error.request) {
+                console.error('[BINANCE REAL] Error de red getAccountInfo:', error.message);
+                throw new Error('Error de red al obtener informacion de cuenta');
+            } else {
+                console.error('[BINANCE REAL] Error configuracion getAccountInfo:', error.message);
+                throw new Error(`Error de configuracion: ${error.message}`);
+            }
+        }
+    }
+
+    async getCurrentPrice(symbol = 'BTCUSDT') {
+        try {
+            // **USAR QUANTUM CACHE**: Evitar rate limiting
+            const cacheKey = `price_${symbol}`;
+            const cachedData = await this.quantumCache.get('prices', cacheKey, async () => {
+                const response = await axios.get(`${this.getBaseURL()}/fapi/v1/ticker/price`, {
+                    params: { symbol: symbol }
+                });
+                return {
+                    price: parseFloat(response.data.price),
+                    timestamp: Date.now(),
+                    symbol: symbol
+                };
+            }, { ttl: 1000 }); // Cache por 1 segundo
+            
+            const price = cachedData.price;
+            this.currentPrices.set(symbol, price);
+            
+            return price;
+            
+        } catch (error) {
+            console.error(`[BINANCE REAL] Error obteniendo precio de ${symbol}:`, error.message);
+            throw error;
+        }
+    }
+
+    async initializeRealTimePrices() {
+        try {
+            console.log(`[BINANCE REAL] ðŸ“Š Inicializando datos para ${this.allSymbols.length} sÃ­mbolos en tiempo real...`);
+            
+            // Inicializar conexiones WebSocket por categorÃ­a
+            await this.initializeWebSocketConnections();
+            
+            // Esperar por datos iniciales
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Inicializar mÃ©tricas
+            for (const symbol of this.allSymbols) {
+                try {
+                    await this.calculateVolatilityMetrics(symbol);
+                    await this.calculateLunarInfluence(symbol);
+                } catch (error) {
+                    console.warn(`[BINANCE REAL] Advertencia: No se pudo calcular mÃ©tricas para ${symbol}: ${error.message}`);
+                }
+            }
+            
+            // EstadÃ­sticas de inicializaciÃ³n
+            const initializedPrices = this.currentPrices.size;
+            const initializedVolatility = this.volatilityMetrics.size;
+            const initializedLunar = this.lunarInfluence.size;
+            
+            console.log(`[BINANCE REAL] âœ… Datos inicializados para el universo completo:`);
+            console.log(`  ðŸ“ˆ Precios: ${initializedPrices}/${this.allSymbols.length} (${((initializedPrices/this.allSymbols.length)*100).toFixed(2)}%)`);
+            console.log(`  ðŸ“Š Volatilidad: ${initializedVolatility}/${this.allSymbols.length} (${((initializedVolatility/this.allSymbols.length)*100).toFixed(2)}%)`);
+            console.log(`  ðŸŒ™ Lunar: ${initializedLunar}/${this.allSymbols.length} (${((initializedLunar/this.allSymbols.length)*100).toFixed(2)}%)`);
+            console.log(`  ðŸ” CategorÃ­as principales: Majors: ${this.assetCategories.majors.length}, Memes: ${this.assetCategories.memeCoins.length}, ExÃ³ticos: ${this.assetCategories.exotics.length}, Lado Oscuro: ${this.assetCategories.darkSide.length}`);
+            
+        } catch (error) {
+            console.error('[BINANCE REAL] Error inicializando precios:', error.message);
+        }
+    }
+    
+    async initializeWebSocketConnections() {
+        // Dividir sÃ­mbolos en grupos para mÃºltiples conexiones
+        const symbolGroups = this.createSymbolGroups();
+        
+        for (const [groupName, symbols] of symbolGroups) {
+            try {
+                await this.setupWebSocketConnection(groupName, symbols);
+            } catch (error) {
+                console.error(`[BINANCE REAL] Error inicializando WebSocket para ${groupName}:`, error.message);
+            }
+        }
+    }
+    
+    createSymbolGroups() {
+        const groups = new Map();
+        
+        // Agrupar sÃ­mbolos por categorÃ­a
+        groups.set('majors', this.assetCategories.majors);
+        groups.set('memeCoins', this.assetCategories.memeCoins);
+        groups.set('exotics', this.assetCategories.exotics);
+        groups.set('darkSide', this.assetCategories.darkSide);
+        
+        return groups;
+    }
+    
+    async setupWebSocketConnection(groupName, symbols) {
+        if (!symbols || symbols.length === 0) return;
+        
+        // Crear streams para cada sÃ­mbolo
+        const streams = symbols.map(symbol => {
+            const lowerSymbol = symbol.toLowerCase();
+            return `${lowerSymbol}@markPrice@1s/${lowerSymbol}@bookTicker`;
+        });
+        
+        // Construir URL del WebSocket
+        const wsUrl = `${this.getWsBaseURL()}/stream?streams=${streams.join('/')}`;
+        
+        // Crear conexiÃ³n WebSocket
+        const ws = new WebSocket(wsUrl);
+        
+        ws.on('open', () => {
+            console.log(`[BINANCE REAL] WebSocket conectado para ${groupName}`);
+            this.wsConnections.set(groupName, ws);
+            
+            // Reiniciar reconexiÃ³n si existe
+            if (this.reconnectTimers.has(groupName)) {
+                clearTimeout(this.reconnectTimers.get(groupName));
+                this.reconnectTimers.delete(groupName);
+            }
+        });
+        
+        ws.on('message', (data) => {
+            try {
+                const message = JSON.parse(data);
+                if (message.data) {
+                    this.handleWebSocketMessage(message.data, groupName);
+                }
+            } catch (error) {
+                console.error(`[BINANCE REAL] Error procesando mensaje WebSocket para ${groupName}:`, error.message);
+            }
+        });
+        
+        ws.on('close', () => {
+            console.log(`[BINANCE REAL] WebSocket desconectado para ${groupName}`);
+            this.wsConnections.delete(groupName);
+            
+            // Programar reconexiÃ³n
+            const reconnectTimer = setTimeout(() => {
+                console.log(`[BINANCE REAL] Intentando reconectar WebSocket para ${groupName}...`);
+                this.setupWebSocketConnection(groupName, symbols);
+            }, 5000);
+            
+            this.reconnectTimers.set(groupName, reconnectTimer);
+        });
+        
+        ws.on('error', (error) => {
+            console.error(`[BINANCE REAL] Error en WebSocket para ${groupName}:`, error.message);
+        });
+    }
+    
+    handleWebSocketMessage(data, groupName) {
+        if (!data || !data.s) return; // s = symbol
+        
+        const symbol = data.s;
+        
+        // Actualizar precio
+        if (data.p) { // p = price
+            const price = parseFloat(data.p);
+            this.currentPrices.set(symbol, price);
+        }
+        
+        // Actualizar mejor bid/ask si disponible
+        if (data.b && data.a) { // b = bid, a = ask
+            const bid = parseFloat(data.b);
+            const ask = parseFloat(data.a);
+            this.updateOrderBookData(symbol, bid, ask);
+        }
+    }
+    
+    updateOrderBookData(symbol, bid, ask) {
+        if (!this.orderBookData) {
+            this.orderBookData = new Map();
+        }
+        
+        this.orderBookData.set(symbol, {
+            bid,
+            ask,
+            spread: ask - bid,
+            timestamp: Date.now()
+        });
+    }
+
+    async executeRealOrder(orderParams) {
+        try {
+            const {
+                symbol = 'BTCUSDT',
+                side = 'BUY',
+                quantity,
+                price,
+                type = 'MARKET',
+                // Non-determinism controls (optional)
+                tickSize,
+                stepSize,
+                maxPriceTickJitter = parseFloat(process.env.PRICE_TICK_JITTER || '0'),
+                qtyJitterPct = parseFloat(process.env.QTY_JITTER_PCT || '0'),
+                jitterMsMin = parseInt(process.env.JITTER_MS_MIN || '0', 10),
+                jitterMsMax = parseInt(process.env.JITTER_MS_MAX || '0', 10),
+                nonDeterminism = (process.env.NON_DETERMINISM_ENABLED === 'true')
+            } = orderParams;
+
+            // Verificar que tenemos precio actual
+            const currentPrice = await this.getCurrentPrice(symbol);
+            
+            // Preparar parÃ¡metros de la orden
+            const params = {
+                symbol: symbol,
+                side: side,
+                type: type,
+                quantity: quantity,
+                timestamp: Date.now()
+            };
+
+            // Agregar precio si es orden limit
+            if (type === 'LIMIT') {
+                let finalPrice = price;
+                if (nonDeterminism && maxPriceTickJitter > 0 && typeof tickSize === 'number') {
+                    const { applyPriceTickJitter } = require('./nonDeterminism');
+                    finalPrice = applyPriceTickJitter(price, tickSize, maxPriceTickJitter);
+                }
+                params.price = finalPrice;
+                params.timeInForce = 'GTC';
+            }
+
+            // Jitter en cantidad si aplica
+            if (nonDeterminism && qtyJitterPct > 0 && typeof stepSize === 'number') {
+                const { applyQtyJitter, roundToStep } = require('./nonDeterminism');
+                const jitteredQty = applyQtyJitter(quantity, qtyJitterPct);
+                params.quantity = roundToStep(Math.max(jitteredQty, quantity), stepSize); // no reducir por debajo del base
+            }
+
+            // Delay controlado si aplica
+            if (nonDeterminism && jitterMsMax > 0) {
+                const { jitterDelayAsync } = require('./nonDeterminism');
+                await jitterDelayAsync(jitterMsMin, jitterMsMax);
+            }
+
+            // Generar firma
+            const queryString = this.buildQueryString(params);
+            const signature = this.generateSignature(queryString);
+            params.signature = signature;
+
+            // Ejecutar orden real en Binance
+            const response = await axios.post(`${this.getBaseURL()}/fapi/v1/order`, null, {
+                headers: {
+                    'X-MBX-APIKEY': this.apiKey,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                params: params
+            });
+
+            console.log(`[BINANCE REAL] Orden ejecutada: ${response.data.orderId}`);
+            
+            return {
+                status: 'EXECUTED',
+                orderId: response.data.orderId,
+                symbol: response.data.symbol,
+                side: response.data.side,
+                quantity: response.data.executedQty,
+                price: response.data.price || currentPrice,
+                status: response.data.status,
+                timestamp: new Date().toISOString(),
+                binance_response: response.data
+            };
+
+        } catch (error) {
+            console.error('[BINANCE REAL] Error ejecutando orden:', error.response?.data || error.message);
+            
+            return {
+                status: 'ERROR',
+                error: error.response?.data?.msg || error.message,
+                timestamp: new Date().toISOString()
+            };
+        }
+    }
+
+    async getOrderStatus(orderId, symbol = 'BTCUSDT') {
+        try {
+            const timestamp = Date.now();
+            const params = {
+                symbol: symbol,
+                orderId: orderId,
+                timestamp: timestamp
+            };
+
+            const queryString = this.buildQueryString(params);
+            const signature = this.generateSignature(queryString);
+            params.signature = signature;
+
+            const response = await axios.get(`${this.getBaseURL()}/fapi/v1/order`, {
+                headers: {
+                    'X-MBX-APIKEY': this.apiKey
+                },
+                params: params
+            });
+
+            return response.data;
+
+        } catch (error) {
+            console.error('[BINANCE REAL] Error obteniendo estado de orden:', error.message);
+            throw error;
+        }
+    }
+
+    async cancelOrder(orderId, symbol = 'BTCUSDT') {
+        try {
+            const timestamp = Date.now();
+            const params = {
+                symbol: symbol,
+                orderId: orderId,
+                timestamp: timestamp
+            };
+
+            const queryString = this.buildQueryString(params);
+            const signature = this.generateSignature(queryString);
+            params.signature = signature;
+
+            const response = await axios.delete(`${this.getBaseURL()}/fapi/v1/order`, {
+                headers: {
+                    'X-MBX-APIKEY': this.apiKey
+                },
+                params: params
+            });
+
+            console.log(`[BINANCE REAL] Orden cancelada: ${orderId}`);
+            return response.data;
+
+        } catch (error) {
+            console.error('[BINANCE REAL] Error cancelando orden:', error.message);
+            throw error;
+        }
+    }
+
+    async getOpenOrders(symbol = 'BTCUSDT') {
+        try {
+            const timestamp = Date.now();
+            const params = {
+                symbol: symbol,
+                timestamp: timestamp
+            };
+
+            const queryString = this.buildQueryString(params);
+            const signature = this.generateSignature(queryString);
+            params.signature = signature;
+
+            const response = await axios.get(`${this.getBaseURL()}/fapi/v1/openOrders`, {
+                headers: {
+                    'X-MBX-APIKEY': this.apiKey
+                },
+                params: params
+            });
+
+            return response.data;
+
+        } catch (error) {
+            console.error('[BINANCE REAL] Error obteniendo Ã³rdenes abiertas:', error.message);
+            throw error;
+        }
+    }
+
+    async getTradeHistory(symbol = 'BTCUSDT', limit = 100) {
+        try {
+            const timestamp = Date.now();
+            const params = {
+                symbol: symbol,
+                limit: limit,
+                timestamp: timestamp
+            };
+
+            const queryString = this.buildQueryString(params);
+            const signature = this.generateSignature(queryString);
+            params.signature = signature;
+
+            const response = await axios.get(`${this.getBaseURL()}/fapi/v1/userTrades`, {
+                headers: {
+                    'X-MBX-APIKEY': this.apiKey
+                },
+                params: params
+            });
+
+            return response.data;
+
+        } catch (error) {
+            console.error('[BINANCE REAL] Error obteniendo historial de trades:', error.message);
+            throw error;
+        }
+    }
+
+    // MÃ©todos auxiliares
+    getBaseURL() {
+        return this.isTestnet ? this.testnetURL : this.baseURL;
+    }
+
+    getWsBaseURL() {
+        return this.isTestnet ? this.testnetWsURLBase : this.wsURLBase;
+    }
+
+    async makeRequest(method, endpoint, params = {}) {
+        const maxRetries = 5;
+        let attempt = 0;
+        let lastError = null;
+        
+        // **APLICAR RATE LIMITING ANTES DE LA REQUEST**
+        if (this.rateLimiter) {
+            await this.rateLimiter.acquire();
+        }
+        
+        // Weight limiting para endpoints específicos que lo requieren
+        const endpointWeight = this.getEndpointWeight(endpoint);
+        if (endpointWeight > 1 && this.weightLimiter) {
+            // Adquirir múltiples tokens para endpoints pesados
+            for (let i = 0; i < endpointWeight; i++) {
+                await this.weightLimiter.acquire();
+            }
+        }
+        
+        while (attempt < maxRetries) {
+            try {
+                const url = `${this.getBaseURL()}${endpoint}`;
+                
+                // **VALIDAR PARAMETROS CON EL VALIDADOR**
+                let validatedParams = params;
+                let validatedHeaders = {
+                    'X-MBX-APIKEY': this.apiKey
+                };
+                
+                if (this.validator && typeof this.validator.validateRequest === 'function') {
+                    try {
+                        const validation = this.validator.validateRequest(method, endpoint, params, validatedHeaders);
+                        
+                        if (!validation.valid) {
+                            console.error('[BINANCE REAL] Errores de validación:', validation.errors);
+                            throw new Error(`Parámetros inválidos: ${validation.errors.join(', ')}`);
+                        }
+                        
+                        // Usar parámetros validados y corregidos
+                        validatedParams = validation.params;
+                        validatedHeaders = validation.headers;
+                        
+                        // Generar firma con parámetros validados
+                        let signature;
+                        if (validation.requiresSignature && this.secretKey) {
+                            const queryString = validation.queryString;
+                            signature = this.generateSignature(queryString);
+                            validatedParams.signature = signature;
+                        }
+                    } catch (validatorError) {
+                        console.warn('[BINANCE REAL] Warning: Error en validador, continuando sin validación:', validatorError.message);
+                        // Continuar con parámetros originales si el validador falla
+                    }
+                } else {
+                    console.warn('[BINANCE REAL] Warning: Validador no disponible, usando parámetros directos');
+                    // Agregar timestamp si no está presente para endpoints que lo requieren
+                    if (endpoint.includes('fapi/v1/') || endpoint.includes('fapi/v2/')) {
+                        if (!validatedParams.timestamp) {
+                            validatedParams = { ...validatedParams, timestamp: Date.now() };
+                        }
+                        
+                        // Generar firma si es necesario
+                        if (this.secretKey && (endpoint.includes('account') || endpoint.includes('order') || 
+                                              endpoint.includes('position') || endpoint.includes('balance'))) {
+                            const queryString = this.buildQueryString(validatedParams);
+                            const signature = this.generateSignature(queryString);
+                            validatedParams.signature = signature;
+                        }
+                    }
+                }
+                
+                // Preparar configuración de la petición
+                const config = {
+                    method: method,
+                    url: url,
+                    headers: validatedHeaders,
+                };
+                
+                // Agregar parámetros según el método
+                if (method === 'GET' || method === 'DELETE') {
+                    config.params = validatedParams;
+                } else {
+                    config.data = validatedParams;
+                    if (!config.headers['Content-Type']) {
+                        config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                    }
+                }
+                
+                // Log para debugging en caso de errores
+                if (process.env.DEBUG_BINANCE_REQUESTS === 'true') {
+                    console.log('[BINANCE DEBUG] Request:', {
+                        method,
+                        endpoint,
+                        params: validatedParams,
+                        headers: Object.keys(validatedHeaders)
+                    });
+                }
+                
+                const response = await axios(config);
+                return response.data;
+                
+            } catch (error) {
+                lastError = error;
+                const status = error?.response?.status;
+                
+                // Log específico para error 400 (Bad Request)
+                if (status === 400) {
+                    console.error('[BINANCE REAL] Error 400 - Bad Request:', {
+                        endpoint,
+                        params: params,
+                        response_data: error.response?.data,
+                        validation_errors: error.response?.data?.msg
+                    });
+                }
+                
+                // Handle rate limit/ban backoff
+                if (status === 418 || status === 429) {
+                    const delay = Math.min(1000 * Math.pow(2, attempt), 15000);
+                    console.warn(`[BINANCE REAL] Backoff ${status} en ${endpoint}, reintento ${attempt + 1}/${maxRetries} en ${delay}ms`);
+                    await new Promise(r => setTimeout(r, delay));
+                    attempt++;
+                    continue;
+                }
+                
+                // No reintentar para errores 400 (generalmente son errores de parámetros)
+                if (status === 400) {
+                    console.error(`[BINANCE REAL] Error 400 en ${method} ${endpoint} - No se reintentará`);
+                    throw error;
+                }
+                
+                console.error(`[BINANCE REAL] Error en request ${method} ${endpoint}:`, error.response?.data || error.message);
+                throw error;
+            }
+        }
+        throw lastError;
+    }
+
+    generateSignature(queryString) {
+        return crypto
+            .createHmac('sha256', this.secretKey)
+            .update(queryString)
+            .digest('hex');
+    }
+
+    buildQueryString(params) {
+        return Object.keys(params)
+            .map(key => `${key}=${params[key]}`)
+            .join('&');
+    }
+    
+    // **MÉTODO PARA CALCULAR EL PESO DEL ENDPOINT**
+    getEndpointWeight(endpoint) {
+        // Pesos basados en la documentación oficial de Binance Futures
+        const endpointWeights = {
+            // Endpoints públicos (peso 1)
+            '/fapi/v1/ping': 1,
+            '/fapi/v1/time': 1,
+            '/fapi/v1/exchangeInfo': 1,
+            '/fapi/v1/depth': 1,
+            '/fapi/v1/trades': 1,
+            '/fapi/v1/historicalTrades': 5,
+            '/fapi/v1/aggTrades': 1,
+            '/fapi/v1/klines': 1,
+            '/fapi/v1/continuousKlines': 1,
+            '/fapi/v1/indexPriceKlines': 1,
+            '/fapi/v1/markPriceKlines': 1,
+            '/fapi/v1/premiumIndex': 1,
+            '/fapi/v1/fundingRate': 1,
+            '/fapi/v1/ticker/24hr': 1,
+            '/fapi/v1/ticker/price': 1,
+            '/fapi/v1/ticker/bookTicker': 1,
+            '/fapi/v1/openInterest': 1,
+            
+            // Endpoints de cuenta (pesos mayores)
+            '/fapi/v2/account': 5,
+            '/fapi/v1/account': 5,
+            '/fapi/v2/balance': 1,
+            '/fapi/v1/balance': 1,
+            '/fapi/v2/positionRisk': 5,
+            '/fapi/v1/positionRisk': 5,
+            
+            // Endpoints de órdenes (pesos variables)
+            '/fapi/v1/order': 1, // GET/DELETE para orden específica
+            '/fapi/v1/openOrders': 1, // Symbol specific: 1, all symbols: 40
+            '/fapi/v1/allOrders': 5,
+            
+            // Endpoints de trades
+            '/fapi/v1/userTrades': 5,
+            '/fapi/v1/income': 30,
+            '/fapi/v1/leverageBracket': 1,
+            '/fapi/v1/positionMargin': 1,
+            '/fapi/v1/positionMargin/history': 1,
+            '/fapi/v1/marginType': 1,
+            '/fapi/v1/leverage': 1,
+            
+            // Endpoints de data streams
+            '/fapi/v1/listenKey': 1,
+            
+            // Endpoints especiales
+            '/fapi/v1/commissionRate': 20,
+            '/fapi/v1/apiTradingStatus': 1
+        };
+        
+        // Buscar coincidencia exacta primero
+        if (endpointWeights[endpoint]) {
+            return endpointWeights[endpoint];
+        }
+        
+        // Buscar coincidencias parciales para endpoints dinámicos
+        for (const [pattern, weight] of Object.entries(endpointWeights)) {
+            if (endpoint.includes(pattern)) {
+                return weight;
+            }
+        }
+        
+        // Peso por defecto para endpoints no catalogados
+        return 1;
+    }
+
+    // MÃ©todos de utilidad para el sistema cuÃ¡ntico
+    async getAccountBalance() {
+        if (!this.accountInfo) {
+            await this.getAccountInfo();
+        }
+        
+        // Para Binance Futures, la estructura es diferente que SPOT
+        // Futures usa 'assets' en lugar de 'balances'
+        if (this.accountInfo.assets) {
+            return this.accountInfo.assets.filter(balance => 
+                parseFloat(balance.walletBalance) > 0 || parseFloat(balance.marginBalance) > 0
+            );
+        } else if (this.accountInfo.balances) {
+            // Fallback para SPOT si alguna vez se usa
+            return this.accountInfo.balances.filter(balance => 
+                parseFloat(balance.free) > 0 || parseFloat(balance.locked) > 0
+            );
+        }
+        
+        return [];
+    }
+
+    async getUSDTBalance() {
+        const balances = await this.getAccountBalance();
+        const usdtBalance = balances.find(b => b.asset === 'USDT');
+        
+        if (usdtBalance) {
+            // Para Futures usa 'walletBalance', para SPOT usa 'free'
+            return usdtBalance.walletBalance ? parseFloat(usdtBalance.walletBalance) : parseFloat(usdtBalance.free || 0);
+        }
+        return 0;
+    }
+
+    async getBTCBalance() {
+        const balances = await this.getAccountBalance();
+        const btcBalance = balances.find(b => b.asset === 'BTC');
+        
+        if (btcBalance) {
+            // Para Futures usa 'walletBalance', para SPOT usa 'free'
+            return btcBalance.walletBalance ? parseFloat(btcBalance.walletBalance) : parseFloat(btcBalance.free || 0);
+        }
+        return 0;
+    }
+
+    calculatePositionSize(usdtAmount, symbol = 'BTCUSDT') {
+        const currentPrice = this.currentPrices.get(symbol);
+        if (!currentPrice) {
+            throw new Error(`Precio real de ${symbol} no disponible - datos no inicializados`);
+        }
+        return (usdtAmount / currentPrice).toFixed(6);
+    }
+
+    // MÃ©todo para verificar si el sistema estÃ¡ listo para trading
+    isReadyForTrading() {
+        return this.isConnected && 
+               this.apiKey && 
+               this.secretKey && 
+               this.currentPrices.size > 0;
+    }
+
+    // MÃ©todo para calcular mÃ©tricas de volatilidad del lado oscuro
+    async calculateVolatilityMetrics(symbol) {
+        try {
+            // **USAR QUANTUM CACHE**: Evitar rate limiting para mÃ©tricas de volatilidad
+            const cacheKey = `volatility_${symbol}`;
+            const cachedMetrics = await this.quantumCache.get('metrics', cacheKey, async () => {
+                const response = await axios.get(`${this.getBaseURL()}/fapi/v1/ticker/24hr`, {
+                    params: { symbol: symbol }
+                });
+                
+                const data = response.data;
+                const priceChangePercent = parseFloat(data.priceChangePercent);
+                const volume = parseFloat(data.volume);
+                const high = parseFloat(data.highPrice);
+                const low = parseFloat(data.lowPrice);
+                
+                // Calcular mÃ©tricas del caos
+                const volatilityIndex = Math.abs(priceChangePercent);
+                const chaosLevel = ((high - low) / low) * 100;
+                const liquidityRisk = volume < 1000000 ? 'HIGH' : volume < 10000000 ? 'MEDIUM' : 'LOW';
+                
+                return {
+                    volatilityIndex: volatilityIndex,
+                    chaosLevel: chaosLevel,
+                    liquidityRisk: liquidityRisk,
+                    volume24h: volume,
+                    priceChangePercent: priceChangePercent,
+                    lastUpdate: new Date().toISOString()
+                };
+            }, { ttl: 30000 }); // Cache por 30 segundos - mÃ©tricas mÃ¡s estables
+            
+            // Agregar dark side score calculado
+            const metrics = {
+                ...cachedMetrics,
+                darkSideScore: this.calculateDarkSideScore(symbol, cachedMetrics.volatilityIndex, cachedMetrics.chaosLevel)
+            };
+            
+            this.volatilityMetrics.set(symbol, metrics);
+            return metrics;
+            
+        } catch (error) {
+            console.error(`[BINANCE REAL] Error calculando volatilidad para ${symbol}:`, error.message);
+            return null;
+        }
+    }
+    
+    // MÃ©todo para calcular la influencia lunar y los cuadrantes oscuros
+    async calculateLunarInfluence(symbol) {
+        try {
+            const currentDate = new Date();
+            const moonPhase = this.calculateMoonPhase(currentDate);
+            const lunarQuadrant = this.determineLunarQuadrant(symbol, moonPhase);
+            
+            // Calcular influencia basada en tipo de activo y fase lunar
+            const assetType = this.getAssetType(symbol);
+            const baseInfluence = {
+                'majors': 0.3,
+                'memeCoins': 0.8,
+                'exotics': 0.6,
+                'darkSide': 1.0
+            }[assetType] || 0.5;
+            
+            const lunarMultiplier = {
+                'new_moon': 1.5,      // Nueva Luna - EnergÃ­a de renovaciÃ³n
+                'waxing_crescent': 1.2, // Creciente - Impulso alcista
+                'first_quarter': 1.0,   // Cuarto Creciente - Equilibrio
+                'waxing_gibbous': 0.8,  // Gibosa Creciente - ConsolidaciÃ³n
+                'full_moon': 2.0,       // Luna Llena - MÃ¡xima irracionalidad
+                'waning_gibbous': 0.9,  // Gibosa Menguante - CorrecciÃ³n
+                'last_quarter': 0.7,    // Cuarto Menguante - Tendencia bajista
+                'waning_crescent': 1.3  // Menguante - PreparaciÃ³n para cambio
+            }[moonPhase] || 1.0;
+            
+            const influence = {
+                moonPhase: moonPhase,
+                lunarQuadrant: lunarQuadrant,
+                baseInfluence: baseInfluence,
+                lunarMultiplier: lunarMultiplier,
+                totalInfluence: baseInfluence * lunarMultiplier,
+                assetType: assetType,
+                recommendation: this.getLunarRecommendation(moonPhase, assetType),
+                lastUpdate: new Date().toISOString()
+            };
+            
+            this.lunarInfluence.set(symbol, influence);
+            return influence;
+            
+        } catch (error) {
+            console.error(`[BINANCE REAL] Error calculando influencia lunar para ${symbol}:`, error.message);
+            return null;
+        }
+    }
+
+    // MÃ©todo para obtener mÃ©tricas de rendimiento expandidas
+    async getPerformanceMetrics() {
+        try {
+            const trades = await this.getTradeHistory('BTCUSDT', 50);
+            const totalPnL = trades.reduce((sum, trade) => {
+                return sum + (parseFloat(trade.realizedPnl) || 0);
+            }, 0);
+
+            // Obtener mÃ©tricas del lado oscuro
+            const darkSideMetrics = this.calculateDarkSidePerformance();
+            const lunarCorrelations = this.calculateLunarCorrelations();
+
+            return {
+                totalTrades: trades.length,
+                totalPnL: totalPnL,
+                averagePnL: trades.length > 0 ? totalPnL / trades.length : 0,
+                winRate: trades.filter(t => parseFloat(t.realizedPnl) > 0).length / trades.length,
+                darkSideMetrics: darkSideMetrics,
+                lunarCorrelations: lunarCorrelations,
+                assetDistribution: this.getAssetDistribution(),
+                lastUpdate: new Date().toISOString()
+            };
+
+        } catch (error) {
+            console.error('[BINANCE REAL] Error obteniendo mÃ©tricas:', error.message);
+            return {
+                totalTrades: 0,
+                totalPnL: 0,
+                averagePnL: 0,
+                winRate: 0,
+                darkSideMetrics: {},
+                lunarCorrelations: {},
+                assetDistribution: {},
+                lastUpdate: new Date().toISOString()
+            };
+        }
+    }
+
+    // MÃ©todos auxiliares para el lado oscuro de la luna
+
+    calculateMoonPhase(date) {
+        // CÃ¡lculo simplificado de fase lunar basado en algoritmo lunar
+        const moonCycleLength = 29.53; // dÃ­as
+        const knownNewMoon = new Date('2024-01-11'); // Nueva Luna conocida
+        const diffTime = Math.abs(date - knownNewMoon);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const cycleProgress = (diffDays % moonCycleLength) / moonCycleLength;
+
+        if (cycleProgress < 0.125) return 'new_moon';
+        if (cycleProgress < 0.25) return 'waxing_crescent';
+        if (cycleProgress < 0.375) return 'first_quarter';
+        if (cycleProgress < 0.5) return 'waxing_gibbous';
+        if (cycleProgress < 0.625) return 'full_moon';
+        if (cycleProgress < 0.75) return 'waning_gibbous';
+        if (cycleProgress < 0.875) return 'last_quarter';
+        return 'waning_crescent';
+    }
+
+    determineLunarQuadrant(symbol, moonPhase) {
+        const assetType = this.getAssetType(symbol);
+        
+        // Los cuadrantes lunares determinan estrategias especÃ­ficas
+        const quadrants = {
+            'majors': {
+                'new_moon': 'ACCUMULATION_QUADRANT',
+                'waxing_crescent': 'GROWTH_QUADRANT',
+                'first_quarter': 'STABILITY_QUADRANT', 
+                'waxing_gibbous': 'MOMENTUM_QUADRANT',
+                'full_moon': 'CHAOS_QUADRANT',
+                'waning_gibbous': 'CORRECTION_QUADRANT',
+                'last_quarter': 'CONSOLIDATION_QUADRANT',
+                'waning_crescent': 'PREPARATION_QUADRANT'
+            },
+            'memeCoins': {
+                'new_moon': 'VIRAL_BIRTH_QUADRANT',
+                'waxing_crescent': 'MEME_EXPLOSION_QUADRANT',
+                'first_quarter': 'HYPE_STABILITY_QUADRANT',
+                'waxing_gibbous': 'PEAK_MEME_QUADRANT',
+                'full_moon': 'MAXIMUM_IRRATIONALITY_QUADRANT',
+                'waning_gibbous': 'MEME_DEATH_QUADRANT',
+                'last_quarter': 'FORGOTTEN_QUADRANT',
+                'waning_crescent': 'RESURRECTION_QUADRANT'
+            },
+            'exotics': {
+                'new_moon': 'DISCOVERY_QUADRANT',
+                'waxing_crescent': 'ADOPTION_QUADRANT', 
+                'first_quarter': 'UTILITY_QUADRANT',
+                'waxing_gibbous': 'SPECULATION_QUADRANT',
+                'full_moon': 'EXOTIC_MADNESS_QUADRANT',
+                'waning_gibbous': 'REALITY_CHECK_QUADRANT',
+                'last_quarter': 'FUNDAMENTAL_QUADRANT',
+                'waning_crescent': 'INNOVATION_QUADRANT'
+            },
+            'darkSide': {
+                'new_moon': 'SHADOW_BIRTH_QUADRANT',
+                'waxing_crescent': 'DARK_ENERGY_QUADRANT',
+                'first_quarter': 'OCCULT_BALANCE_QUADRANT',
+                'waxing_gibbous': 'FORBIDDEN_KNOWLEDGE_QUADRANT',
+                'full_moon': 'ABSOLUTE_DARKNESS_QUADRANT',
+                'waning_gibbous': 'SHADOW_RETREAT_QUADRANT',
+                'last_quarter': 'DARK_CONTEMPLATION_QUADRANT',
+                'waning_crescent': 'VOID_PREPARATION_QUADRANT'
+            }
+        };
+
+        return quadrants[assetType]?.[moonPhase] || 'UNKNOWN_QUADRANT';
+    }
+
+    getAssetType(symbol) {
+        if (this.assetCategories.majors.includes(symbol)) return 'majors';
+        if (this.assetCategories.memeCoins.includes(symbol)) return 'memeCoins';
+        if (this.assetCategories.exotics.includes(symbol)) return 'exotics';
+        if (this.assetCategories.darkSide.includes(symbol)) return 'darkSide';
+        return 'unknown';
+    }
+
+    calculateDarkSideScore(symbol, volatilityIndex, chaosLevel) {
+        const assetType = this.getAssetType(symbol);
+        const baseMultiplier = {
+            'majors': 1.0,
+            'memeCoins': 2.5,
+            'exotics': 1.8,
+            'darkSide': 3.0
+        }[assetType] || 1.0;
+
+        // PuntuaciÃ³n del lado oscuro basada en caos y volatilidad
+        const darkScore = (volatilityIndex + chaosLevel) * baseMultiplier;
+        
+        if (darkScore > 100) return 'ABSOLUTE_DARKNESS';
+        if (darkScore > 50) return 'DEEP_SHADOW';
+        if (darkScore > 25) return 'TWILIGHT';
+        if (darkScore > 10) return 'DUSK';
+        return 'DAYLIGHT';
+    }
+
+    getLunarRecommendation(moonPhase, assetType) {
+        const recommendations = {
+            'majors': {
+                'new_moon': 'ACCUMULATE_GRADUALLY',
+                'waxing_crescent': 'BUILD_POSITION',
+                'first_quarter': 'HOLD_STEADY',
+                'waxing_gibbous': 'TAKE_PARTIAL_PROFITS',
+                'full_moon': 'EXTREME_CAUTION',
+                'waning_gibbous': 'REDUCE_EXPOSURE',
+                'last_quarter': 'DEFENSIVE_STANCE',
+                'waning_crescent': 'PREPARE_FOR_CYCLE'
+            },
+            'memeCoins': {
+                'new_moon': 'HUNT_FOR_GEMS',
+                'waxing_crescent': 'RIDE_THE_MEME',
+                'first_quarter': 'SURF_THE_HYPE',
+                'waxing_gibbous': 'PREPARE_EXIT',
+                'full_moon': 'DUMP_IMMEDIATELY',
+                'waning_gibbous': 'SHORT_IF_POSSIBLE',
+                'last_quarter': 'IGNORE_COMPLETELY',
+                'waning_crescent': 'SCOUT_NEXT_MEME'
+            },
+            'exotics': {
+                'new_moon': 'RESEARCH_DEEP',
+                'waxing_crescent': 'EARLY_ADOPTION',
+                'first_quarter': 'UTILITY_FOCUS',
+                'waxing_gibbous': 'MOMENTUM_PLAY',
+                'full_moon': 'SPECULATIVE_CAUTION',
+                'waning_gibbous': 'FUNDAMENTALS_CHECK',
+                'last_quarter': 'VALUE_ASSESSMENT',
+                'waning_crescent': 'INNOVATION_WATCH'
+            },
+            'darkSide': {
+                'new_moon': 'ENTER_THE_VOID',
+                'waxing_crescent': 'EMBRACE_CHAOS',
+                'first_quarter': 'BALANCE_DARKNESS',
+                'waxing_gibbous': 'FORBIDDEN_TRADES',
+                'full_moon': 'MAXIMUM_DARKNESS',
+                'waning_gibbous': 'RETREAT_FROM_SHADOW',
+                'last_quarter': 'CONTEMPLATE_VOID',
+                'waning_crescent': 'PREPARE_DESCENT'
+            }
+        };
+
+        return recommendations[assetType]?.[moonPhase] || 'OBSERVE_AND_WAIT';
+    }
+
+    calculateDarkSidePerformance() {
+        // Calcular rendimiento especÃ­fico de activos del lado oscuro
+        const darkSideSymbols = [...this.assetCategories.memeCoins, ...this.assetCategories.darkSide];
+        let totalDarkPerformance = 0;
+        let darkAssetsCount = 0;
+
+        for (const symbol of darkSideSymbols) {
+            const volatilityMetric = this.volatilityMetrics.get(symbol);
+            if (volatilityMetric) {
+                totalDarkPerformance += volatilityMetric.priceChangePercent;
+                darkAssetsCount++;
+            }
+        }
+
+        return {
+            averageDarkPerformance: darkAssetsCount > 0 ? totalDarkPerformance / darkAssetsCount : 0,
+            darkAssetsTracked: darkAssetsCount,
+            chaosLevel: this.calculateAverageChaos(),
+            irracionalityIndex: this.calculateIrracionalityIndex()
+        };
+    }
+
+    calculateLunarCorrelations() {
+        const currentMoonPhase = this.calculateMoonPhase(new Date());
+        const correlations = {};
+
+        for (const [category, symbols] of Object.entries(this.assetCategories)) {
+            let totalCorrelation = 0;
+            let validSymbols = 0;
+
+            for (const symbol of symbols) {
+                const lunarInfluence = this.lunarInfluence.get(symbol);
+                if (lunarInfluence) {
+                    totalCorrelation += lunarInfluence.totalInfluence;
+                    validSymbols++;
+                }
+            }
+
+            correlations[category] = {
+                averageInfluence: validSymbols > 0 ? totalCorrelation / validSymbols : 0,
+                symbolsTracked: validSymbols,
+                currentMoonPhase: currentMoonPhase
+            };
+        }
+
+        return correlations;
+    }
+
+    getAssetDistribution() {
+        const distribution = {};
+        
+        for (const [category, symbols] of Object.entries(this.assetCategories)) {
+            distribution[category] = {
+                count: symbols.length,
+                percentage: (symbols.length / this.allSymbols.length) * 100,
+                symbols: symbols
+            };
+        }
+
+        return distribution;
+    }
+
+    calculateAverageChaos() {
+        let totalChaos = 0;
+        let validMetrics = 0;
+
+        for (const metrics of this.volatilityMetrics.values()) {
+            if (metrics.chaosLevel !== undefined) {
+                totalChaos += metrics.chaosLevel;
+                validMetrics++;
+            }
+        }
+
+        return validMetrics > 0 ? totalChaos / validMetrics : 0;
+    }
+
+    calculateIrracionalityIndex() {
+        const memeCoinsVolatility = this.assetCategories.memeCoins
+            .map(symbol => this.volatilityMetrics.get(symbol)?.volatilityIndex || 0)
+            .reduce((sum, vol) => sum + vol, 0);
+
+        const majorsVolatility = this.assetCategories.majors
+            .map(symbol => this.volatilityMetrics.get(symbol)?.volatilityIndex || 0)
+            .reduce((sum, vol) => sum + vol, 0);
+
+        // Ãndice de irracionalidad: ratio de volatilidad memes vs majors
+        return majorsVolatility > 0 ? memeCoinsVolatility / majorsVolatility : 0;
+    }
+
+    // MÃ©todo para obtener el mejor activo para trading segÃºn cuadrante lunar actual
+    getBestAssetForCurrentLunarQuadrant() {
+        const currentMoonPhase = this.calculateMoonPhase(new Date());
+        const recommendations = [];
+
+        for (const symbol of this.allSymbols) {
+            const lunarInfluence = this.lunarInfluence.get(symbol);
+            const volatilityMetric = this.volatilityMetrics.get(symbol);
+            
+            if (lunarInfluence && volatilityMetric) {
+                const score = lunarInfluence.totalInfluence * volatilityMetric.volatilityIndex;
+                recommendations.push({
+                    symbol: symbol,
+                    score: score,
+                    lunarQuadrant: lunarInfluence.lunarQuadrant,
+                    recommendation: lunarInfluence.recommendation,
+                    assetType: lunarInfluence.assetType,
+                    darkSideScore: volatilityMetric.darkSideScore
+                });
+            }
+        }
+
+        return recommendations
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 5); // Top 5 recomendaciones
+    }
+
+    // MÃ©todo para reportar estado de datos reales
+    getRealDataStatus() {
+        const status = {
+            connection_status: this.isConnected,
+            total_symbols: this.allSymbols.length,
+            prices_loaded: this.currentPrices.size,
+            volatility_metrics_loaded: this.volatilityMetrics.size,
+            lunar_influence_loaded: this.lunarInfluence.size,
+            ready_for_trading: this.isReadyForTrading(),
+            data_completeness: {
+                prices: (this.currentPrices.size / this.allSymbols.length) * 100,
+                volatility: (this.volatilityMetrics.size / this.allSymbols.length) * 100,
+                lunar: (this.lunarInfluence.size / this.allSymbols.length) * 100
+            },
+            symbols_with_complete_data: [],
+            symbols_missing_data: []
+        };
+
+        // Verificar completitud por sÃ­mbolo
+        for (const symbol of this.allSymbols) {
+            const hasPrice = this.currentPrices.has(symbol);
+            const hasVolatility = this.volatilityMetrics.has(symbol);
+            const hasLunar = this.lunarInfluence.has(symbol);
+
+            if (hasPrice && hasVolatility && hasLunar) {
+                status.symbols_with_complete_data.push(symbol);
+            } else {
+                status.symbols_missing_data.push({
+                    symbol: symbol,
+                    missing: {
+                        price: !hasPrice,
+                        volatility: !hasVolatility,
+                        lunar: !hasLunar
+                    }
+                });
+            }
+        }
+
+        return status;
+    }
+}
+
+// MÃ©todos estÃ¡ticos de singleton
+BinanceRealConnector._instance = null;
+BinanceRealConnector.getInstance = function() {
+    if (BinanceRealConnector._instance) return BinanceRealConnector._instance;
+    return new BinanceRealConnector();
+};
+
+// Diagnóstico de rate limiting (orders y weight limiters)
+BinanceRealConnector.prototype.getRateLimitStats = function() {
+    try {
+        const orders = this.rateLimiter && typeof this.rateLimiter.getStats === 'function'
+            ? this.rateLimiter.getStats()
+            : null;
+        const weight = this.weightLimiter && typeof this.weightLimiter.getStats === 'function'
+            ? this.weightLimiter.getStats()
+            : null;
+        return {
+            ordersLimiter: orders,
+            weightLimiter: weight,
+            timestamp: new Date().toISOString()
+        };
+    } catch (e) {
+        return { error: e.message, timestamp: new Date().toISOString() };
+    }
+};
+
+module.exports = { BinanceRealConnector, getInstance: BinanceRealConnector.getInstance, connector: BinanceRealConnector.getInstance() };
+
+
+

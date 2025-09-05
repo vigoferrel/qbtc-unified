@@ -1,0 +1,75 @@
+{
+  "timestamp": "2025-08-09T22:01:52.286Z",
+  "publicTests": [
+    {
+      "name": "Ping",
+      "success": true,
+      "statusCode": 200,
+      "responseTime": 361,
+      "dataSize": 2,
+      "error": null
+    },
+    {
+      "name": "Server Time",
+      "success": true,
+      "statusCode": 200,
+      "responseTime": 313,
+      "dataSize": 28,
+      "error": null
+    },
+    {
+      "name": "Exchange Info",
+      "success": true,
+      "statusCode": 200,
+      "responseTime": 310,
+      "dataSize": 691587,
+      "error": null
+    },
+    {
+      "name": "Ticker Price",
+      "success": true,
+      "statusCode": 200,
+      "responseTime": 309,
+      "dataSize": 61,
+      "error": null
+    }
+  ],
+  "authTests": [
+    {
+      "name": "Account Info",
+      "success": true,
+      "statusCode": 200,
+      "responseTime": 326,
+      "dataSize": 209966,
+      "error": null
+    },
+    {
+      "name": "Balance",
+      "success": true,
+      "statusCode": 200,
+      "responseTime": 315,
+      "dataSize": 1926,
+      "error": null
+    },
+    {
+      "name": "Position Risk",
+      "success": true,
+      "statusCode": 200,
+      "responseTime": 312,
+      "dataSize": 214413,
+      "error": null
+    }
+  ],
+  "ipInfo": {
+    "current": "181.43.212.196",
+    "country": "CL",
+    "region": "Santiago Metropolitan",
+    "city": "Santiago",
+    "isp": "AS27651 ENTEL CHILE S.A.",
+    "timezone": "America/Santiago"
+  },
+  "banStatus": "no_ban",
+  "recommendations": [
+    "✅ Todo funciona correctamente - No hay baneo"
+  ]
+}

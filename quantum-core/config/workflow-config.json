@@ -1,0 +1,66 @@
+{
+    "workflow": {
+        "sequential": {
+            "steps": ["detect", "validate", "execute"],
+            "timeouts": {
+                "detect": 5000,
+                "validate": 3000,
+                "execute": 10000
+            },
+            "retries": {
+                "detect": 2,
+                "validate": 1,
+                "execute": 0
+            }
+        },
+        "oracle": {
+            "timeframes": ["1h", "4h", "1d"],
+            "metrics": {
+                "consciousness": 0.941,
+                "coherence": 0.964,
+                "resonance": 0.888
+            },
+            "validation": {
+                "minConfidence": 0.8,
+                "minCoherence": 0.85,
+                "timeoutMs": 5000
+            }
+        },
+        "execution": {
+            "baseAmount": 10,
+            "maxAmount": 100,
+            "riskLevels": {
+                "conservative": {
+                    "stopLoss": 0.02,
+                    "takeProfit": 0.05
+                },
+                "moderate": {
+                    "stopLoss": 0.03,
+                    "takeProfit": 0.075
+                },
+                "aggressive": {
+                    "stopLoss": 0.05,
+                    "takeProfit": 0.15
+                }
+            }
+        },
+        "monitoring": {
+            "updateInterval": 1000,
+            "metrics": ["consciousness", "coherence", "opportunities", "performance"],
+            "alerts": {
+                "lowConsciousness": 0.5,
+                "lowCoherence": 0.6,
+                "executionDelay": 2000
+            }
+        },
+        "optimization": {
+            "autoAdjust": true,
+            "learningRate": 0.1,
+            "maxIterations": 10,
+            "targetMetrics": {
+                "winRate": 0.65,
+                "profitFactor": 1.5
+            }
+        }
+    }
+}

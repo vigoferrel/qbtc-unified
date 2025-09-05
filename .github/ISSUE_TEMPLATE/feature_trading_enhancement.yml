@@ -1,0 +1,245 @@
+name: ✨ Feature de Trading Enhancement
+description: Solicitar una nueva funcionalidad para el sistema de trading QBTC-UNIFIED
+title: "[FEATURE] "
+labels: ["enhancement", "trading-feature", "needs-review"]
+assignees:
+  - vigoferrel
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🚀 Nueva Funcionalidad de Trading
+        Describe una nueva funcionalidad que mejore el sistema de trading cuántico.
+        
+        💡 **Tip**: Explica cómo esto mejorará el ROI, reducirá riesgo, o aumentará eficiencia.
+
+  - type: dropdown
+    id: feature_category
+    attributes:
+      label: Categoría de Feature
+      description: ¿A qué área del sistema pertenece esta funcionalidad?
+      options:
+        - "📊 Portfolio Management (Kelly, VaR, Sharpe)"
+        - "🧠 Leonardo IA Enhancement"
+        - "⚡ Quantum System Optimization" 
+        - "🛡️ Guardian & Risk Management"
+        - "📈 Trading Strategy Algorithm"
+        - "🔗 Exchange Integration"
+        - "📊 Metrics & Monitoring"
+        - "🔧 System Infrastructure"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority_level
+    attributes:
+      label: Prioridad Comercial
+      description: ¿Qué tan importante es esta funcionalidad?
+      options:
+        - "🔴 CRÍTICA - Necesaria para competitividad"
+        - "🟠 ALTA - Mejora significativa de ROI"
+        - "🟡 MEDIA - Optimización útil"
+        - "🟢 BAJA - Nice to have"
+    validations:
+      required: true
+
+  - type: textarea
+    id: business_problem
+    attributes:
+      label: 💼 Problema Comercial
+      description: ¿Qué problema de trading/financiero resuelve esta funcionalidad?
+      placeholder: |
+        Ejemplo: "El sistema actual no puede detectar arbitraje cross-exchange, perdiendo oportunidades 
+        de profit del 0.1-0.3% diario. Esto representa $300-900 USD diarios en un portfolio de $300k..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: 📝 Descripción de la Funcionalidad
+      description: Describe en detalle qué quieres que haga el sistema
+      placeholder: |
+        Ejemplo: "Implementar un detector de arbitraje que:
+        1. Monitoree precios en tiempo real entre Binance y Coinbase
+        2. Identifique diferencias de precio > 0.1%
+        3. Calcule costos de transacción automáticamente
+        4. Execute trades simultáneos si profit neto > 0.05%
+        5. Integre con Portfolio Manager para sizing óptimo"
+    validations:
+      required: true
+
+  - type: textarea
+    id: roi_impact
+    attributes:
+      label: 💰 Impacto en ROI Esperado
+      description: ¿Cómo mejorará esto la rentabilidad del sistema?
+      placeholder: |
+        - Profit adicional estimado: $XXX USD/mes
+        - Reducción de pérdidas: X.X%
+        - Mejora en Sharpe Ratio: +X.X
+        - Reducción de VaR: -X.X%
+        - Tiempo de payback: X meses
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical_approach
+    attributes:
+      label: 🔧 Enfoque Técnico Sugerido
+      description: Si tienes ideas de cómo implementarlo técnicamente
+      placeholder: |
+        - Nuevo microservicio en puerto 14XXX
+        - Integración con Leonardo IA para decisiones
+        - Uso de WebSockets para data en tiempo real
+        - Base de datos para historical analysis
+        - Circuit breakers para protección
+    validations:
+      required: false
+
+  - type: textarea
+    id: risk_analysis
+    attributes:
+      label: ⚠️ Análisis de Riesgo
+      description: ¿Qué riesgos introduce esta funcionalidad?
+      placeholder: |
+        - Riesgo de latencia en ejecución
+        - Posible aumento de VaR durante arbitraje
+        - Dependencia de múltiples exchanges
+        - Riesgo de correlación temporal
+        - Complejidad adicional del sistema
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: integration_requirements
+    attributes:
+      label: 🔗 Requisitos de Integración
+      description: ¿Con qué componentes debe integrarse?
+      options:
+        - label: Portfolio Manager (14801)
+        - label: Leonardo IA Server (8090)
+        - label: Guardian System (14601)
+        - label: Metrics Server (14701)
+        - label: Quantum Cache System
+        - label: Binance API
+        - label: Nuevas APIs de exchange
+        - label: Sistema de alertas
+
+  - type: textarea
+    id: success_metrics
+    attributes:
+      label: 📊 Métricas de Éxito
+      description: ¿Cómo mediremos el éxito de esta funcionalidad?
+      placeholder: |
+        - Profit incremental: > $XXX USD/mes
+        - Trades exitosos: > XX% win rate
+        - Latencia de ejecución: < XXX ms
+        - Uptime del feature: > 99.5%
+        - Sharpe Ratio mejorado: > X.X
+        - VaR mantenido: < X.X%
+    validations:
+      required: true
+
+  - type: dropdown
+    id: testing_approach
+    attributes:
+      label: 🧪 Estrategia de Testing
+      description: ¿Cómo deberíamos probar esta funcionalidad?
+      options:
+        - "Testnet primero, luego paper trading"
+        - "Backtesting con datos históricos"
+        - "A/B testing con capital limitado"
+        - "Simulación Monte Carlo"
+        - "Shadow trading (no ejecución real)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: market_research
+    attributes:
+      label: 📈 Research de Mercado
+      description: ¿Has investigado si otros sistemas hacen esto?
+      placeholder: |
+        - ¿Competitors que tienen esta funcionalidad?
+        - ¿Estudios académicos relevantes?
+        - ¿Benchmarks de la industria?
+        - ¿Regulaciones que considerar?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: implementation_complexity
+    attributes:
+      label: 🔨 Complejidad de Implementación
+      description: ¿Qué tan complejo estimas que sea implementar esto?
+      options:
+        - "🟢 SIMPLE - < 1 semana de desarrollo"
+        - "🟡 MEDIO - 2-4 semanas de desarrollo"
+        - "🟠 COMPLEJO - 1-2 meses de desarrollo"
+        - "🔴 MUY COMPLEJO - > 2 meses de desarrollo"
+    validations:
+      required: true
+
+  - type: textarea
+    id: leonardo_consciousness_integration
+    attributes:
+      label: 🧠 Integración con Leonardo IA
+      description: ¿Cómo se integraría con el sistema de consciencia artificial?
+      placeholder: |
+        - ¿Debe considerarse en decisions de consciousness level?
+        - ¿Afecta coherence score calculation?
+        - ¿Requiere nuevos parámetros de aprendizaje?
+        - ¿Modifica targets de Big Bang threshold?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: regulatory_compliance
+    attributes:
+      label: ⚖️ Compliance Regulatorio
+      description: Consideraciones regulatorias
+      options:
+        - label: No introduce nuevos riesgos regulatorios
+        - label: Requiere review legal antes de implementación
+        - label: Debe cumplir con regulaciones específicas de país
+        - label: Necesita disclosure adicional a usuarios
+        - label: Puede requerir licencias adicionales
+
+  - type: textarea
+    id: user_impact
+    attributes:
+      label: 👥 Impacto en Usuario
+      description: ¿Cómo afecta esto a los usuarios del sistema?
+      placeholder: |
+        - ¿Requiere configuración adicional?
+        - ¿Modifica flujos de trabajo existentes?
+        - ¿Necesita nueva documentación?
+        - ¿Afecta performance del sistema?
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives_considered
+    attributes:
+      label: 🔄 Alternativas Consideradas
+      description: ¿Qué otras alternativas has considerado?
+      placeholder: |
+        - Alternativa 1: [Descripción y por qué la descartaste]
+        - Alternativa 2: [Descripción y por qué la descartaste]
+        - ¿Por qué esta es la mejor opción?
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: 📝 Contexto Adicional
+      description: Cualquier información adicional relevante
+      placeholder: |
+        - Enlaces a research papers
+        - Screenshots de competitors
+        - Datos de mercado relevantes
+        - Feedback de otros usuarios
+    validations:
+      required: false

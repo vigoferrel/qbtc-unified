@@ -1,0 +1,519 @@
+{
+  "createdAt": "2025-08-14T20:40:52.482Z",
+  "lastRotation": null,
+  "validationHistory": [
+    {
+      "timestamp": "2025-08-15T01:00:40.670Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T01:04:16.533Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T01:07:34.994Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T01:12:30.449Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T01:14:19.893Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T01:22:48.159Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T01:29:15.052Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T03:16:59.415Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T03:26:40.722Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T03:33:38.937Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T04:13:02.691Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T04:18:29.312Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T04:25:47.839Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T04:53:46.431Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T04:54:02.707Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T04:59:37.678Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T05:30:28.933Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T05:35:54.394Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T05:38:15.910Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T05:43:06.678Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T05:47:26.287Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:04:59.233Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:05:18.042Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:11:28.926Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:14:20.200Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:20:20.822Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:25:53.444Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:31:01.088Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:37:07.746Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:49:56.348Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T06:53:37.345Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T07:04:11.981Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T07:07:50.291Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T07:09:54.153Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T07:10:56.831Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T07:14:04.898Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T07:19:38.535Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T07:35:02.953Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T07:43:12.675Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T08:03:09.606Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T08:17:29.052Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T08:32:36.354Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T08:45:56.804Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T09:02:19.963Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T09:08:26.442Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T09:10:47.821Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T09:45:12.624Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T09:59:49.499Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T10:27:45.432Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T10:33:12.009Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T10:45:07.468Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T10:54:42.903Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T10:55:55.634Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T11:07:06.412Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T11:11:37.833Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T11:32:56.925Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T14:58:43.205Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-15T15:46:19.911Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-17T02:14:07.791Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T12:57:07.940Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T13:23:30.492Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T14:38:35.741Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T14:45:45.357Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T14:52:52.736Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T15:21:59.568Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T15:25:32.815Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T15:26:22.603Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T15:27:16.906Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T15:34:59.595Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T15:37:51.315Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T15:38:21.571Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T15:48:49.261Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T15:50:17.983Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T16:08:37.256Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T16:15:52.530Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T16:52:47.798Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T17:34:11.833Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T17:36:22.883Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T17:38:32.572Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T17:58:03.088Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T18:00:33.121Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T18:02:34.271Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T18:04:21.507Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T18:17:53.680Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-18T18:21:31.704Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T00:06:07.333Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T00:07:36.405Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T00:10:53.011Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T01:44:42.863Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T02:10:54.677Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T02:39:11.228Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T13:07:15.069Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T14:16:42.121Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T14:29:28.578Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T14:33:32.938Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T14:50:50.367Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T15:24:35.514Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T16:19:29.186Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T16:27:25.689Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    },
+    {
+      "timestamp": "2025-08-19T16:31:33.867Z",
+      "valid": true,
+      "details": "Claves validadas correctamente"
+    }
+  ],
+  "permissions": {
+    "futures": {
+      "enabled": true,
+      "readOnly": true,
+      "trading": false,
+      "leverageChange": false
+    },
+    "spot": {
+      "enabled": true,
+      "readOnly": true,
+      "trading": false
+    }
+  }
+}

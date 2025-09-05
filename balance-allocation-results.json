@@ -1,0 +1,168 @@
+{
+  "timestamp": "2025-08-09T22:11:32.429Z",
+  "balance": {
+    "futures": {
+      "totalWalletBalance": 200.02834,
+      "totalUnrealizedProfit": 0,
+      "totalMarginBalance": 200.02834,
+      "totalPositionInitialMargin": 0,
+      "totalOpenOrderInitialMargin": 0,
+      "availableBalance": 200.02834,
+      "maxWithdrawAmount": 200.02834,
+      "canTrade": true,
+      "canDeposit": true,
+      "canWithdraw": true,
+      "updateTime": 0,
+      "assets": [
+        {
+          "asset": "USDT",
+          "walletBalance": 200,
+          "availableBalance": 199.96000366,
+          "crossUnPnl": 0,
+          "crossWalletBalance": 200
+        },
+        {
+          "asset": "FDUSD",
+          "walletBalance": 0,
+          "availableBalance": 198.24012486,
+          "crossUnPnl": 0,
+          "crossWalletBalance": 0
+        },
+        {
+          "asset": "LDUSDT",
+          "walletBalance": 0,
+          "availableBalance": 179.57263727,
+          "crossUnPnl": 0,
+          "crossWalletBalance": 0
+        },
+        {
+          "asset": "BFUSD",
+          "walletBalance": 0,
+          "availableBalance": 199.78022095,
+          "crossUnPnl": 0,
+          "crossWalletBalance": 0
+        },
+        {
+          "asset": "BNB",
+          "walletBalance": 0,
+          "availableBalance": 0.23720873,
+          "crossUnPnl": 0,
+          "crossWalletBalance": 0
+        },
+        {
+          "asset": "ETH",
+          "walletBalance": 0,
+          "availableBalance": 0.04446709,
+          "crossUnPnl": 0,
+          "crossWalletBalance": 0
+        },
+        {
+          "asset": "BTC",
+          "walletBalance": 0,
+          "availableBalance": 0.00163484,
+          "crossUnPnl": 0,
+          "crossWalletBalance": 0
+        },
+        {
+          "asset": "USDC",
+          "walletBalance": 0,
+          "availableBalance": 200.01983315,
+          "crossUnPnl": 0,
+          "crossWalletBalance": 0
+        }
+      ]
+    },
+    "": {
+      "assets": [
+        {
+          "asset": "SYS",
+          "free": 47.622,
+          "locked": 0,
+          "total": 47.622
+        },
+        {
+          "asset": "SOL",
+          "free": 0.00862802,
+          "locked": 0,
+          "total": 0.00862802
+        },
+        {
+          "asset": "LUNC",
+          "free": 0.00807,
+          "locked": 0,
+          "total": 0.00807
+        },
+        {
+          "asset": "BNB",
+          "free": 0.00634644,
+          "locked": 0,
+          "total": 0.00634644
+        },
+        {
+          "asset": "LUNA",
+          "free": 0.00562879,
+          "locked": 0,
+          "total": 0.00562879
+        },
+        {
+          "asset": "BTC",
+          "free": 0.00000428,
+          "locked": 0,
+          "total": 0.00000428
+        }
+      ],
+      "estimatedUSDT": 4.235864
+    },
+    "total": {}
+  },
+  "allocation": {
+    "status": "ready",
+    "totalBalance": 200.02834,
+    "reserveAmount": 40.005668,
+    "tradingBalance": 160.022672,
+    "riskParameters": {
+      "riskLimit": 0.01,
+      "maxPositionSize": 0.2,
+      "maxDailyTrades": 20,
+      "maxPositions": 5,
+      "minBalanceUSDT": 100
+    },
+    "quantumFactors": {
+      "quantumMultiplier": 1.618,
+      "consciousnessTarget": 0.941,
+      "coherenceTarget": 0.964,
+      "quantumAmplification": 1.467726632
+    },
+    "allocationLevels": {
+      "conservative": {
+        "riskPerTrade": 0.80011336,
+        "capitalPerPosition": 9.601360320000001,
+        "maxPositions": 3,
+        "leverageMax": 10,
+        "description": "Modo conservador - entrada gradual"
+      },
+      "balanced": {
+        "riskPerTrade": 1.20017004,
+        "capitalPerPosition": 19.202720640000003,
+        "maxPositions": 4,
+        "leverageMax": 25,
+        "description": "Modo balanceado - operación normal"
+      },
+      "aggressive": {
+        "riskPerTrade": 1.60022672,
+        "capitalPerPosition": 32.004534400000004,
+        "maxPositions": 5,
+        "leverageMax": 50,
+        "description": "Modo agresivo - máxima eficiencia"
+      },
+      "quantum": {
+        "riskPerTrade": 2.348695374182007,
+        "capitalPerPosition": 46.97390748364015,
+        "maxPositions": 10,
+        "leverageMax": 125,
+        "description": "Modo cuántico - Leonardo Consciousness activa"
+      }
+    },
+    "recommendedStartLevel": "conservative"
+  }
+}
